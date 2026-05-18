@@ -1,0 +1,37 @@
+---
+description: Core rules for building Meta Ray-Ban Display apps with mrbd-ui-kit
+globs: ["**/*.tsx", "**/*.ts", "**/*.css"]
+alwaysApply: true
+---
+
+# MRBD UI Kit Rules
+
+You are building for the Meta Ray-Ban Display — a 600×600 additive display in smart glasses. Use the `mrbd-ui-kit` package.
+
+## Critical Constraints
+- NEVER use `#FFFFFF` or pure white — causes ghosting. Use `text-mrbd-text`.
+- NEVER use `drop-shadow` or `box-shadow` for decoration — looks like dirt. Use `shadow-mrbd-glow-*`.
+- NEVER use `font-weight` below 500 — illegible on additive display.
+- ALWAYS wrap MRBD UI in `<DisplayRoot>`.
+- ALWAYS give every `<Focusable>`, `<Button>`, and nav item a unique `id`.
+
+## Imports
+```typescript
+// Components + hooks
+import { DisplayRoot, Text, Box, Stack, Icon, Focusable, Button, NavigationBar, LoadingIndicator, useDpad, useFocusManager, useIsMRBD } from 'mrbd-ui-kit';
+
+// Server detection
+import { isMRBD, isMRBDFromHeaders } from 'mrbd-ui-kit/server';
+
+// Next.js RSC detection
+import { isMRBDServer } from 'mrbd-ui-kit/next';
+```
+
+## CSS Setup
+```css
+@import "tailwindcss";
+@import "mrbd-ui-kit/css/theme";
+@import "mrbd-ui-kit/css/base";
+```
+
+For full API reference, read `AGENTS.md` at the repository root.

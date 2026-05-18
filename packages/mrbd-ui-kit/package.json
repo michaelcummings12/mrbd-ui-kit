@@ -1,0 +1,83 @@
+{
+  "name": "mrbd-ui-kit",
+  "version": "0.1.0",
+  "description": "React component library for Meta Ray-Ban Display web apps",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./css/theme": "./src/css/mrbd-theme.css",
+    "./css/base": "./src/css/mrbd-base.css",
+    "./server": {
+      "import": {
+        "types": "./dist/server/is-mrbd.d.ts",
+        "default": "./dist/server/is-mrbd.js"
+      },
+      "require": {
+        "types": "./dist/server/is-mrbd.d.cts",
+        "default": "./dist/server/is-mrbd.cjs"
+      }
+    },
+    "./next": {
+      "import": {
+        "types": "./dist/next/is-mrbd.d.ts",
+        "default": "./dist/next/is-mrbd.js"
+      },
+      "require": {
+        "types": "./dist/next/is-mrbd.d.cts",
+        "default": "./dist/next/is-mrbd.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src/css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "next": "^16.2.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": [
+    "meta",
+    "ray-ban",
+    "mrbd",
+    "display",
+    "wearables",
+    "react",
+    "components",
+    "ui-kit"
+  ],
+  "license": "MIT"
+}
