@@ -1,0 +1,55 @@
+name: Publish Package to NPM
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "latest"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+      - name: Install dependencies  
+        run: pnpm install
+      - name: Build packages
+        run: pnpm build
+      - name: Check latest version
+        id: check
+        working-directory: packages/mrbd-ui-kit
+        run: |
+          VERSION=$(npm pkg get version | tr -d '"')
+          NAME=$(npm pkg get name | tr -d '"')
+          PUBLISHED_VERSION=$(npm view "$NAME@$VERSION" version 2>/dev/null || echo "")
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          if [ -z "$PUBLISHED_VERSION" ]; then
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create GitHub Release
+        if: steps.check.outputs.should_publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v${{ steps.check.outputs.version }} \
+            --generate-notes \
+            --title "v${{ steps.check.outputs.version }}"
+      - name: Publish to NPM
+        if: steps.check.outputs.should_publish == 'true'
+        working-directory: packages/mrbd-ui-kit
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
