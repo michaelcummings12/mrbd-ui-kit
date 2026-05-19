@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies  
         run: pnpm install --frozen-lockfile
       - name: Build packages
-        run: pnpm build
+        run: pnpm build --filter "mrbd-ui-kit"
       - name: Check latest version
         id: check
         working-directory: packages/mrbd-ui-kit

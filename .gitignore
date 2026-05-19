@@ -41,3 +41,6 @@
 # generated Prisma files
 **/prisma/generated
 
+# turbo
+**/.turbo
+
