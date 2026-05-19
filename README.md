@@ -6,6 +6,9 @@
 
 React component library for [Meta Ray-Ban Display](https://www.meta.com/smart-glasses/) web apps. Opinionated defaults for the 600×600 additive display. Fully customizable.
 
+See it in action: [**mrbd.fun live example app**](https://www.mrbd.fun/)
+
+
 ## Install
 
 ```bash
