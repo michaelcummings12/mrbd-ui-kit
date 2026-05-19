@@ -1,6 +1,8 @@
+import { cn } from "../lib/cn";
+
 export interface LoadingIndicatorProps {
   /** @default 'spinner' */
-  variant?: 'spinner' | 'dots' | 'pulse';
+  variant?: "spinner" | "dots" | "pulse";
   /** Size in px. @default 32 */
   size?: number;
   /** Tailwind color class or CSS color. @default 'var(--color-mrbd-text)' */
@@ -10,29 +12,27 @@ export interface LoadingIndicatorProps {
   className?: string;
 }
 
-function Spinner({ size, color }: { size: number; color: string }) {
-  const strokeWidth = Math.max(2, size / 12);
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const dashLength = circumference * 0.7;
-
+function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      style={{ animation: 'mrbd-spin 0.8s linear infinite' }}
+      role="status"
+      aria-label="Loading"
+      viewBox="0 0 100 100"
+      fill="none"
+      className={cn("animate-spin", className)}
+      {...props}
     >
       <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
+        cx="50"
+        cy="50"
+        r="33"
+        stroke="currentColor"
+        strokeWidth="8"
         strokeLinecap="round"
-        strokeDasharray={`${dashLength} ${circumference - dashLength}`}
-        opacity={0.9}
+        transform="rotate(-90 50 50)"
+        strokeDasharray="52 155"
+        strokeDashoffset="0"
+        className="spinner-dash"
       />
     </svg>
   );
@@ -54,7 +54,7 @@ function Dots({ size, color }: { size: number; color: string }) {
           style={{
             width: dotSize,
             height: dotSize,
-            borderRadius: '50%',
+            borderRadius: "50%",
             backgroundColor: color,
             animation: `mrbd-dot-bounce 1.2s ease-in-out ${i * 0.15}s infinite`,
           }}
@@ -70,30 +70,30 @@ function Pulse({ size, color }: { size: number; color: string }) {
       style={{
         width: size,
         height: size,
-        borderRadius: '50%',
+        borderRadius: "50%",
         backgroundColor: color,
-        animation: 'mrbd-pulse 1.5s ease-in-out infinite',
+        animation: "mrbd-pulse 1.5s ease-in-out infinite",
       }}
     />
   );
 }
 
 export function LoadingIndicator({
-  variant = 'spinner',
+  variant = "spinner",
   size = 32,
-  color = 'var(--color-mrbd-text)',
-  label = 'Loading',
+  color = "var(--color-mrbd-text)",
+  label = "Loading",
   className,
 }: LoadingIndicatorProps) {
   return (
     <div
       role="status"
       aria-label={label}
-      className={`inline-flex items-center justify-center ${className ?? ''}`.trim()}
+      className={`inline-flex items-center justify-center ${className ?? ""}`.trim()}
     >
-      {variant === 'spinner' && <Spinner size={size} color={color} />}
-      {variant === 'dots' && <Dots size={size} color={color} />}
-      {variant === 'pulse' && <Pulse size={size} color={color} />}
+      {variant === "spinner" && <Spinner color={color} />}
+      {variant === "dots" && <Dots size={size} color={color} />}
+      {variant === "pulse" && <Pulse size={size} color={color} />}
     </div>
   );
 }

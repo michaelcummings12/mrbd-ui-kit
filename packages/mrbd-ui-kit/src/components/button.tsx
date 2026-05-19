@@ -1,17 +1,18 @@
-import type { ReactNode } from 'react';
-import { Focusable } from './focusable';
-import { Icon, type BuiltInIcon } from './icon';
+import type { ElementType, ReactNode } from "react";
+import { Focusable } from "./focusable";
+import { Icon } from "./icon";
+import { cn } from "../lib/cn";
 
 export interface ButtonProps {
   children: ReactNode;
   /** @default 'primary' */
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  variant?: "primary" | "secondary" | "ghost" | "danger";
   /** @default 'md' */
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   /** Required — used for focus engine registration */
   id: string;
   /** Icon to render before children */
-  icon?: BuiltInIcon;
+  icon?: ElementType;
   /** @default false */
   disabled?: boolean;
   /** Called on D-pad select (Enter key) */
@@ -23,58 +24,62 @@ export interface ButtonProps {
   className?: string;
 }
 
-const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
+const VARIANT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    'bg-mrbd-accent text-black font-bold hover:brightness-110 active:brightness-90',
+    "bg-mrbd-accent text-black font-bold hover:brightness-110 active:brightness-90",
   secondary:
-    'bg-mrbd-surface text-mrbd-text border border-white/10 hover:bg-mrbd-surface-hover active:bg-mrbd-surface-active',
-  ghost:
-    'bg-transparent text-mrbd-text hover:bg-mrbd-surface active:bg-mrbd-surface-hover',
+    "bg-mrbd-surface text-mrbd-text border border-white/10 hover:bg-mrbd-surface-hover active:bg-mrbd-surface-active",
+  ghost: "bg-white/5 text-mrbd-text active:bg-white/10",
   danger:
-    'bg-mrbd-danger text-black font-bold hover:brightness-110 active:brightness-90',
+    "bg-mrbd-danger text-black font-bold hover:brightness-110 active:brightness-90",
 };
 
-const SIZE_CLASSES: Record<NonNullable<ButtonProps['size']>, string> = {
-  sm: 'h-8 px-3 text-sm rounded-md gap-1.5',
-  md: 'h-10 px-4 text-base rounded-lg gap-2',
-  lg: 'h-12 px-6 text-lg rounded-lg gap-2.5',
+const SIZE_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
+  sm: "h-20 px-3 text-sm rounded-3xl gap-1.5",
+  md: "h-24 px-4 text-base rounded-4xl gap-2",
+  lg: "h-28 px-6 text-lg rounded-4xl gap-2.5",
 };
 
-const ICON_SIZE: Record<NonNullable<ButtonProps['size']>, number> = {
-  sm: 16,
-  md: 20,
-  lg: 24,
+const ICON_SIZE: Record<NonNullable<ButtonProps["size"]>, number> = {
+  sm: 20,
+  md: 24,
+  lg: 28,
 };
 
 export function Button({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "ghost",
+  size = "md",
   id,
   icon,
-  disabled = false,
+  disabled,
   onPress,
-  fullWidth = false,
   group,
   className,
 }: ButtonProps) {
-  const classes = [
-    'inline-flex items-center justify-center font-mrbd font-semibold transition-all duration-150',
-    VARIANT_CLASSES[variant],
-    SIZE_CLASSES[size],
-    fullWidth ? 'w-full' : '',
-    disabled ? 'opacity-40 pointer-events-none' : '',
-    className ?? '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = [];
 
   return (
-    <Focusable id={id} onSelect={onPress} disabled={disabled} group={group}>
-      <div className={classes}>
-        {icon && <Icon name={icon} size={ICON_SIZE[size]} />}
+    <Focusable
+      id={id}
+      onSelect={onPress}
+      disabled={disabled}
+      group={group}
+      className="group"
+    >
+      <button
+        className={cn(
+          "group-focus:scale-105 hover:scale-105 focus:outline-none inline-flex items-center justify-center font-mrbd font-semibold transition-all duration-150",
+          VARIANT_CLASSES[variant],
+          SIZE_CLASSES[size],
+          "hover:shadow-mrbd-glow-inner group-focus:shadow-mrbd-glow-inner",
+          disabled && "opacity-40 pointer-events-none",
+          className,
+        )}
+      >
+        {icon && <Icon icon={icon} size={ICON_SIZE[size]} />}
         {children}
-      </div>
+      </button>
     </Focusable>
   );
 }

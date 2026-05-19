@@ -59,8 +59,6 @@ Both CSS imports are required. `theme` provides Tailwind v4 tokens. `base` provi
 import {
   DisplayRoot,
   Text,
-  Box,
-  Stack,
   Icon,
   Focusable,
   Button,
@@ -117,29 +115,6 @@ Display-optimized typography. Enforces minimum font weight.
 
 Props: `size?: 'xs'|'sm'|'md'|'lg'|'xl'|'2xl'`, `weight?: 'medium'|'semibold'|'bold'`, `glow?: boolean`, `dim?: boolean`, `as?: 'p'|'span'|'h1'|'h2'|'h3'|'label'`
 
-### Box
-
-Layout container.
-
-```tsx
-<Box surface rounded="lg" p={4}>
-  content
-</Box>
-```
-
-Props: `surface?: boolean`, `p?/px?/py?: number`, `rounded?: 'none'|'sm'|'md'|'lg'|'xl'|'full'`, `as?: ElementType`
-
-### Stack
-
-Flex layout.
-
-```tsx
-<Stack direction="horizontal" gap={3} align="center">
-  items
-</Stack>
-```
-
-Props: `direction?: 'vertical'|'horizontal'`, `gap?: number`, `align?: 'start'|'center'|'end'|'stretch'`, `justify?: 'start'|'center'|'end'|'between'|'around'`
 
 ### Icon
 
@@ -264,8 +239,6 @@ import { useState } from "react";
 import {
   DisplayRoot,
   Text,
-  Stack,
-  Box,
   Button,
   NavigationBar,
   LoadingIndicator,
@@ -278,27 +251,27 @@ export default function MyMRBDApp() {
 
   return (
     <DisplayRoot focusOptions={{ initialFocusId: "action-btn" }}>
-      <Stack direction="vertical" gap={4} className="p-6 pb-20">
+      <div className="flex flex-col gap-4 p-6 pb-20">
         {/* Header */}
-        <Stack direction="horizontal" gap={2} align="center">
+        <div className="flex flex-row gap-2 items-center">
           <Icon name="bell" size={20} color="var(--color-mrbd-accent)" />
           <Text size="lg" weight="bold">
             Notifications
           </Text>
-        </Stack>
+        </div>
 
         {/* Content card */}
-        <Box surface rounded="lg" p={4}>
-          <Stack gap={2}>
+        <div className="bg-mrbd-surface rounded-lg p-4">
+          <div className="flex flex-col gap-2">
             <Text weight="semibold">New message from Alex</Text>
             <Text size="sm" dim>
               Hey, are you free for lunch?
             </Text>
-          </Stack>
-        </Box>
+          </div>
+        </div>
 
         {/* Actions */}
-        <Stack direction="horizontal" gap={3}>
+        <div className="flex flex-row gap-3">
           <Button
             id="action-btn"
             variant="primary"
@@ -310,14 +283,14 @@ export default function MyMRBDApp() {
           <Button id="decline-btn" variant="ghost" icon="x" onPress={() => {}}>
             Decline
           </Button>
-        </Stack>
+        </div>
 
         {loading && (
-          <Stack align="center">
+          <div className="flex flex-col items-center">
             <LoadingIndicator variant="dots" size={24} />
-          </Stack>
+          </div>
         )}
-      </Stack>
+      </div>
 
       <NavigationBar
         items={[

@@ -24,20 +24,20 @@ The theme provides Tailwind v4 tokens via `@theme` — colors, fonts, shadows, a
 ## Quick Start
 
 ```tsx
-import { DisplayRoot, Button, NavigationBar, Text, Stack } from 'mrbd-ui-kit';
+import { DisplayRoot, Button, NavigationBar, Text } from 'mrbd-ui-kit';
 import { useIsMRBD } from 'mrbd-ui-kit';
 
 export default function App() {
   return (
     <DisplayRoot>
-      <Stack direction="vertical" gap={4} className="p-6">
+      <div className="flex flex-col gap-4 p-6">
         <Text size="xl" weight="bold">Hello, Display</Text>
         <Text dim>Glanceable UI for your glasses.</Text>
 
         <Button id="action-btn" variant="primary" onPress={() => console.log('pressed!')}>
           Get Started
         </Button>
-      </Stack>
+      </div>
 
       <NavigationBar
         items={[
@@ -106,40 +106,6 @@ Display-optimized typography with enforced minimum font weight.
 | `dim` | `boolean` | `false` | Use dimmed text color |
 | `as` | `'p' \| 'span' \| 'h1' \| 'h2' \| 'h3' \| 'label'` | `'span'` | HTML element |
 
-#### `<Box>`
-
-Layout primitive with surface and padding props.
-
-```tsx
-<Box surface rounded="lg" p={4}>
-  <Text>Card content</Text>
-</Box>
-```
-
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `surface` | `boolean` | `false` | Apply surface background |
-| `p`, `px`, `py` | `number` | — | Padding (Tailwind spacing scale) |
-| `rounded` | `'none' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'none'` | Border radius |
-| `as` | `ElementType` | `'div'` | HTML element |
-
-#### `<Stack>`
-
-Flex layout helper.
-
-```tsx
-<Stack direction="horizontal" gap={3} align="center">
-  <Icon name="bell" />
-  <Text>Notification</Text>
-</Stack>
-```
-
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `direction` | `'vertical' \| 'horizontal'` | `'vertical'` | Flex direction |
-| `gap` | `number` | `2` | Gap between items (Tailwind spacing) |
-| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` | `'stretch'` | Cross-axis alignment |
-| `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around'` | `'start'` | Main-axis justification |
 
 #### `<Icon>`
 

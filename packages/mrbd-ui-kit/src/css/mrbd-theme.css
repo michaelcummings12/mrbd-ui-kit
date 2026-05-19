@@ -1,3 +1,5 @@
+@source "../../dist";
+
 @theme {
   /* Colors — additive display safe palette */
   --color-mrbd-bg: rgba(0, 0, 0, 0);
@@ -21,4 +23,5 @@
   --shadow-mrbd-glow: 0 0 8px rgba(255, 255, 255, 0.15);
   --shadow-mrbd-glow-accent: 0 0 12px rgba(100, 180, 255, 0.3);
   --shadow-mrbd-glow-focus: 0 0 0 2px rgba(100, 180, 255, 0.5);
+  --shadow-mrbd-glow-inner: inset 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 0 0 6px rgba(255, 255, 255, 0.02), inset 0 0 18px 6px rgba(255, 255, 255, 0.1);
 }

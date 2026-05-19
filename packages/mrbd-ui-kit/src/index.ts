@@ -2,8 +2,6 @@
 export { DisplayRoot } from './components/display-root';
 export { Text } from './components/text';
 export { Icon } from './components/icon';
-export { Box } from './components/box';
-export { Stack } from './components/stack';
 export { Focusable } from './components/focusable';
 
 // Components — Composites
@@ -19,9 +17,7 @@ export { useIsMRBD } from './hooks/use-is-mrbd';
 // Types — Components
 export type { DisplayRootProps } from './components/display-root';
 export type { TextProps } from './components/text';
-export type { IconProps, BuiltInIcon } from './components/icon';
-export type { BoxProps } from './components/box';
-export type { StackProps } from './components/stack';
+export type { IconProps } from './components/icon';
 export type { FocusableProps } from './components/focusable';
 export type { ButtonProps } from './components/button';
 export type { NavigationBarProps, NavItem } from './components/navigation-bar';

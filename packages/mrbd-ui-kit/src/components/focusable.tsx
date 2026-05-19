@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, type ReactNode } from 'react';
-import { useFocusContext } from './display-root';
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { useFocusContext } from "./display-root";
 
 export interface FocusableProps {
   children: ReactNode;
@@ -68,7 +68,7 @@ export function Focusable({
   // Handle Enter key for onSelect
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !disabled) {
+      if (e.key === "Enter" && !disabled) {
         e.preventDefault();
         e.stopPropagation();
         callbacksRef.current.onSelect?.();
@@ -82,7 +82,7 @@ export function Focusable({
       ref={elementRef}
       id={id}
       tabIndex={disabled ? -1 : 0}
-      className={`mrbd-focusable ${className ?? ''}`.trim()}
+      className={`mrbd-focusable ${className ?? ""}`.trim()}
       onKeyDown={handleKeyDown}
       aria-disabled={disabled || undefined}
     >

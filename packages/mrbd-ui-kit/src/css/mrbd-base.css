@@ -2,59 +2,39 @@
    Using @font-face instead of @import url() to avoid CSS ordering issues.
    Consumers can override by loading their own Inter font. */
 @font-face {
-  font-family: 'Inter';
+  font-family: "Inter";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZs.woff2') format('woff2');
+  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZs.woff2")
+    format("woff2");
 }
 
 @font-face {
-  font-family: 'Inter';
+  font-family: "Inter";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZs.woff2') format('woff2');
+  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZs.woff2")
+    format("woff2");
 }
 
 @font-face {
-  font-family: 'Inter';
+  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZs.woff2') format('woff2');
-}
-
-/* Root display container */
-.mrbd-root {
-  width: 600px;
-  height: 600px;
-  overflow: hidden;
-  position: relative;
-  background: transparent;
-  font-family: var(--font-mrbd);
-  font-weight: 500;
-  color: var(--color-mrbd-text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  user-select: none;
-  cursor: default;
-  line-height: 1.4;
+  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZs.woff2")
+    format("woff2");
 }
 
 /* Focus ring — outer glow, never outline or box-shadow border */
 .mrbd-focusable:focus-visible {
   outline: none;
-  box-shadow: var(--shadow-mrbd-glow-focus);
-  border-radius: 8px;
 }
 
 .mrbd-focusable:focus {
   outline: none;
-}
-
-.mrbd-focusable[data-focused='true'] {
-  box-shadow: var(--shadow-mrbd-glow-focus);
 }
 
 /* Hide scrollbars everywhere inside the display */

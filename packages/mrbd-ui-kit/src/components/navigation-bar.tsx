@@ -1,11 +1,12 @@
+import type { ElementType } from 'react';
 import { Focusable } from './focusable';
-import { Icon, type BuiltInIcon } from './icon';
+import { Icon } from './icon';
 import { Text } from './text';
 
 export interface NavItem {
   id: string;
   label: string;
-  icon: BuiltInIcon;
+  icon: ElementType;
 }
 
 export interface NavigationBarProps {
@@ -34,7 +35,7 @@ export function NavigationBar({ items, activeId, onSelect, className }: Navigati
           >
             <div className="flex flex-col items-center justify-center gap-1 px-3 py-2 relative">
               <Icon
-                name={item.icon}
+                icon={item.icon}
                 size={20}
                 color={isActive ? 'var(--color-mrbd-accent)' : 'var(--color-mrbd-text-dim)'}
               />

@@ -5,13 +5,14 @@ import {
   useEffect,
   useRef,
   type ReactNode,
-} from 'react';
+} from "react";
 import {
   createFocusEngine,
   type DpadDirection,
   type FocusEngine,
   type FocusEngineOptions,
-} from '../focus/engine';
+} from "../focus/engine";
+import { cn } from "../lib/cn";
 
 export interface DisplayRootProps {
   children: ReactNode;
@@ -32,18 +33,18 @@ export function useFocusContext(): FocusContextValue {
   const ctx = useContext(FocusContext);
   if (!ctx) {
     throw new Error(
-      'useFocusContext must be used within a <DisplayRoot>. ' +
-        'Wrap your MRBD app in <DisplayRoot> to enable focus management.',
+      "useFocusContext must be used within a <DisplayRoot>. " +
+        "Wrap your MRBD app in <DisplayRoot> to enable focus management.",
     );
   }
   return ctx;
 }
 
 const ARROW_TO_DIRECTION: Record<string, DpadDirection> = {
-  ArrowUp: 'up',
-  ArrowDown: 'down',
-  ArrowLeft: 'left',
-  ArrowRight: 'right',
+  ArrowUp: "up",
+  ArrowDown: "down",
+  ArrowLeft: "left",
+  ArrowRight: "right",
 };
 
 export function DisplayRoot({
@@ -73,7 +74,7 @@ export function DisplayRoot({
         return;
       }
 
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         e.preventDefault();
         const focusedId = engine.getCurrentId();
         if (focusedId && onSelect) {
@@ -88,9 +89,9 @@ export function DisplayRoot({
     const root = rootRef.current;
     if (!root) return;
 
-    root.addEventListener('keydown', handleKeyDown);
+    root.addEventListener("keydown", handleKeyDown);
     return () => {
-      root.removeEventListener('keydown', handleKeyDown);
+      root.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
 
@@ -107,7 +108,10 @@ export function DisplayRoot({
     <FocusContext.Provider value={contextValue}>
       <div
         ref={rootRef}
-        className={`mrbd-root ${className ?? ''}`.trim()}
+        className={cn(
+          "m-auto p-4 size-150 overflow-hidden relative bg-transparent",
+          className,
+        )}
         tabIndex={-1}
       >
         {children}
