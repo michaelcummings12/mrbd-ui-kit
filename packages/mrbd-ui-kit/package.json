@@ -42,14 +42,18 @@
   },
   "files": [
     "dist",
-    "src/css"
+    "src/css",
+    "LICENSE",
+    "README.md",
+    "package.json"
   ],
   "scripts": {
+    "prepack": "cp ../../README.md ./README.md",
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo",
-        "lint": "eslint .",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
   "peerDependencies": {

@@ -28,13 +28,13 @@ jobs:
         id: check
         working-directory: packages/mrbd-ui-kit
         run: |
-          VERSION=$(npm pkg get version | tr -d '"')
-          NAME=$(npm pkg get name | tr -d '"')
-          PUBLISHED_VERSION=$(npm view "$NAME@$VERSION" version 2>/dev/null || echo "")
+          VERSION=$(node -p "require('./package.json').version")
+          NAME=$(node -p "require('./package.json').name")
+          PUBLISHED_VERSION=$(npm view "$NAME" version 2>/dev/null || echo "")
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-          if [ -z "$PUBLISHED_VERSION" ]; then
+          if [ "$VERSION" != "$PUBLISHED_VERSION" ]; then
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
