@@ -1,6 +1,6 @@
-import { headers } from 'next/headers';
+import { headers } from "next/headers";
 
-const MRBD_UA_TOKEN = 'Greatwhite';
+const MRBD_UA_TOKEN = "Greatwhite";
 
 /**
  * Detect MRBD device in React Server Components and Server Actions.
@@ -22,6 +22,6 @@ const MRBD_UA_TOKEN = 'Greatwhite';
  * ```
  */
 export async function isMRBDServer(): Promise<boolean> {
-  const h = await headers();
-  return (h.get('user-agent') ?? '').includes(MRBD_UA_TOKEN);
+	const h = await headers();
+	return (h.get("user-agent") ?? "").includes(MRBD_UA_TOKEN);
 }

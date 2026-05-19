@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const MRBD_UA_TOKEN = 'Greatwhite';
+const MRBD_UA_TOKEN = "Greatwhite";
 
 /**
  * Client-side hook to detect if the current device is a Meta Ray-Ban Display.
@@ -20,11 +20,11 @@ const MRBD_UA_TOKEN = 'Greatwhite';
  * ```
  */
 export function useIsMRBD(): boolean {
-  const [isMRBD, setIsMRBD] = useState(false);
+	const [isMRBD, setIsMRBD] = useState(false);
 
-  useEffect(() => {
-    setIsMRBD(navigator.userAgent.includes(MRBD_UA_TOKEN));
-  }, []);
+	useEffect(() => {
+		setIsMRBD(navigator.userAgent.includes(MRBD_UA_TOKEN));
+	}, []);
 
-  return isMRBD;
+	return isMRBD;
 }

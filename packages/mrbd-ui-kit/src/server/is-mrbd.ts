@@ -1,4 +1,4 @@
-const MRBD_UA_TOKEN = 'Greatwhite';
+const MRBD_UA_TOKEN = "Greatwhite";
 
 /**
  * Check a raw user agent string for MRBD device.
@@ -15,7 +15,7 @@ const MRBD_UA_TOKEN = 'Greatwhite';
  * ```
  */
 export function isMRBD(userAgent: string): boolean {
-  return userAgent.includes(MRBD_UA_TOKEN);
+	return userAgent.includes(MRBD_UA_TOKEN);
 }
 
 /**
@@ -33,5 +33,5 @@ export function isMRBD(userAgent: string): boolean {
  * ```
  */
 export function isMRBDFromHeaders(headers: Headers): boolean {
-  return isMRBD(headers.get('user-agent') ?? '');
+	return isMRBD(headers.get("user-agent") ?? "");
 }

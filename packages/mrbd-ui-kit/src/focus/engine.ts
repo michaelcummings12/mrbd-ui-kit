@@ -1,47 +1,47 @@
-export type DpadDirection = 'up' | 'down' | 'left' | 'right';
+export type DpadDirection = "up" | "down" | "left" | "right";
 
 export interface FocusableEntry {
-  id: string;
-  element: HTMLElement;
-  group?: string;
+	id: string;
+	element: HTMLElement;
+	group?: string;
 }
 
 export interface FocusEngineOptions {
-  /** Wrap focus at boundaries. @default true */
-  wrap?: boolean;
-  /** ID to focus on mount */
-  initialFocusId?: string;
+	/** Wrap focus at boundaries. @default true */
+	wrap?: boolean;
+	/** ID to focus on mount */
+	initialFocusId?: string;
 }
 
 export interface FocusEngine {
-  register: (entry: FocusableEntry) => void;
-  unregister: (id: string) => void;
-  move: (direction: DpadDirection) => void;
-  focusById: (id: string) => void;
-  getCurrentId: () => string | null;
-  subscribe: (listener: (id: string | null) => void) => () => void;
-  destroy: () => void;
+	register: (entry: FocusableEntry) => void;
+	unregister: (id: string) => void;
+	move: (direction: DpadDirection) => void;
+	focusById: (id: string) => void;
+	getCurrentId: () => string | null;
+	subscribe: (listener: (id: string | null) => void) => () => void;
+	destroy: () => void;
 }
 
 interface Rect {
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-  centerX: number;
-  centerY: number;
+	top: number;
+	bottom: number;
+	left: number;
+	right: number;
+	centerX: number;
+	centerY: number;
 }
 
 function getRect(el: HTMLElement): Rect {
-  const r = el.getBoundingClientRect();
-  return {
-    top: r.top,
-    bottom: r.bottom,
-    left: r.left,
-    right: r.right,
-    centerX: r.left + r.width / 2,
-    centerY: r.top + r.height / 2,
-  };
+	const r = el.getBoundingClientRect();
+	return {
+		top: r.top,
+		bottom: r.bottom,
+		left: r.left,
+		right: r.right,
+		centerX: r.left + r.width / 2,
+		centerY: r.top + r.height / 2
+	};
 }
 
 /**
@@ -50,20 +50,20 @@ function getRect(el: HTMLElement): Rect {
  * Small tolerance (1px) to avoid self-matching.
  */
 function filterByDirection(
-  direction: DpadDirection,
-  current: Rect,
-  candidates: Array<{ id: string; rect: Rect }>,
+	direction: DpadDirection,
+	current: Rect,
+	candidates: Array<{ id: string; rect: Rect }>
 ): Array<{ id: string; rect: Rect }> {
-  switch (direction) {
-    case 'up':
-      return candidates.filter((c) => c.rect.centerY < current.centerY - 1);
-    case 'down':
-      return candidates.filter((c) => c.rect.centerY > current.centerY + 1);
-    case 'left':
-      return candidates.filter((c) => c.rect.centerX < current.centerX - 1);
-    case 'right':
-      return candidates.filter((c) => c.rect.centerX > current.centerX + 1);
-  }
+	switch (direction) {
+		case "up":
+			return candidates.filter((c) => c.rect.centerY < current.centerY - 1);
+		case "down":
+			return candidates.filter((c) => c.rect.centerY > current.centerY + 1);
+		case "left":
+			return candidates.filter((c) => c.rect.centerX < current.centerX - 1);
+		case "right":
+			return candidates.filter((c) => c.rect.centerX > current.centerX + 1);
+	}
 }
 
 /**
@@ -76,188 +76,181 @@ function filterByDirection(
  * The penalty ensures elements roughly aligned on the movement axis are preferred
  * over elements that are closer but far off to the side.
  */
-function scoreCandidate(
-  direction: DpadDirection,
-  current: Rect,
-  candidate: Rect,
-): number {
-  const dx = candidate.centerX - current.centerX;
-  const dy = candidate.centerY - current.centerY;
+function scoreCandidate(direction: DpadDirection, current: Rect, candidate: Rect): number {
+	const dx = candidate.centerX - current.centerX;
+	const dy = candidate.centerY - current.centerY;
 
-  const isVertical = direction === 'up' || direction === 'down';
-  const primaryDist = isVertical ? Math.abs(dy) : Math.abs(dx);
-  const offAxisDist = isVertical ? Math.abs(dx) : Math.abs(dy);
+	const isVertical = direction === "up" || direction === "down";
+	const primaryDist = isVertical ? Math.abs(dy) : Math.abs(dx);
+	const offAxisDist = isVertical ? Math.abs(dx) : Math.abs(dy);
 
-  // Off-axis penalty: elements far off the movement axis are penalized
-  const OFF_AXIS_WEIGHT = 2.5;
-  return primaryDist + offAxisDist * OFF_AXIS_WEIGHT;
+	// Off-axis penalty: elements far off the movement axis are penalized
+	const OFF_AXIS_WEIGHT = 2.5;
+	return primaryDist + offAxisDist * OFF_AXIS_WEIGHT;
 }
 
 /**
  * For wrap-around: find the element on the opposite edge.
  * e.g., if moving "right" with no candidates, wrap to the leftmost element.
  */
-function getWrapTarget(
-  direction: DpadDirection,
-  entries: Array<{ id: string; rect: Rect }>,
-): string | null {
-  if (entries.length === 0) return null;
+function getWrapTarget(direction: DpadDirection, entries: Array<{ id: string; rect: Rect }>): string | null {
+	if (entries.length === 0) return null;
 
-  let best = entries[0];
-  for (const entry of entries) {
-    switch (direction) {
-      case 'up':
-        if (entry.rect.centerY > best.rect.centerY) best = entry;
-        break;
-      case 'down':
-        if (entry.rect.centerY < best.rect.centerY) best = entry;
-        break;
-      case 'left':
-        if (entry.rect.centerX > best.rect.centerX) best = entry;
-        break;
-      case 'right':
-        if (entry.rect.centerX < best.rect.centerX) best = entry;
-        break;
-    }
-  }
-  return best.id;
+	let best = entries[0];
+	for (const entry of entries) {
+		switch (direction) {
+			case "up":
+				if (entry.rect.centerY > best.rect.centerY) best = entry;
+				break;
+			case "down":
+				if (entry.rect.centerY < best.rect.centerY) best = entry;
+				break;
+			case "left":
+				if (entry.rect.centerX > best.rect.centerX) best = entry;
+				break;
+			case "right":
+				if (entry.rect.centerX < best.rect.centerX) best = entry;
+				break;
+		}
+	}
+	return best.id;
 }
 
 export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine {
-  const { wrap = true, initialFocusId } = options;
+	const { wrap = true, initialFocusId } = options;
 
-  const entries = new Map<string, FocusableEntry>();
-  let currentId: string | null = initialFocusId ?? null;
-  const listeners = new Set<(id: string | null) => void>();
+	const entries = new Map<string, FocusableEntry>();
+	let currentId: string | null = initialFocusId ?? null;
+	const listeners = new Set<(id: string | null) => void>();
 
-  function notify() {
-    for (const listener of listeners) {
-      listener(currentId);
-    }
-  }
+	function notify() {
+		for (const listener of listeners) {
+			listener(currentId);
+		}
+	}
 
-  function applyFocus(id: string | null) {
-    // Remove data-focused from previous
-    if (currentId) {
-      const prev = entries.get(currentId);
-      if (prev?.element) {
-        prev.element.setAttribute('data-focused', 'false');
-        prev.element.blur();
-      }
-    }
+	function applyFocus(id: string | null) {
+		// Remove data-focused from previous
+		if (currentId) {
+			const prev = entries.get(currentId);
+			if (prev?.element) {
+				prev.element.setAttribute("data-focused", "false");
+				prev.element.blur();
+			}
+		}
 
-    currentId = id;
+		currentId = id;
 
-    // Apply data-focused to new
-    if (currentId) {
-      const next = entries.get(currentId);
-      if (next?.element) {
-        next.element.setAttribute('data-focused', 'true');
-        next.element.focus({ preventScroll: true });
-      }
-    }
+		// Apply data-focused to new
+		if (currentId) {
+			const next = entries.get(currentId);
+			if (next?.element) {
+				next.element.setAttribute("data-focused", "true");
+				next.element.focus({ preventScroll: true });
+			}
+		}
 
-    notify();
-  }
+		notify();
+	}
 
-  function register(entry: FocusableEntry) {
-    entries.set(entry.id, entry);
+	function register(entry: FocusableEntry) {
+		entries.set(entry.id, entry);
 
-    // If this is the initial focus target, or the first registered element
-    if (entry.id === initialFocusId || (currentId === null && entries.size === 1)) {
-      // Defer to allow DOM to settle
-      requestAnimationFrame(() => applyFocus(entry.id));
-    }
-  }
+		// If this is the initial focus target, or the first registered element
+		if (entry.id === initialFocusId || (currentId === null && entries.size === 1)) {
+			// Defer to allow DOM to settle
+			requestAnimationFrame(() => applyFocus(entry.id));
+		}
+	}
 
-  function unregister(id: string) {
-    entries.delete(id);
-    if (currentId === id) {
-      // Focus first remaining entry, or null
-      const first = entries.keys().next().value;
-      applyFocus(first ?? null);
-    }
-  }
+	function unregister(id: string) {
+		entries.delete(id);
+		if (currentId === id) {
+			// Focus first remaining entry, or null
+			const first = entries.keys().next().value;
+			applyFocus(first ?? null);
+		}
+	}
 
-  function move(direction: DpadDirection) {
-    if (entries.size === 0) return;
+	function move(direction: DpadDirection) {
+		if (entries.size === 0) return;
 
-    // If nothing focused, focus the first entry
-    if (currentId === null) {
-      const first = entries.keys().next().value;
-      if (first) applyFocus(first);
-      return;
-    }
+		// If nothing focused, focus the first entry
+		if (currentId === null) {
+			const first = entries.keys().next().value;
+			if (first) applyFocus(first);
+			return;
+		}
 
-    const currentEntry = entries.get(currentId);
-    if (!currentEntry) return;
+		const currentEntry = entries.get(currentId);
+		if (!currentEntry) return;
 
-    const currentRect = getRect(currentEntry.element);
+		const currentRect = getRect(currentEntry.element);
 
-    // Build candidate list (excluding current, same group if grouped)
-    const candidates: Array<{ id: string; rect: Rect }> = [];
-    for (const [id, entry] of entries) {
-      if (id === currentId) continue;
-      // If current has a group, only consider same group
-      if (currentEntry.group && entry.group !== currentEntry.group) continue;
-      candidates.push({ id, rect: getRect(entry.element) });
-    }
+		// Build candidate list (excluding current, same group if grouped)
+		const candidates: Array<{ id: string; rect: Rect }> = [];
+		for (const [id, entry] of entries) {
+			if (id === currentId) continue;
+			// If current has a group, only consider same group
+			if (currentEntry.group && entry.group !== currentEntry.group) continue;
+			candidates.push({ id, rect: getRect(entry.element) });
+		}
 
-    // Filter to candidates in the correct direction
-    const directional = filterByDirection(direction, currentRect, candidates);
+		// Filter to candidates in the correct direction
+		const directional = filterByDirection(direction, currentRect, candidates);
 
-    if (directional.length > 0) {
-      // Score and pick the best
-      let bestId = directional[0].id;
-      let bestScore = scoreCandidate(direction, currentRect, directional[0].rect);
+		if (directional.length > 0) {
+			// Score and pick the best
+			let bestId = directional[0].id;
+			let bestScore = scoreCandidate(direction, currentRect, directional[0].rect);
 
-      for (let i = 1; i < directional.length; i++) {
-        const score = scoreCandidate(direction, currentRect, directional[i].rect);
-        if (score < bestScore) {
-          bestScore = score;
-          bestId = directional[i].id;
-        }
-      }
+			for (let i = 1; i < directional.length; i++) {
+				const score = scoreCandidate(direction, currentRect, directional[i].rect);
+				if (score < bestScore) {
+					bestScore = score;
+					bestId = directional[i].id;
+				}
+			}
 
-      applyFocus(bestId);
-    } else if (wrap) {
-      // No candidates in direction — wrap to opposite edge
-      const allWithRects = candidates.map((c) => ({ id: c.id, rect: c.rect }));
-      const wrapId = getWrapTarget(direction, allWithRects);
-      if (wrapId) applyFocus(wrapId);
-    }
-  }
+			applyFocus(bestId);
+		} else if (wrap) {
+			// No candidates in direction — wrap to opposite edge
+			const allWithRects = candidates.map((c) => ({ id: c.id, rect: c.rect }));
+			const wrapId = getWrapTarget(direction, allWithRects);
+			if (wrapId) applyFocus(wrapId);
+		}
+	}
 
-  function focusById(id: string) {
-    if (entries.has(id)) {
-      applyFocus(id);
-    }
-  }
+	function focusById(id: string) {
+		if (entries.has(id)) {
+			applyFocus(id);
+		}
+	}
 
-  function getCurrentId() {
-    return currentId;
-  }
+	function getCurrentId() {
+		return currentId;
+	}
 
-  function subscribe(listener: (id: string | null) => void) {
-    listeners.add(listener);
-    return () => {
-      listeners.delete(listener);
-    };
-  }
+	function subscribe(listener: (id: string | null) => void) {
+		listeners.add(listener);
+		return () => {
+			listeners.delete(listener);
+		};
+	}
 
-  function destroy() {
-    entries.clear();
-    listeners.clear();
-    currentId = null;
-  }
+	function destroy() {
+		entries.clear();
+		listeners.clear();
+		currentId = null;
+	}
 
-  return {
-    register,
-    unregister,
-    move,
-    focusById,
-    getCurrentId,
-    subscribe,
-    destroy,
-  };
+	return {
+		register,
+		unregister,
+		move,
+		focusById,
+		getCurrentId,
+		subscribe,
+		destroy
+	};
 }
