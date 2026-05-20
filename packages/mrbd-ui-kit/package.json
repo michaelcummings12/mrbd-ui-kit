@@ -52,7 +52,7 @@
     "package.json"
   ],
   "scripts": {
-    "prepack": "cp ../../README.md ./README.md",
+    "prepack": "cp ../../README.md ./README.md && cp ../../LICENSE ./LICENSE",
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
