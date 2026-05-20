@@ -225,10 +225,8 @@ const isMRBD = await isMRBDServer(); // boolean
 
 Colors: `mrbd-bg`, `mrbd-surface`, `mrbd-surface-hover`, `mrbd-surface-active`, `mrbd-text`, `mrbd-text-dim`, `mrbd-accent`, `mrbd-danger`, `mrbd-success`
 Shadows: `mrbd-glow`, `mrbd-glow-accent`, `mrbd-glow-focus`
-Font: `mrbd`
-Sizing: `mrbd` (600px for width/height)
 
-Use as: `bg-mrbd-surface`, `text-mrbd-text`, `shadow-mrbd-glow`, `font-mrbd`, `w-mrbd`, `h-mrbd`
+Use as: `bg-mrbd-surface`, `text-mrbd-text`, `shadow-mrbd-glow`
 
 ## Full App Example
 

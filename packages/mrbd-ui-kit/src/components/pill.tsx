@@ -11,7 +11,7 @@ export function Pill({ children, className }: PillProps) {
 		<span
 			className={cn(
 				className,
-				"relative m-auto rounded-full border-t border-l border-white/10 bg-linear-to-b from-white/20 to-transparent p-3",
+				"relative m-auto h-12 rounded-full border-t border-l border-mrbd-tint/10 bg-linear-to-b from-mrbd-tint/20 to-transparent px-4",
 				className
 			)}>
 			{children}

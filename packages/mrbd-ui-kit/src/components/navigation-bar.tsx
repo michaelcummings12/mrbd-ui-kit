@@ -21,7 +21,7 @@ export interface NavigationBarProps {
 export function NavigationBar({ items, activeId, onSelect, className }: NavigationBarProps) {
 	return (
 		<nav
-			className={`bg-mrbd-surface absolute right-0 bottom-0 left-0 flex h-16 items-center justify-around border-t border-white/5 ${className ?? ""}`.trim()}>
+			className={`bg-mrbd-surface absolute right-0 bottom-0 left-0 flex h-16 items-center justify-around border-t border-mrbd-tint/5 ${className ?? ""}`.trim()}>
 			{items.map((item) => {
 				const isActive = item.id === activeId;
 

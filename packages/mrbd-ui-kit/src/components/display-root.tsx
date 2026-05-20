@@ -86,7 +86,7 @@ export function DisplayRoot({ children, className, focusOptions, onSelect }: Dis
 
 	return (
 		<FocusContext.Provider value={contextValue}>
-			<div ref={rootRef} className={cn("relative m-auto size-150 overflow-hidden bg-transparent p-4", className)} tabIndex={-1}>
+			<div ref={rootRef} className={cn("relative m-auto size-150 overflow-hidden bg-black p-2", className)} tabIndex={-1}>
 				{children}
 			</div>
 		</FocusContext.Provider>

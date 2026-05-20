@@ -29,7 +29,6 @@ const WEIGHT_CLASSES: Record<NonNullable<TextProps["weight"]>, string> = {
 
 export function Text({ children, size = "md", weight = "medium", glow = false, dim = false, as: Tag = "span", className }: TextProps) {
 	const classes = [
-		"font-mrbd",
 		SIZE_CLASSES[size],
 		WEIGHT_CLASSES[weight],
 		dim ? "text-mrbd-text-dim" : "text-mrbd-text",

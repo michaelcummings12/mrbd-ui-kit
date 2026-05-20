@@ -116,6 +116,47 @@ function getWrapTarget(direction: DpadDirection, entries: Array<{ id: string; re
 	return best.id;
 }
 
+const SCROLL_MARGIN = 12;
+
+/**
+ * Find the nearest scrollable ancestor and scroll just enough to keep
+ * `element` fully visible, with SCROLL_MARGIN clearance on top/bottom.
+ * Unlike native scrollIntoView, this only scrolls the nearest scroll
+ * container (not the root viewport) and respects gradient overlays.
+ */
+function scrollIntoScrollContainer(element: HTMLElement) {
+	const container = findScrollParent(element);
+	if (!container) return;
+
+	const elRect = element.getBoundingClientRect();
+	const ctRect = container.getBoundingClientRect();
+
+	// How far off the element is from the visible area (with margin)
+	const offTop = elRect.top - ctRect.top - SCROLL_MARGIN;
+	const offBottom = elRect.bottom - ctRect.bottom + SCROLL_MARGIN;
+
+	if (offTop < 0) {
+		// Element is above visible area — scroll up
+		container.scrollBy({ top: offTop, behavior: "smooth" });
+	} else if (offBottom > 0) {
+		// Element is below visible area — scroll down
+		container.scrollBy({ top: offBottom, behavior: "smooth" });
+	}
+}
+
+/** Walk up the DOM to find the first ancestor with overflow scroll/auto. */
+function findScrollParent(el: HTMLElement): HTMLElement | null {
+	let current = el.parentElement;
+	while (current) {
+		const style = getComputedStyle(current);
+		if (/(auto|scroll)/.test(style.overflowY)) {
+			return current;
+		}
+		current = current.parentElement;
+	}
+	return null;
+}
+
 export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine {
 	const { wrap = true, initialFocusId } = options;
 
@@ -147,6 +188,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 			if (next?.element) {
 				next.element.setAttribute("data-focused", "true");
 				next.element.focus({ preventScroll: true });
+				scrollIntoScrollContainer(next.element);
 			}
 		}
 

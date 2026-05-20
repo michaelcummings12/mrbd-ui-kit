@@ -28,6 +28,32 @@ Add the theme and base styles to your app's global CSS:
 
 The theme provides Tailwind v4 tokens via `@theme` — colors, fonts, shadows, and sizing designed specifically for additive displays.
 
+### Font Configuration
+
+The UI kit ships with no default font bundled to keep your application lightweight. We highly recommend using **Nunito** (weights 500, 600, and 700), as we've found it looks exceptionally clear and is highly legible on the Meta Ray-Ban Display.
+
+You can configure it in a Next.js application using `next/font/google`:
+
+```tsx
+// app/layout.tsx
+import { Nunito } from "next/font/google";
+import "./globals.css";
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-nunito"
+});
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={nunito.variable}>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
 ## Quick Start
 
 ```tsx
@@ -296,9 +322,6 @@ When you import `mrbd-ui-kit/css/theme`, these Tailwind utilities become availab
 - `shadow-mrbd-glow` — Subtle white glow
 - `shadow-mrbd-glow-accent` — Blue accent glow
 - `shadow-mrbd-glow-focus` — Focus ring glow
-
-### Typography
-- `font-mrbd` — Inter/Roboto font stack
 
 ### Sizing
 - `w-mrbd` / `h-mrbd` — 600px (full display)

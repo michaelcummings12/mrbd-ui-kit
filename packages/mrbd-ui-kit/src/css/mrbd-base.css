@@ -1,33 +1,3 @@
-/* Inter font — loaded via Google Fonts CDN
-   Using @font-face instead of @import url() to avoid CSS ordering issues.
-   Consumers can override by loading their own Inter font. */
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZs.woff2")
-    format("woff2");
-}
-
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZs.woff2")
-    format("woff2");
-}
-
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZs.woff2")
-    format("woff2");
-}
-
 /* Focus ring — outer glow, never outline or box-shadow border */
 .mrbd-focusable:focus-visible {
   outline: none;
@@ -43,6 +13,11 @@
 }
 .mrbd-root *::-webkit-scrollbar {
   display: none;
+}
+
+/* Default transition easing — smooth ease-in-out for all Tailwind transition utilities */
+@theme {
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Loading animations — CSS only, no JS animation loops */

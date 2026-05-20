@@ -1,14 +1,20 @@
 @source "../../dist";
 
 @theme {
+  /* Tint — the single color that drives the entire palette.
+     Override in your globals.css:
+       :root { --color-mrbd-tint: #14b8a6; }
+     Default: white (#ffffff) */
+  --color-mrbd-tint: #ffffff;
+
   /* Colors  */
   --color-mrbd-bg: rgba(0, 0, 0, 0);
-  --color-mrbd-surface: rgba(255, 255, 255, 0.06);
-  --color-mrbd-surface-hover: rgba(255, 255, 255, 0.12);
-  --color-mrbd-surface-active: rgba(255, 255, 255, 0.18);
+  --color-mrbd-surface: color-mix(in srgb, var(--color-mrbd-tint) 6%, transparent);
+  --color-mrbd-surface-hover: color-mix(in srgb, var(--color-mrbd-tint) 12%, transparent);
+  --color-mrbd-surface-active: color-mix(in srgb, var(--color-mrbd-tint) 18%, transparent);
   --color-mrbd-text: rgba(255, 255, 255, 0.92);
   --color-mrbd-text-dim: rgba(255, 255, 255, 0.55);
-  --color-mrbd-accent: rgba(100, 180, 255, 0.9);
+  --color-mrbd-accent: color-mix(in srgb, var(--color-mrbd-tint) 90%, transparent);
   --color-mrbd-danger: rgba(255, 100, 100, 0.85);
   --color-mrbd-success: rgba(100, 255, 160, 0.85);
 
@@ -16,12 +22,9 @@
   --width-mrbd: 600px;
   --height-mrbd: 600px;
 
-  /* Typography */
-  --font-mrbd: 'Inter', 'Roboto', sans-serif;
-
   /* Outer glows */
-  --shadow-mrbd-glow: 0 0 8px rgba(255, 255, 255, 0.15);
-  --shadow-mrbd-glow-accent: 0 0 12px rgba(100, 180, 255, 0.3);
-  --shadow-mrbd-glow-focus: 0 0 0 2px rgba(100, 180, 255, 0.5);
-  --shadow-mrbd-glow-inner: inset -1.5px -1.5px 6px 4.5px rgba(255, 255, 255, 0.333), inset 0 0 18px 12px rgba(255, 255, 255, 0.1);
+  --shadow-mrbd-glow: 0 0 8px color-mix(in srgb, var(--color-mrbd-tint) 15%, transparent);
+  --shadow-mrbd-glow-accent: 0 0 12px color-mix(in srgb, var(--color-mrbd-tint) 30%, transparent);
+  --shadow-mrbd-glow-focus: 0 0 0 2px color-mix(in srgb, var(--color-mrbd-tint) 50%, transparent);
+  --shadow-mrbd-glow-inner: inset -2px -2px 12px 6px color-mix(in srgb, var(--color-mrbd-tint) 40%, transparent), inset 0 0 18px 12px color-mix(in srgb, var(--color-mrbd-tint) 10%, transparent);
 }
