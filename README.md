@@ -4,7 +4,7 @@
 [![GitHub](https://img.shields.io/github/license/michaelcummings12/mrbd-ui-kit)](https://github.com/michaelcummings12/mrbd-ui-kit/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/michaelcummings12/mrbd-ui-kit?style=social)](https://github.com/michaelcummings12/mrbd-ui-kit)
 
-React component library for [Meta Ray-Ban Display](https://www.meta.com/smart-glasses/) web apps. Opinionated defaults for the 600×600 additive display. Fully customizable.
+React component library for [Meta Ray-Ban Display](https://www.meta.com/smart-glasses/) web apps. Opinionated defaults, fully customizable.
 
 See it in action: [**mrbd.fun live example app**](https://www.mrbd.fun/)
 
@@ -17,7 +17,7 @@ npm install mrbd-ui-kit
 
 ## Setup
 
-Add the MRBD theme and base styles to your app's global CSS:
+Add the theme and base styles to your app's global CSS:
 
 ```css
 /* global.css */

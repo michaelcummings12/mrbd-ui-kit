@@ -16,9 +16,9 @@ export interface TextProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<TextProps["size"]>, string> = {
-	sm: "text-lg",
-	md: "text-xl",
-	lg: "text-2xl"
+	sm: "text-xl",
+	md: "text-2xl",
+	lg: "text-3xl"
 };
 
 const WEIGHT_CLASSES: Record<NonNullable<TextProps["weight"]>, string> = {

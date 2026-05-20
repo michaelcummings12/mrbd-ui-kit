@@ -1,7 +1,7 @@
 @source "../../dist";
 
 @theme {
-  /* Colors — additive display safe palette */
+  /* Colors  */
   --color-mrbd-bg: rgba(0, 0, 0, 0);
   --color-mrbd-surface: rgba(255, 255, 255, 0.06);
   --color-mrbd-surface-hover: rgba(255, 255, 255, 0.12);
@@ -19,9 +19,9 @@
   /* Typography */
   --font-mrbd: 'Inter', 'Roboto', sans-serif;
 
-  /* Outer glows — NEVER use drop-shadow (looks like dirt on lens) */
+  /* Outer glows */
   --shadow-mrbd-glow: 0 0 8px rgba(255, 255, 255, 0.15);
   --shadow-mrbd-glow-accent: 0 0 12px rgba(100, 180, 255, 0.3);
   --shadow-mrbd-glow-focus: 0 0 0 2px rgba(100, 180, 255, 0.5);
-  --shadow-mrbd-glow-inner: inset 0 0 6px 6px rgba(255, 255, 255, 0.5), inset 0 0 18px 12px rgba(255, 255, 255, 0.1);
+  --shadow-mrbd-glow-inner: inset -1.5px -1.5px 6px 4.5px rgba(255, 255, 255, 0.333), inset 0 0 18px 12px rgba(255, 255, 255, 0.1);
 }
