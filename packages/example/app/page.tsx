@@ -1,29 +1,33 @@
 "use client";
 
-import { Check, X } from "lucide-react";
-import { Button, Icon, LoadingIndicator, Text } from "mrbd-ui-kit";
+import { Check, Settings, X } from "lucide-react";
+import { Button, Icon, LoadingIndicator, Pill, Text } from "mrbd-ui-kit";
 
 export default function HomeTab() {
 	return (
 		<div className="flex flex-col gap-4">
-			<div className="flex flex-col gap-2">
+			<Pill>
+				<div className="flex flex-row items-center gap-2">
+					<div className="size-2 rounded-full bg-white" />
+					<div className="size-2 rounded-full bg-white/50" />
+					<div className="size-2 rounded-full bg-white/50" />
+				</div>
+			</Pill>
+			<div className="flex flex-col items-center gap-2">
 				<Text size="lg" weight="bold">
 					mrbd-ui-kit
 				</Text>
-				<Text size="xs" dim>
+				<Text size="sm" dim>
 					The easiest way to build an app for Meta Ray-Ban Display
 				</Text>
 			</div>
-			<Button id={"card"} className="w-full">
-				<div className="flex flex-row items-center gap-2">
-					<div className="bg-mrbd-accent/20 flex h-8 w-8 items-center justify-center rounded-full">
-						<Icon icon={Check} size={16} color="var(--color-mrbd-accent)" />
+			<Button id="button" className="w-full">
+				<div className="flex w-full flex-row items-center gap-4">
+					<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
+						<Icon icon={Settings} size={28} color="white" />
 					</div>
-					<div className="flex flex-col">
-						<Text weight="semibold">New message from Alex</Text>
-						<Text size="sm" dim>
-							Hey, are you free for lunch?
-						</Text>
+					<div className="flex flex-col items-start">
+						<Text weight="semibold">Settings</Text>
 					</div>
 				</div>
 			</Button>

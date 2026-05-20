@@ -29,7 +29,7 @@ export function NavigationBar({ items, activeId, onSelect, className }: Navigati
 					<Focusable key={item.id} id={item.id} group="mrbd-nav" onSelect={() => onSelect(item.id)}>
 						<div className="relative flex flex-col items-center justify-center gap-1 px-3 py-2">
 							<Icon icon={item.icon} size={20} color={isActive ? "var(--color-mrbd-accent)" : "var(--color-mrbd-text-dim)"} />
-							<Text size="xs" weight="semibold" dim={!isActive}>
+							<Text weight="semibold" dim={!isActive}>
 								{item.label}
 							</Text>
 							{/* Active indicator — accent underline */}

@@ -8,6 +8,7 @@ export { Text } from "./components/text";
 export { Button } from "./components/button";
 export { LoadingIndicator } from "./components/loading-indicator";
 export { NavigationBar } from "./components/navigation-bar";
+export { Pill } from "./components/pill";
 
 // Hooks
 export { useDpad } from "./hooks/use-dpad";
@@ -21,6 +22,7 @@ export type { FocusableProps } from "./components/focusable";
 export type { IconProps } from "./components/icon";
 export type { LoadingIndicatorProps } from "./components/loading-indicator";
 export type { NavItem, NavigationBarProps } from "./components/navigation-bar";
+export type { PillProps } from "./components/pill";
 export type { TextProps } from "./components/text";
 
 // Types — Hooks

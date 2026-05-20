@@ -27,7 +27,7 @@ export interface ButtonProps {
 const VARIANT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
 	primary: "bg-mrbd-accent text-black font-bold hover:brightness-110 active:brightness-90",
 	secondary: "bg-mrbd-surface text-mrbd-text border border-white/10 hover:bg-mrbd-surface-hover active:bg-mrbd-surface-active",
-	ghost: "bg-white/5 text-mrbd-text active:bg-white/10",
+	ghost: "border-l border-t border-white/10 bg-white/20 text-mrbd-text",
 	danger: "bg-mrbd-danger text-black font-bold hover:brightness-110 active:brightness-90"
 };
 
@@ -44,13 +44,11 @@ const ICON_SIZE: Record<NonNullable<ButtonProps["size"]>, number> = {
 };
 
 export function Button({ children, variant = "ghost", size = "md", id, icon, disabled, onPress, group, className }: ButtonProps) {
-	const classes = [];
-
 	return (
 		<Focusable id={id} onSelect={onPress} disabled={disabled} group={group} className="group">
 			<button
 				className={cn(
-					"font-mrbd inline-flex items-center justify-center font-semibold transition-all duration-150 group-focus:scale-105 hover:scale-105 focus:outline-none",
+					"font-mrbd inline-flex items-center justify-center font-semibold transition-all duration-150 group-focus:scale-105 hover:scale-102 focus:outline-none",
 					VARIANT_CLASSES[variant],
 					SIZE_CLASSES[size],
 					"hover:shadow-mrbd-glow-inner group-focus:shadow-mrbd-glow-inner",

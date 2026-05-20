@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export interface TextProps {
 	children: ReactNode;
 	/** @default 'md' */
-	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+	size?: "sm" | "md" | "lg";
 	/** @default 'medium'. Minimum 500 weight — thin fonts are illegible on additive displays. */
 	weight?: "medium" | "semibold" | "bold";
 	/** Adds outer glow for emphasis. @default false */
@@ -16,12 +16,9 @@ export interface TextProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<TextProps["size"]>, string> = {
-	"xs": "text-xs",
-	"sm": "text-sm",
-	"md": "text-base",
-	"lg": "text-xl",
-	"xl": "text-3xl",
-	"2xl": "text-4xl"
+	sm: "text-lg",
+	md: "text-xl",
+	lg: "text-2xl"
 };
 
 const WEIGHT_CLASSES: Record<NonNullable<TextProps["weight"]>, string> = {
