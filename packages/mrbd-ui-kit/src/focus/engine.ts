@@ -157,6 +157,31 @@ function findScrollParent(el: HTMLElement): HTMLElement | null {
 	return null;
 }
 
+/**
+ * Check whether candidates have meaningful spatial spread along the
+ * movement axis.  For horizontal movement (left/right), we check if
+ * candidate centerX values differ by more than a threshold.  For
+ * vertical (up/down), we check centerY.
+ *
+ * This prevents wrap-around when all elements sit in a single column
+ * (left/right wrap) or a single row (up/down wrap).
+ */
+const SPREAD_THRESHOLD = 10; // px — elements within this distance are considered aligned
+
+function hasSpatialSpread(
+	direction: DpadDirection,
+	candidates: Array<{ id: string; rect: Rect }>
+): boolean {
+	if (candidates.length < 2) return false;
+
+	const isHorizontal = direction === "left" || direction === "right";
+	const values = candidates.map((c) => (isHorizontal ? c.rect.centerX : c.rect.centerY));
+	const min = Math.min(...values);
+	const max = Math.max(...values);
+
+	return max - min > SPREAD_THRESHOLD;
+}
+
 export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine {
 	const { wrap = true, initialFocusId } = options;
 
@@ -255,8 +280,11 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 			}
 
 			applyFocus(bestId);
-		} else if (wrap) {
-			// No candidates in direction — wrap to opposite edge
+		} else if (wrap && hasSpatialSpread(direction, candidates)) {
+			// No candidates in direction — wrap to opposite edge, but only
+			// if elements are actually spread along the movement axis.
+			// This prevents left/right from wrapping in a purely vertical
+			// layout (and vice-versa).
 			const allWithRects = candidates.map((c) => ({ id: c.id, rect: c.rect }));
 			const wrapId = getWrapTarget(direction, allWithRects);
 			if (wrapId) applyFocus(wrapId);

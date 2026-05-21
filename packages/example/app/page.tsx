@@ -1,21 +1,24 @@
 "use client";
 
-import { Eye, Link as LinkIcon, Paintbrush, Pointer, TextCursor } from "lucide-react";
-import { Button, Icon, Pill, ScrollArea, ScrollBar, Text, useScroll } from "mrbd-ui-kit";
+import { Eye, Glasses, Link as LinkIcon, Paintbrush, Pointer, TextCursor } from "lucide-react";
+import { Button, Icon, ScrollArea, ScrollBar, Text, useScroll } from "mrbd-ui-kit";
 import Link from "next/link";
 
 export default function HomeTab() {
 	const scroll = useScroll();
 	return (
 		<div className="flex h-full flex-col gap-4">
-			<Pill>
+			{/* <Pill>
 				<div className="flex h-full flex-row items-center justify-center gap-2">
 					<div className="size-3 rounded-full bg-white" />
 					<div className="size-3 rounded-full bg-white/50" />
 					<div className="size-3 rounded-full bg-white/50" />
 				</div>
-			</Pill>
+			</Pill> */}
 			<div className="flex flex-col items-center gap-2">
+				<div className="flex size-12 items-center justify-center rounded-full bg-linear-to-br from-blue-400 to-blue-600">
+					<Icon icon={Glasses} className="h-full text-white" />
+				</div>
 				<Text size="lg" weight="bold">
 					mrbd-ui-kit
 				</Text>
