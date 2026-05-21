@@ -21,7 +21,7 @@ export default function ScrollPage() {
 				<ScrollArea scrollRef={scroll.scrollRef} canScrollUp={scroll.canScrollUp} canScrollDown={scroll.canScrollDown}>
 					<div className="flex flex-col gap-2">
 						{ITEMS.map((item) => (
-							<Button key={item} id={`scrollable-button-${item}`} className="w-full">
+							<Button key={item} id={`scrollable-button-${item}`} variant="secondary" className="w-full">
 								<Text size="sm" weight="semibold">
 									{item}
 								</Text>

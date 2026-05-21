@@ -32,7 +32,7 @@ export default function ThemesPage() {
 			{/* Color swatches */}
 			<div className="grid grid-cols-3 gap-2">
 				{TINTS.map((tint) => (
-					<Button onClick={() => applyTint(tint.value)} id={`tint-color-${tint.label}`} className="w-full flex-col items-center justify-center gap-1">
+					<Button onClick={() => applyTint(tint.value)} id={`tint-color-${tint.label}`} variant="secondary" className="w-full flex-col items-center justify-center gap-1">
 						<div className="flex flex-row items-center gap-1.5">
 							<div className="size-5 rounded-full border border-white/20" style={{ backgroundColor: tint.value }} />
 						</div>

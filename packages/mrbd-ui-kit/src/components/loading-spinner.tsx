@@ -8,7 +8,7 @@ export interface LoadingSpinnerProps {
 
 export function LoadingSpinner({ label = "Loading", className }: LoadingSpinnerProps) {
 	return (
-		<svg role="status" aria-label={label} viewBox="0 0 100 100" fill="none" className={cn("text-mrbd-text size-8 animate-spin", className)}>
+		<svg role="status" aria-label={label} viewBox="0 0 100 100" fill="none" className={cn("text-mrbd-accent size-8 animate-spin", className)}>
 			<circle
 				cx="50"
 				cy="50"

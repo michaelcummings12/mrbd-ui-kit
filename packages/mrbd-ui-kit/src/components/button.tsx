@@ -42,8 +42,9 @@ export interface ButtonProps {
 
 const VARIANT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
 	primary: "bg-mrbd-accent/90 text-black",
-	secondary: "bg-mrbd-accent/10 text-mrbd-text border border-mrbd-accent/10 hover:bg-mrbd-accent/20 active:bg-mrbd-accent/30",
-	ghost: "border-l-2 border-t-2 border-mrbd-accent/10 hover:border-mrbd-accent/40 group-focus:border-mrbd-accent/40 bg-mrbd-accent/20 text-mrbd-text",
+	secondary:
+		"border-l-2 border-t-2 border-mrbd-accent/10 hover:border-mrbd-accent/40 group-focus:border-mrbd-accent/40 bg-mrbd-accent/20 text-mrbd-text",
+	ghost: "bg-transparent text-mrbd-text group-focus:bg-mrbd-accent/20",
 	danger: "bg-red-400/85 text-black"
 };
 
@@ -61,7 +62,7 @@ const ICON_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
 
 export function Button({
 	children,
-	variant = "ghost",
+	variant = "secondary",
 	size = "md",
 	id,
 	icon,

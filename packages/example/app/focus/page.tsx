@@ -18,10 +18,10 @@ export default function FocusPage() {
 
 			{/* Focusable grid */}
 			<div className="grid grid-cols-3 gap-3">
-				{Array.from({ length: 6 }, (_, i) => {
+				{Array.from({ length: 9 }, (_, i) => {
 					const id = `item-${i + 1}`;
 					return (
-						<Button key={id} id={id} className="w-full" onFocus={() => setLastFocused(id)} onSelect={() => setLastSelected(id)}>
+						<Button key={id} id={id} variant="secondary" className="w-full" onFocus={() => setLastFocused(id)} onSelect={() => setLastSelected(id)}>
 							<Text size="sm" weight="semibold">
 								{i + 1}
 							</Text>

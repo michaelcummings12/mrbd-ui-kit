@@ -174,7 +174,7 @@ Makes any child spatially navigable. Registers with the spatial focus engine. On
 
 #### `<Button>`
 
-Spatially navigable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
+Spatially navigable button with variants. Default variant is `secondary`. Wraps `<Focusable>` internally.
 
 ```tsx
 import { Check, X } from "lucide-react";
@@ -243,11 +243,11 @@ Rounded pill/badge with a subtle gradient tint border.
 
 #### `<LoadingSpinner>`
 
-CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-text`. Customize size and color via `className`.
+CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-accent`. Customize size and color via `className`.
 
 ```tsx
 <LoadingSpinner />
-<LoadingSpinner className="size-6 text-mrbd-accent" />
+<LoadingSpinner className="size-6 text-blue-500" />
 ```
 
 | Prop | Type | Default | Description |

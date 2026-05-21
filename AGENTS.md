@@ -155,7 +155,7 @@ Props: `id: string` (required), `children`, `group?: string`, `onSelect?: () => 
 
 ### Button
 
-Spatially navigable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
+Spatially navigable button with variants. Default variant is `secondary`. Wraps `<Focusable>` internally.
 
 ```tsx
 import { Check, X } from "lucide-react";
