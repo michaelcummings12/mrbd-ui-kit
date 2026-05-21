@@ -90,7 +90,7 @@ export function Button({
 				// Must be exactly one child — no icon expression here.
 				<Slot className={resolvedClass}>{children}</Slot>
 			) : (
-				<button className={resolvedClass} onClick={onSelect ?? onClick}>
+				<button className={resolvedClass}>
 					{icon && <Icon icon={icon} className={ICON_CLASSES[size]} />}
 					{children}
 				</button>
