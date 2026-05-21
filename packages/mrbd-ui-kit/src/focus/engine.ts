@@ -1,4 +1,4 @@
-export type DpadDirection = "up" | "down" | "left" | "right";
+export type SpatialDirection = "up" | "down" | "left" | "right";
 
 export interface FocusableEntry {
 	id: string;
@@ -16,7 +16,7 @@ export interface FocusEngineOptions {
 export interface FocusEngine {
 	register: (entry: FocusableEntry) => void;
 	unregister: (id: string) => void;
-	move: (direction: DpadDirection) => void;
+	move: (direction: SpatialDirection) => void;
 	focusById: (id: string) => void;
 	getCurrentId: () => string | null;
 	subscribe: (listener: (id: string | null) => void) => () => void;
@@ -50,7 +50,7 @@ function getRect(el: HTMLElement): Rect {
  * Small tolerance (1px) to avoid self-matching.
  */
 function filterByDirection(
-	direction: DpadDirection,
+	direction: SpatialDirection,
 	current: Rect,
 	candidates: Array<{ id: string; rect: Rect }>
 ): Array<{ id: string; rect: Rect }> {
@@ -76,7 +76,7 @@ function filterByDirection(
  * The penalty ensures elements roughly aligned on the movement axis are preferred
  * over elements that are closer but far off to the side.
  */
-function scoreCandidate(direction: DpadDirection, current: Rect, candidate: Rect): number {
+function scoreCandidate(direction: SpatialDirection, current: Rect, candidate: Rect): number {
 	const dx = candidate.centerX - current.centerX;
 	const dy = candidate.centerY - current.centerY;
 
@@ -93,7 +93,7 @@ function scoreCandidate(direction: DpadDirection, current: Rect, candidate: Rect
  * For wrap-around: find the element on the opposite edge.
  * e.g., if moving "right" with no candidates, wrap to the leftmost element.
  */
-function getWrapTarget(direction: DpadDirection, entries: Array<{ id: string; rect: Rect }>): string | null {
+function getWrapTarget(direction: SpatialDirection, entries: Array<{ id: string; rect: Rect }>): string | null {
 	if (entries.length === 0) return null;
 
 	let best = entries[0];
@@ -169,7 +169,7 @@ function findScrollParent(el: HTMLElement): HTMLElement | null {
 const SPREAD_THRESHOLD = 10; // px — elements within this distance are considered aligned
 
 function hasSpatialSpread(
-	direction: DpadDirection,
+	direction: SpatialDirection,
 	candidates: Array<{ id: string; rect: Rect }>
 ): boolean {
 	if (candidates.length < 2) return false;
@@ -290,7 +290,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		}
 	}
 
-	function move(direction: DpadDirection) {
+	function move(direction: SpatialDirection) {
 		if (entries.size === 0) return;
 
 		// If nothing focused, focus the first entry

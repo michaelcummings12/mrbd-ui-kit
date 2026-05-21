@@ -84,7 +84,7 @@ The Meta Ray-Ban Display is fundamentally different from phones and monitors. Th
 |---|---|---|
 | Resolution | 600 × 600 px | `<DisplayRoot>` sets the viewport |
 | Display type | Additive (LCoS) | Black = transparent. No pure `#FFF` in the palette — prevents ghosting |
-| Input | D-pad / Neural Band | Spatial focus engine handles arrow-key navigation automatically |
+| Input | Spatial (Neural Band / temple touch) | Spatial focus engine handles arrow-key navigation automatically |
 | Typography | Bold sans-serif | `<Text>` enforces minimum `font-weight: 500` |
 | Shadows | Never drop-shadow | All shadows are outer glows (drop shadows look like dirt on the lens) |
 | Layout | Monocular, right eye | F-pattern, right-anchored layouts recommended |
@@ -156,7 +156,7 @@ import { Home, Bell } from "lucide-react";
 
 #### `<Focusable>`
 
-Makes any child D-pad focusable. Registers with the spatial focus engine. On Enter key, fires `onSelect` and clicks the first child element.
+Makes any child spatially navigable. Registers with the spatial focus engine. On Enter key, fires `onSelect` and clicks the first child element.
 
 ```tsx
 <Focusable id="my-item" onSelect={() => handleSelect()} onFocus={() => handleFocus()}>
@@ -189,7 +189,7 @@ Merges its own props onto a single child element — the child's props take prec
 
 #### `<Button>`
 
-D-pad focusable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
+Spatially navigable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
 
 ```tsx
 import { Check, X } from "lucide-react";
@@ -216,7 +216,7 @@ The `asChild` prop merges button styles onto a child element instead of renderin
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
 | `id` | `string` | **required** | Focus engine ID |
 | `icon` | `ElementType` | — | Icon component before label |
-| `onClick` | `() => void` | — | Called on D-pad select |
+| `onClick` | `() => void` | — | Called on select (Enter key) |
 | `onFocus` | `() => void` | — | Called when focused |
 | `onBlur` | `() => void` | — | Called when focus leaves |
 | `onSelect` | `() => void` | — | Alias for `onClick` |
@@ -346,12 +346,12 @@ const scroll = useScroll();
 
 ## Hooks
 
-### `useDpad()`
+### `useSpatialInput()`
 
-Subscribe to D-pad input events.
+Subscribe to spatial input events (arrow keys + Enter from Neural Band or temple touch).
 
 ```tsx
-const { activeKey, lastKey } = useDpad({
+const { activeKey, lastKey } = useSpatialInput({
   onPress: (key) => console.log("pressed:", key),
   onRelease: (key) => console.log("released:", key),
 });
@@ -484,4 +484,4 @@ When you import `mrbd-ui-kit/css/theme`, these Tailwind utilities become availab
 
 ## License
 
-MIT
+See the [LICENSE](LICENSE) for details.

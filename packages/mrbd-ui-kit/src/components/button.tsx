@@ -16,7 +16,7 @@ export interface ButtonProps {
 	icon?: ElementType;
 	/** @default false */
 	disabled?: boolean;
-	/** Called on D-pad select (Enter key) */
+	/** Called on select (Enter key) */
 	onClick?: () => void;
 	/** Called when this element receives focus */
 	onFocus?: () => void;

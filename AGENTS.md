@@ -4,7 +4,7 @@ You are building a web app for Meta Ray-Ban Display glasses using the `mrbd-ui-k
 
 ## What is Meta Ray-Ban Display?
 
-Meta Ray-Ban Display glasses have a 600×600 pixel monocular additive display projected into the right lens. Web apps are standard HTML/CSS/JS rendered on this display. Input comes from a D-pad (capacitive touch on the glasses temple) and the Meta Neural Band (EMG wrist gestures), both mapped to arrow keys and Enter.
+Meta Ray-Ban Display glasses have a 600×600 pixel monocular additive display projected into the right lens. Web apps are standard HTML/CSS/JS rendered on this display. Input comes from the Meta Neural Band (EMG wrist gestures) and a capacitive touch strip on the glasses temple, both mapped to arrow keys and Enter.
 
 ## Critical Display Rules
 
@@ -19,7 +19,7 @@ These are NOT suggestions. Violating them creates a broken experience on the har
 - Use `font-weight: 500` or higher for all text
 - Use `Nunito` or a similar bold sans-serif font (weights 500+)
 - Keep layouts right-anchored or F-pattern (display is in the right lens)
-- Make all interactive elements D-pad focusable via `<Focusable>` or composite components
+- Make all interactive elements spatially navigable via `<Focusable>` or composite components
 - Give every `<Focusable>` and `<Button>` a unique `id`
 - Keep content glanceable — users scan in <2 seconds
 - Use `lucide-react` icons via the `<Icon>` component
@@ -29,8 +29,8 @@ These are NOT suggestions. Violating them creates a broken experience on the har
 - Use `#FFFFFF` or `rgb(255,255,255)` — causes ghosting. Use `text-mrbd-text` instead
 - Use `drop-shadow` or `box-shadow` for decorative shadows — looks like dirt on lens. Use `shadow-mrbd-glow-*`
 - Use `font-weight` below 500 — illegible on additive display
-- Use mouse/touch event handlers as primary interaction — use D-pad events
-- Create scrollable content without focus management — D-pad can't scroll
+- Use mouse/touch event handlers as primary interaction — use spatial input events
+- Create scrollable content without focus management — spatial input can't scroll
 - Use heavy animations or frequent re-renders — battery-constrained device
 
 ## Project Setup
@@ -75,7 +75,7 @@ import {
 import { Check, Home, Search, Settings } from "lucide-react";
 
 // Hooks
-import { useDpad, useFocusManager, useIsMRBD, useScroll } from "mrbd-ui-kit";
+import { useSpatialInput, useFocusManager, useIsMRBD, useScroll } from "mrbd-ui-kit";
 
 // Server-side device detection (no "use client")
 import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
@@ -142,7 +142,7 @@ Props: `icon?: ElementType`, `children?: ReactNode` (custom SVG), `size?: number
 
 ### Focusable
 
-Makes children D-pad navigable. Every `id` must be unique. On Enter key press, fires `onSelect` and clicks the first child element.
+Makes children spatially navigable. Every `id` must be unique. On Enter key press, fires `onSelect` and clicks the first child element.
 
 ```tsx
 <Focusable id="item-1" onSelect={handleSelect} group="list">
@@ -167,7 +167,7 @@ Props: `children` (must be a single valid React element), plus any HTML attribut
 
 ### Button
 
-D-pad focusable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
+Spatially navigable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
 
 ```tsx
 import { Check, X } from "lucide-react";
@@ -278,10 +278,10 @@ Props: `scrollHeight: number`, `clientHeight: number`, `scrollTop: number`, `isS
 
 ## Hooks
 
-### useDpad()
+### useSpatialInput()
 
 ```tsx
-const { activeKey, lastKey } = useDpad({
+const { activeKey, lastKey } = useSpatialInput({
   onPress: (key) => {},   // 'up' | 'down' | 'left' | 'right' | 'select'
   onRelease: (key) => {},
   disabled: false,
@@ -427,6 +427,6 @@ export default function MyMRBDApp() {
 
 ## Testing Your App
 
-1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys for D-pad, Enter for select.
+1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys for spatial navigation, Enter for select.
 2. On device: Deploy to HTTPS URL → Meta AI app → Devices → Display Glasses → App connections → Web apps → Add URL.
 3. Device detection: Override user agent in Chrome DevTools to include "Greatwhite" to test `useIsMRBD()`.

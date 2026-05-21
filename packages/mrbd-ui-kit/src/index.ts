@@ -14,7 +14,7 @@ export { ScrollBar } from "./components/scroll-bar";
 export { ScrollContainer } from "./components/scroll-container";
 
 // Hooks
-export { useDpad } from "./hooks/use-dpad";
+export { useSpatialInput } from "./hooks/use-spatial-input";
 export { useFocusManager } from "./hooks/use-focus-manager";
 export { useIsMRBD } from "./hooks/use-is-mrbd";
 export { useScroll } from "./hooks/use-scroll";
@@ -33,9 +33,9 @@ export type { SlotProps } from "./components/slot";
 export type { TextProps } from "./components/text";
 
 // Types — Hooks
-export type { DpadKey, DpadState, UseDpadOptions } from "./hooks/use-dpad";
+export type { SpatialInputKey, SpatialInputState, UseSpatialInputOptions } from "./hooks/use-spatial-input";
 export type { FocusManager } from "./hooks/use-focus-manager";
 export type { ScrollState, UseScrollReturn } from "./hooks/use-scroll";
 
 // Types — Focus Engine
-export type { DpadDirection, FocusEngineOptions } from "./focus/engine";
+export type { SpatialDirection, FocusEngineOptions } from "./focus/engine";
