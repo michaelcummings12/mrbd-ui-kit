@@ -66,6 +66,7 @@ import {
   Pill,
   ScrollArea,
   ScrollBar,
+  ScrollContainer,
   Slot,
   Text,
 } from "mrbd-ui-kit";
@@ -171,10 +172,10 @@ D-pad focusable button with variants. Default variant is `ghost`. Wraps `<Focusa
 ```tsx
 import { Check, X } from "lucide-react";
 
-<Button id="ok" variant="primary" icon={Check} onPress={handleOk}>
+<Button id="ok" variant="primary" icon={Check} onClick={handleOk}>
   OK
 </Button>
-<Button id="cancel" variant="ghost" icon={X} onPress={handleCancel}>
+<Button id="cancel" variant="ghost" icon={X} onClick={handleCancel}>
   Cancel
 </Button>
 ```
@@ -187,7 +188,7 @@ The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 </Button>
 ```
 
-Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onPress?: () => void`, `disabled?: boolean`, `fullWidth?: boolean`, `asChild?: boolean`, `group?: string`, `className?`
+Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `group?: string`, `className?`
 
 ### Pill
 
@@ -211,7 +212,29 @@ CSS-only spinner animation.
 
 Props: `size?: number`, `color?: string`, `label?: string`, `className?`
 
+### ScrollContainer
+
+The easiest way to add a scrollable region. Owns the required layout wrapper (`flex min-h-0 flex-1 flex-row`), renders `<ScrollArea>` with fade gradients, and includes a `<ScrollBar>` indicator — all wired up internally. No `useScroll()` needed.
+
+Place it inside any `flex h-full flex-col` parent and it will expand to fill remaining space:
+
+```tsx
+<div className="flex h-full flex-col gap-4 p-4">
+  <Text size="lg" weight="bold">Title</Text>
+
+  <ScrollContainer>
+    {items.map((item) => (
+      <Button key={item.id} id={item.id}>{item.label}</Button>
+    ))}
+  </ScrollContainer>
+</div>
+```
+
+Props: `children`, `className?`
+
 ### ScrollArea
+
+> **Advanced / escape-hatch.** Use `<ScrollContainer>` unless you need to share scroll state with elements outside the scroll region.
 
 A scroll viewport with top/bottom fade gradients that indicate hidden content. Pair with `useScroll()` and optionally `<ScrollBar>`.
 
@@ -231,12 +254,14 @@ Props: `children`, `scrollRef: React.RefObject<HTMLDivElement | null>`, `canScro
 
 ### ScrollBar
 
+> **Advanced / escape-hatch.** Included automatically by `<ScrollContainer>`.
+
 A composable scrollbar indicator. The track is fixed height; the thumb scales proportionally. Fades in/out based on `isScrolling` from `useScroll()`.
 
 ```tsx
 const scroll = useScroll();
 
-<div className="flex flex-row gap-2">
+<div className="flex min-h-0 flex-1 flex-row gap-2">
   <ScrollArea scrollRef={scroll.scrollRef} canScrollUp={scroll.canScrollUp} canScrollDown={scroll.canScrollDown}>
     {items}
   </ScrollArea>
@@ -380,11 +405,11 @@ export default function MyMRBDApp() {
             id="action-btn"
             variant="primary"
             icon={Check}
-            onPress={() => setLoading(true)}
+            onClick={() => setLoading(true)}
           >
             Accept
           </Button>
-          <Button id="decline-btn" icon={X} onPress={() => {}}>
+          <Button id="decline-btn" icon={X} onClick={() => {}}>
             Decline
           </Button>
         </div>

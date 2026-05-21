@@ -67,7 +67,7 @@ export default function App() {
         <Text size="lg" weight="bold">Hello, Display</Text>
         <Text dim>Glanceable UI for your glasses.</Text>
 
-        <Button id="action-btn" variant="primary" icon={Check} onPress={() => console.log("pressed!")}>
+        <Button id="action-btn" variant="primary" icon={Check} onClick={() => console.log("pressed!")}>
           Get Started
         </Button>
       </div>
@@ -194,10 +194,10 @@ D-pad focusable button with variants. Default variant is `ghost`. Wraps `<Focusa
 ```tsx
 import { Check, X } from "lucide-react";
 
-<Button id="confirm" variant="primary" icon={Check} onPress={handleConfirm}>
+<Button id="confirm" variant="primary" icon={Check} onClick={handleConfirm}>
   Confirm
 </Button>
-<Button id="cancel" icon={X} onPress={handleCancel}>
+<Button id="cancel" icon={X} onClick={handleCancel}>
   Cancel
 </Button>
 ```
@@ -216,9 +216,11 @@ The `asChild` prop merges button styles onto a child element instead of renderin
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
 | `id` | `string` | **required** | Focus engine ID |
 | `icon` | `ElementType` | — | Icon component before label |
-| `onPress` | `() => void` | — | Called on D-pad select |
+| `onClick` | `() => void` | — | Called on D-pad select |
+| `onFocus` | `() => void` | — | Called when focused |
+| `onBlur` | `() => void` | — | Called when focus leaves |
+| `onSelect` | `() => void` | — | Alias for `onClick` |
 | `disabled` | `boolean` | `false` | Disabled state |
-| `fullWidth` | `boolean` | `false` | Full width |
 | `asChild` | `boolean` | `false` | Merge styles onto child element instead of `<button>` |
 | `group` | `string` | — | Focus group for scoped navigation |
 | `className` | `string` | — | Additional classes |
@@ -252,20 +254,57 @@ CSS-only spinner animation.
 | `label` | `string` | `'Loading'` | Accessible label |
 | `className` | `string` | — | Additional classes |
 
-#### `<ScrollArea>`
+#### `<ScrollContainer>`
+
+The easiest way to add a scrollable region. Handles the layout, fade gradients, and scrollbar automatically — no `useScroll()` needed.
+
+Place it inside any `flex h-full flex-col` parent and it expands to fill the remaining space:
+
+```tsx
+import { ScrollContainer } from "mrbd-ui-kit";
+
+<div className="flex h-full flex-col gap-4 p-4">
+  <Text size="lg" weight="bold">Title</Text>
+
+  <ScrollContainer>
+    {items.map((item) => (
+      <Button key={item.id} id={item.id}>{item.label}</Button>
+    ))}
+  </ScrollContainer>
+</div>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `children` | `ReactNode` | **required** | Scrollable content |
+| `className` | `string` | — | Additional classes on the outer wrapper |
+
+#### `<ScrollArea>` _(advanced)_
+
+> Use `<ScrollContainer>` for the common case. Reach for `<ScrollArea>` directly only when you need to share a `useScroll()` instance with other elements outside the scroll region.
 
 A scroll viewport with fade gradients that indicate hidden content above or below. Pair with `useScroll()` and optionally `<ScrollBar>`.
+
+**Required layout:** `<ScrollArea>` must live inside a `flex min-h-0 flex-1 flex-row` parent, otherwise it has no bounded height and will not scroll.
 
 ```tsx
 const scroll = useScroll();
 
-<ScrollArea
-  scrollRef={scroll.scrollRef}
-  canScrollUp={scroll.canScrollUp}
-  canScrollDown={scroll.canScrollDown}
->
-  {/* Scrollable content */}
-</ScrollArea>
+<div className="flex min-h-0 flex-1 flex-row gap-2">
+  <ScrollArea
+    scrollRef={scroll.scrollRef}
+    canScrollUp={scroll.canScrollUp}
+    canScrollDown={scroll.canScrollDown}
+  >
+    {/* Scrollable content */}
+  </ScrollArea>
+  <ScrollBar
+    scrollHeight={scroll.scrollHeight}
+    clientHeight={scroll.clientHeight}
+    scrollTop={scroll.scrollTop}
+    isScrolling={scroll.isScrolling}
+  />
+</div>
 ```
 
 | Prop | Type | Default | Description |
@@ -275,7 +314,9 @@ const scroll = useScroll();
 | `canScrollDown` | `boolean` | **required** | Show bottom fade gradient |
 | `className` | `string` | — | Additional classes |
 
-#### `<ScrollBar>`
+#### `<ScrollBar>` _(advanced)_
+
+> Included automatically by `<ScrollContainer>`. Use directly only alongside a manual `<ScrollArea>` setup.
 
 A composable scrollbar indicator. The track is fixed height (112px). The thumb scales proportionally to content. Fades in only while scrolling.
 

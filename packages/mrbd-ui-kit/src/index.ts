@@ -11,6 +11,7 @@ export { LoadingSpinner } from "./components/loading-indicator";
 export { Pill } from "./components/pill";
 export { ScrollArea } from "./components/scroll-area";
 export { ScrollBar } from "./components/scroll-bar";
+export { ScrollContainer } from "./components/scroll-container";
 
 // Hooks
 export { useDpad } from "./hooks/use-dpad";
@@ -27,6 +28,7 @@ export type { LoadingSpinnerProps } from "./components/loading-indicator";
 export type { PillProps } from "./components/pill";
 export type { ScrollAreaProps } from "./components/scroll-area";
 export type { ScrollBarProps } from "./components/scroll-bar";
+export type { ScrollContainerProps } from "./components/scroll-container";
 export type { SlotProps } from "./components/slot";
 export type { TextProps } from "./components/text";
 

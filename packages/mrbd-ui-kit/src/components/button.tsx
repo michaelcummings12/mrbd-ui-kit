@@ -17,9 +17,13 @@ export interface ButtonProps {
 	/** @default false */
 	disabled?: boolean;
 	/** Called on D-pad select (Enter key) */
-	onPress?: () => void;
-	/** Full width. @default false */
-	fullWidth?: boolean;
+	onClick?: () => void;
+	/** Called when this element receives focus */
+	onFocus?: () => void;
+	/** Called when this element loses focus */
+	onBlur?: () => void;
+	/** Called when select (Enter) is pressed while focused (alias for onClick) */
+	onSelect?: () => void;
 	/** Focus group for scoped navigation */
 	group?: string;
 	className?: string;
@@ -57,7 +61,21 @@ const ICON_SIZE: Record<NonNullable<ButtonProps["size"]>, number> = {
 	lg: 28
 };
 
-export function Button({ children, variant = "ghost", size = "md", id, icon, disabled, onPress, group, className, asChild = false }: ButtonProps) {
+export function Button({
+	children,
+	variant = "ghost",
+	size = "md",
+	id,
+	icon,
+	disabled,
+	onClick,
+	onFocus,
+	onBlur,
+	onSelect,
+	group,
+	className,
+	asChild = false
+}: ButtonProps) {
 	const resolvedClass = cn(
 		"inline-flex items-center justify-center font-semibold transition-all group-focus:scale-103 hover:scale-103 focus:outline-none",
 		VARIANT_CLASSES[variant],
@@ -68,13 +86,13 @@ export function Button({ children, variant = "ghost", size = "md", id, icon, dis
 	);
 
 	return (
-		<Focusable id={id} onSelect={onPress} disabled={disabled} group={group} className="group">
+		<Focusable id={id} onSelect={onSelect ?? onClick} onFocus={onFocus} onBlur={onBlur} disabled={disabled} group={group} className="group">
 			{asChild ? (
 				// Slot merges resolvedClass onto the single child element (e.g. <Link>).
 				// Must be exactly one child — no icon expression here.
 				<Slot className={resolvedClass}>{children}</Slot>
 			) : (
-				<button className={resolvedClass}>
+				<button className={resolvedClass} onClick={onSelect ?? onClick}>
 					{icon && <Icon icon={icon} size={ICON_SIZE[size]} />}
 					{children}
 				</button>
