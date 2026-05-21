@@ -4,7 +4,7 @@ You are building a web app for Meta Ray-Ban Display glasses using the `mrbd-ui-k
 
 ## What is Meta Ray-Ban Display?
 
-Meta Ray-Ban Display glasses have a 600×600 pixel monocular additive display projected into the right lens. Web apps are standard HTML/CSS/JS rendered on this display. Input comes from a D-pad (capacitive touch on the glasses temple) and the Meta Neural Band (EMG wrist gestures), both mapped to arrow keys and Enter.
+Meta Ray-Ban Display glasses have a 600×600 pixel monocular additive display projected into the right lens. Web apps are standard HTML/CSS/JS rendered on this display. Input comes from the Meta Neural Band (EMG wrist gestures) and a capacitive touch strip on the glasses temple, both mapped to arrow keys and Enter.
 
 ## Critical Display Rules
 
@@ -13,23 +13,24 @@ These are NOT suggestions. Violating them creates a broken experience on the har
 ### DO:
 
 - Use `<DisplayRoot>` as the outermost wrapper for all MRBD UI
-- Use dark/transparent backgrounds (`bg-mrbd-bg`, `bg-mrbd-surface`)
+- Use dark/transparent backgrounds (`bg-mrbd-accent/5`)
 - Use `text-mrbd-text` for primary text (92% white, NOT pure white)
-- Use `shadow-mrbd-glow-*` for emphasis effects (outer glow)
+- Use `shadow-mrbd-glow` for emphasis effects (inner glow)
 - Use `font-weight: 500` or higher for all text
-- Use `Inter` or `Roboto` fonts (loaded via `mrbd-ui-kit/css/base`)
+- Use `Nunito` or a similar bold sans-serif font (weights 500+)
 - Keep layouts right-anchored or F-pattern (display is in the right lens)
-- Make all interactive elements D-pad focusable via `<Focusable>` or composite components
-- Give every `<Focusable>`, `<Button>`, and `<NavigationBar>` item a unique `id`
+- Make all interactive elements spatially navigable via `<Focusable>` or composite components
+- Give every `<Focusable>` and `<Button>` a unique `id`
 - Keep content glanceable — users scan in <2 seconds
+- Use `lucide-react` icons via the `<Icon>` component
 
 ### NEVER:
 
 - Use `#FFFFFF` or `rgb(255,255,255)` — causes ghosting. Use `text-mrbd-text` instead
-- Use `drop-shadow` or `box-shadow` for decorative shadows — looks like dirt on lens. Use `shadow-mrbd-glow-*`
+- Use `drop-shadow` or `box-shadow` for decorative shadows — looks like dirt on lens. Use `shadow-mrbd-glow`
 - Use `font-weight` below 500 — illegible on additive display
-- Use mouse/touch event handlers as primary interaction — use D-pad events
-- Create scrollable content without focus management — D-pad can't scroll
+- Use mouse/touch event handlers as primary interaction — use spatial input events
+- Create scrollable content without focus management — spatial input can't scroll
 - Use heavy animations or frequent re-renders — battery-constrained device
 
 ## Project Setup
@@ -48,7 +49,7 @@ npm install mrbd-ui-kit
 @import "mrbd-ui-kit/css/base";
 ```
 
-Both CSS imports are required. `theme` provides Tailwind v4 tokens. `base` provides the root container styles, focus rings, and animation keyframes.
+Both CSS imports are required. `theme` provides Tailwind v4 tokens. `base` provides focus ring styles, scrollbar hiding, and transition defaults.
 
 ## Architecture
 
@@ -57,15 +58,24 @@ Both CSS imports are required. `theme` provides Tailwind v4 tokens. `base` provi
 ```typescript
 // Components + client hooks (has "use client" banner)
 import {
-  DisplayRoot,
-  Text,
-  Icon,
-  Focusable,
   Button,
-  NavigationBar,
-  LoadingIndicator,
+  Card,
+  DisplayRoot,
+  Focusable,
+  Icon,
+  LoadingSpinner,
+  Pill,
+  ScrollArea,
+  ScrollBar,
+  ScrollContainer,
+  Text,
 } from "mrbd-ui-kit";
-import { useDpad, useFocusManager, useIsMRBD } from "mrbd-ui-kit";
+
+// Icons — use lucide-react directly
+import { Check, Home, Search, Settings } from "lucide-react";
+
+// Hooks
+import { useSpatialInput, useFocusManager, useIsMRBD, useScroll } from "mrbd-ui-kit";
 
 // Server-side device detection (no "use client")
 import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
@@ -80,10 +90,7 @@ Every MRBD app must follow this structure:
 
 ```tsx
 <DisplayRoot>
-  {" "}
-  {/* REQUIRED — sets up 600x600 viewport + focus engine */}
   {/* Your content */}
-  <NavigationBar /> {/* Optional — anchored to bottom */}
 </DisplayRoot>
 ```
 
@@ -91,7 +98,7 @@ Every MRBD app must follow this structure:
 
 ### DisplayRoot
 
-Root wrapper. Required. Sets up viewport, focus context, keyboard handling.
+Root wrapper. Required. Sets up the 600×600 viewport, focus engine context, and keyboard event handling.
 
 ```tsx
 <DisplayRoot
@@ -109,26 +116,33 @@ Props: `children`, `className?`, `focusOptions?: { wrap?: boolean, initialFocusI
 Display-optimized typography. Enforces minimum font weight.
 
 ```tsx
-<Text size="lg" weight="bold" glow>Title</Text>
-<Text size="sm" dim>Subtitle</Text>
+<Text size="lg" weight="bold">Title</Text>
+<Text size="sm" className="text-gray-400">Subtitle</Text>
 ```
 
-Props: `size?: 'xs'|'sm'|'md'|'lg'|'xl'|'2xl'`, `weight?: 'medium'|'semibold'|'bold'`, `glow?: boolean`, `dim?: boolean`, `as?: 'p'|'span'|'h1'|'h2'|'h3'|'label'`
-
+Props: `children`, `size?: 'sm' | 'md' | 'lg'`, `weight?: 'medium' | 'semibold' | 'bold'`, `as?: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'label'`, `className?`
 
 ### Icon
 
-SVG icons. 14 built-in: `chevron-left`, `chevron-right`, `chevron-up`, `chevron-down`, `check`, `x`, `home`, `settings`, `bell`, `search`, `play`, `pause`, `skip-forward`, `skip-back`.
+Renders an icon component (e.g. from `lucide-react`) or custom SVG children. **No built-in icon set** — pass any `ElementType` via the `icon` prop. Style with `className` (e.g. `className="size-6 text-mrbd-accent"`).
 
 ```tsx
-<Icon name="home" size={24} color="var(--color-mrbd-accent)" />
+import { Home, Bell } from "lucide-react";
+
+<Icon icon={Home} className="size-6" />
+<Icon icon={Bell} className="size-5 text-mrbd-accent" />
+
+{/* Custom SVG */}
+<Icon className="size-6">
+  <circle cx="12" cy="12" r="10" />
+</Icon>
 ```
 
-Props: `name?: BuiltInIcon`, `children?: ReactNode` (custom SVG), `size?: number`, `color?: string`
+Props: `icon?: ElementType`, `children?: ReactNode` (custom SVG), `className?`
 
 ### Focusable
 
-Makes children D-pad navigable. Every `id` must be unique.
+Makes children spatially navigable. Every `id` must be unique. On Enter key press, fires `onSelect` and clicks the first child element.
 
 ```tsx
 <Focusable id="item-1" onSelect={handleSelect} group="list">
@@ -136,55 +150,144 @@ Makes children D-pad navigable. Every `id` must be unique.
 </Focusable>
 ```
 
-Props: `id: string` (required), `group?: string`, `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`
+Props: `id: string` (required), `children`, `group?: string`, `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`, `className?`
+
 
 ### Button
 
-Focusable button with variants.
+Spatially navigable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
 
 ```tsx
-<Button id="ok" variant="primary" icon="check" onPress={handleOk}>
+import { Check, X } from "lucide-react";
+
+<Button id="ok" variant="primary" icon={Check} onClick={handleOk}>
   OK
+</Button>
+<Button id="cancel" variant="ghost" icon={X} onClick={handleCancel}>
+  Cancel
 </Button>
 ```
 
-Props: `id: string` (required), `variant?: 'primary'|'secondary'|'ghost'|'danger'`, `size?: 'sm'|'md'|'lg'`, `icon?: BuiltInIcon`, `onPress?: () => void`, `disabled?: boolean`, `fullWidth?: boolean`, `group?: string`
-
-### NavigationBar
-
-Bottom tab bar. D-pad left/right navigates between tabs.
+The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 
 ```tsx
-<NavigationBar
-  items={[
-    { id: "home", label: "Home", icon: "home" },
-    { id: "settings", label: "Settings", icon: "settings" },
-  ]}
-  activeId="home"
-  onSelect={(id) => setTab(id)}
-/>
+<Button id="home" asChild>
+  <Link href="/home">Home</Link>
+</Button>
 ```
 
-Props: `items: NavItem[]`, `activeId: string`, `onSelect: (id: string) => void`
-NavItem: `{ id: string, label: string, icon: BuiltInIcon }`
+Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
 
-### LoadingIndicator
+### Card
 
-CSS-only loading animation.
+Content container with rounded corners and subtle tint-derived background. Good for grouping related content like notifications, status panels, or action prompts.
 
 ```tsx
-<LoadingIndicator variant="spinner" size={32} />
+<Card>Basic card content</Card>
+<Card className="mt-auto">Pushed to bottom</Card>
+<Card className="flex flex-col gap-1">
+  <div className="flex flex-row justify-between">
+    <Text size="sm" className="text-gray-400">Status</Text>
+    <Text size="sm" weight="semibold">Active</Text>
+  </div>
+</Card>
 ```
 
-Props: `variant?: 'spinner'|'dots'|'pulse'`, `size?: number`, `color?: string`, `label?: string`
+Props: `children`, `className?`
+
+### Pill
+
+Rounded pill/badge with a subtle gradient tint border.
+
+```tsx
+<Pill>Status: Active</Pill>
+<Pill className="px-6">Custom</Pill>
+```
+
+Props: `children`, `className?`
+
+### LoadingSpinner
+
+CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-text`. Customize size and color via `className`.
+
+```tsx
+<LoadingSpinner />
+<LoadingSpinner className="size-6 text-mrbd-accent" />
+```
+
+Props: `label?: string`, `className?`
+
+### ScrollContainer
+
+The easiest way to add a scrollable region. Owns the required layout wrapper (`flex min-h-0 flex-1 flex-row`), renders `<ScrollArea>` with fade gradients, and includes a `<ScrollBar>` indicator — all wired up internally. No `useScroll()` needed.
+
+Place it inside any `flex h-full flex-col` parent and it will expand to fill remaining space:
+
+```tsx
+<div className="flex h-full flex-col gap-4 p-4">
+  <Text size="lg" weight="bold">Title</Text>
+
+  <ScrollContainer>
+    {items.map((item) => (
+      <Button key={item.id} id={item.id}>{item.label}</Button>
+    ))}
+  </ScrollContainer>
+</div>
+```
+
+Props: `children`, `className?`
+
+### ScrollArea
+
+> **Advanced / escape-hatch.** Use `<ScrollContainer>` unless you need to share scroll state with elements outside the scroll region.
+
+A scroll viewport with top/bottom fade gradients that indicate hidden content. Pair with `useScroll()` and optionally `<ScrollBar>`.
+
+```tsx
+const scroll = useScroll();
+
+<ScrollArea
+  scrollRef={scroll.scrollRef}
+  canScrollUp={scroll.canScrollUp}
+  canScrollDown={scroll.canScrollDown}
+>
+  {/* Scrollable content */}
+</ScrollArea>
+```
+
+Props: `children`, `scrollRef: React.RefObject<HTMLDivElement | null>`, `canScrollUp: boolean`, `canScrollDown: boolean`, `className?`
+
+### ScrollBar
+
+> **Advanced / escape-hatch.** Included automatically by `<ScrollContainer>`.
+
+A composable scrollbar indicator. The track is fixed height; the thumb scales proportionally. Fades in/out based on `isScrolling` from `useScroll()`.
+
+```tsx
+const scroll = useScroll();
+
+<div className="flex min-h-0 flex-1 flex-row gap-2">
+  <ScrollArea scrollRef={scroll.scrollRef} canScrollUp={scroll.canScrollUp} canScrollDown={scroll.canScrollDown}>
+    {items}
+  </ScrollArea>
+  <ScrollBar
+    scrollHeight={scroll.scrollHeight}
+    clientHeight={scroll.clientHeight}
+    scrollTop={scroll.scrollTop}
+    isScrolling={scroll.isScrolling}
+  />
+</div>
+```
+
+Props: `scrollHeight: number`, `clientHeight: number`, `scrollTop: number`, `isScrolling?: boolean`, `className?`
 
 ## Hooks
 
-### useDpad()
+### useSpatialInput()
 
 ```tsx
-const { activeKey, lastKey } = useDpad({
-  onPress: (key) => {}, // 'up'|'down'|'left'|'right'|'select'
+const { activeKey, lastKey } = useSpatialInput({
+  onPress: (key) => {},   // 'up' | 'down' | 'left' | 'right' | 'select'
   onRelease: (key) => {},
   disabled: false,
 });
@@ -196,16 +299,31 @@ Must be inside `<DisplayRoot>`.
 
 ```tsx
 const { focusedId, move, focus } = useFocusManager();
-move("down"); // Move focus spatially
-focus("my-button"); // Focus by ID
+move("down");        // Move focus spatially
+focus("my-button");  // Focus by ID
 ```
 
 ### useIsMRBD()
 
-Client-side device detection (checks for "Greatwhite" in user agent).
+Client-side device detection (checks for "Greatwhite" in user agent). Returns `false` during SSR.
 
 ```tsx
-const isMRBD = useIsMRBD(); // boolean, false during SSR
+const isMRBD = useIsMRBD(); // boolean
+```
+
+### useScroll()
+
+Tracks scroll position of a container. Returns scroll metrics and a ref to attach to the scrollable element. Designed to pair with `<ScrollArea>` and `<ScrollBar>`.
+
+```tsx
+const scroll = useScroll();
+// scroll.scrollRef      — attach to scrollable container
+// scroll.scrollTop      — current scroll position
+// scroll.scrollHeight   — total scrollable height
+// scroll.clientHeight   — visible viewport height
+// scroll.canScrollUp    — true when scrolled past top
+// scroll.canScrollDown  — true when more content below
+// scroll.isScrolling    — true while scroll position is actively changing
 ```
 
 ## Server Detection
@@ -213,7 +331,7 @@ const isMRBD = useIsMRBD(); // boolean, false during SSR
 ```typescript
 // Any server runtime
 import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
-isMRBD(userAgentString); // boolean
+isMRBD(userAgentString);           // boolean
 isMRBDFromHeaders(request.headers); // boolean
 
 // Next.js RSC / Server Actions
@@ -221,14 +339,28 @@ import { isMRBDServer } from "mrbd-ui-kit/next";
 const isMRBD = await isMRBDServer(); // boolean
 ```
 
+## Theming
+
+The entire color palette is driven by a single CSS variable: `--color-mrbd-accent`. By default it's white (`#ffffff`). Override it to theme your entire app with one line:
+
+```css
+/* global.css — after the mrbd-ui-kit imports */
+:root {
+  --color-mrbd-accent: #14b8a6; /* teal */
+}
+```
+
+All surface colors, accent, glows, and border tints are derived from this variable via `color-mix()`. Changing `--color-mrbd-accent` automatically updates everything.
+
 ## Tailwind Tokens Available After Import
 
-Colors: `mrbd-bg`, `mrbd-surface`, `mrbd-surface-hover`, `mrbd-surface-active`, `mrbd-text`, `mrbd-text-dim`, `mrbd-accent`, `mrbd-danger`, `mrbd-success`
-Shadows: `mrbd-glow`, `mrbd-glow-accent`, `mrbd-glow-focus`
-Font: `mrbd`
-Sizing: `mrbd` (600px for width/height)
+### Colors
+`mrbd-accent`, `mrbd-text`
 
-Use as: `bg-mrbd-surface`, `text-mrbd-text`, `shadow-mrbd-glow`, `font-mrbd`, `w-mrbd`, `h-mrbd`
+### Shadows
+`mrbd-glow`
+
+Use as: `bg-mrbd-accent/10`, `text-mrbd-text`, `shadow-mrbd-glow`
 
 ## Full App Example
 
@@ -236,71 +368,61 @@ Use as: `bg-mrbd-surface`, `text-mrbd-text`, `shadow-mrbd-glow`, `font-mrbd`, `w
 "use client";
 
 import { useState } from "react";
+import { Check, Search, X } from "lucide-react";
 import {
-  DisplayRoot,
-  Text,
   Button,
-  NavigationBar,
-  LoadingIndicator,
+  Card,
+  DisplayRoot,
   Icon,
+  LoadingSpinner,
+  Text,
 } from "mrbd-ui-kit";
 
 export default function MyMRBDApp() {
-  const [activeTab, setActiveTab] = useState("home");
   const [loading, setLoading] = useState(false);
 
   return (
     <DisplayRoot focusOptions={{ initialFocusId: "action-btn" }}>
-      <div className="flex flex-col gap-4 p-6 pb-20">
+      <div className="flex flex-col gap-4 p-6">
         {/* Header */}
         <div className="flex flex-row gap-2 items-center">
-          <Icon name="bell" size={20} color="var(--color-mrbd-accent)" />
+          <Icon icon={Search} className="size-5 text-mrbd-accent" />
           <Text size="lg" weight="bold">
             Notifications
           </Text>
         </div>
 
         {/* Content card */}
-        <div className="bg-mrbd-surface rounded-lg p-4">
+        <Card>
           <div className="flex flex-col gap-2">
             <Text weight="semibold">New message from Alex</Text>
-            <Text size="sm" dim>
+            <Text size="sm" className="text-gray-400">
               Hey, are you free for lunch?
             </Text>
           </div>
-        </div>
+        </Card>
 
         {/* Actions */}
         <div className="flex flex-row gap-3">
           <Button
             id="action-btn"
             variant="primary"
-            icon="check"
-            onPress={() => setLoading(true)}
+            icon={Check}
+            onClick={() => setLoading(true)}
           >
             Accept
           </Button>
-          <Button id="decline-btn" variant="ghost" icon="x" onPress={() => {}}>
+          <Button id="decline-btn" icon={X} onClick={() => {}}>
             Decline
           </Button>
         </div>
 
         {loading && (
           <div className="flex flex-col items-center">
-            <LoadingIndicator variant="dots" size={24} />
+            <LoadingSpinner className="size-6" />
           </div>
         )}
       </div>
-
-      <NavigationBar
-        items={[
-          { id: "home", label: "Home", icon: "home" },
-          { id: "search", label: "Search", icon: "search" },
-          { id: "settings", label: "Settings", icon: "settings" },
-        ]}
-        activeId={activeTab}
-        onSelect={setActiveTab}
-      />
     </DisplayRoot>
   );
 }
@@ -308,6 +430,6 @@ export default function MyMRBDApp() {
 
 ## Testing Your App
 
-1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys for D-pad, Enter for select.
+1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys to navigate and enter to select.
 2. On device: Deploy to HTTPS URL → Meta AI app → Devices → Display Glasses → App connections → Web apps → Add URL.
 3. Device detection: Override user agent in Chrome DevTools to include "Greatwhite" to test `useIsMRBD()`.

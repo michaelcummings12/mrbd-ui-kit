@@ -1,3 +1,8 @@
 @import "tailwindcss";
 @import "mrbd-ui-kit/css/theme";
 @import "mrbd-ui-kit/css/base";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --color-mrbd-accent: var(--color-blue-100);
+}

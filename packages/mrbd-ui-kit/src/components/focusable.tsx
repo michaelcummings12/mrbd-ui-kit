@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { cn } from "../lib/cn";
 import { useFocusContext } from "./display-root";
 
 export interface FocusableProps {
@@ -63,6 +64,9 @@ export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disa
 				e.preventDefault();
 				e.stopPropagation();
 				callbacksRef.current.onSelect?.();
+				// Click the first child element (or the wrapper itself as fallback).
+				const target = (elementRef.current?.firstElementChild ?? elementRef.current) as HTMLElement | null;
+				target?.click();
 			}
 		},
 		[disabled]
@@ -73,7 +77,7 @@ export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disa
 			ref={elementRef}
 			id={id}
 			tabIndex={disabled ? -1 : 0}
-			className={`mrbd-focusable ${className ?? ""}`.trim()}
+			className={cn("mrbd-focusable", className)}
 			onKeyDown={handleKeyDown}
 			aria-disabled={disabled || undefined}>
 			{children}

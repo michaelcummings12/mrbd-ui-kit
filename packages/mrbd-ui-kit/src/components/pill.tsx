@@ -1,0 +1,19 @@
+import type { ReactNode } from "react";
+import { cn } from "../lib/cn";
+
+export interface PillProps {
+	children: ReactNode;
+	className?: string;
+}
+
+export function Pill({ children, className }: PillProps) {
+	return (
+		<span
+			className={cn(
+				"border-mrbd-accent/10 from-mrbd-accent/20 relative m-auto h-12 rounded-full border-t border-l bg-linear-to-b to-transparent px-4",
+				className
+			)}>
+			{children}
+		</span>
+	);
+}

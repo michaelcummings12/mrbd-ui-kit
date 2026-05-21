@@ -1,4 +1,4 @@
-export type DpadDirection = "up" | "down" | "left" | "right";
+export type SpatialDirection = "up" | "down" | "left" | "right";
 
 export interface FocusableEntry {
 	id: string;
@@ -16,7 +16,7 @@ export interface FocusEngineOptions {
 export interface FocusEngine {
 	register: (entry: FocusableEntry) => void;
 	unregister: (id: string) => void;
-	move: (direction: DpadDirection) => void;
+	move: (direction: SpatialDirection) => void;
 	focusById: (id: string) => void;
 	getCurrentId: () => string | null;
 	subscribe: (listener: (id: string | null) => void) => () => void;
@@ -50,7 +50,7 @@ function getRect(el: HTMLElement): Rect {
  * Small tolerance (1px) to avoid self-matching.
  */
 function filterByDirection(
-	direction: DpadDirection,
+	direction: SpatialDirection,
 	current: Rect,
 	candidates: Array<{ id: string; rect: Rect }>
 ): Array<{ id: string; rect: Rect }> {
@@ -76,7 +76,7 @@ function filterByDirection(
  * The penalty ensures elements roughly aligned on the movement axis are preferred
  * over elements that are closer but far off to the side.
  */
-function scoreCandidate(direction: DpadDirection, current: Rect, candidate: Rect): number {
+function scoreCandidate(direction: SpatialDirection, current: Rect, candidate: Rect): number {
 	const dx = candidate.centerX - current.centerX;
 	const dy = candidate.centerY - current.centerY;
 
@@ -93,7 +93,7 @@ function scoreCandidate(direction: DpadDirection, current: Rect, candidate: Rect
  * For wrap-around: find the element on the opposite edge.
  * e.g., if moving "right" with no candidates, wrap to the leftmost element.
  */
-function getWrapTarget(direction: DpadDirection, entries: Array<{ id: string; rect: Rect }>): string | null {
+function getWrapTarget(direction: SpatialDirection, entries: Array<{ id: string; rect: Rect }>): string | null {
 	if (entries.length === 0) return null;
 
 	let best = entries[0];
@@ -116,12 +116,100 @@ function getWrapTarget(direction: DpadDirection, entries: Array<{ id: string; re
 	return best.id;
 }
 
+const SCROLL_MARGIN = 12;
+
+/**
+ * Find the nearest scrollable ancestor and scroll just enough to keep
+ * `element` fully visible, with SCROLL_MARGIN clearance on top/bottom.
+ * Unlike native scrollIntoView, this only scrolls the nearest scroll
+ * container (not the root viewport) and respects gradient overlays.
+ */
+function scrollIntoScrollContainer(element: HTMLElement) {
+	const container = findScrollParent(element);
+	if (!container) return;
+
+	const elRect = element.getBoundingClientRect();
+	const ctRect = container.getBoundingClientRect();
+
+	// How far off the element is from the visible area (with margin)
+	const offTop = elRect.top - ctRect.top - SCROLL_MARGIN;
+	const offBottom = elRect.bottom - ctRect.bottom + SCROLL_MARGIN;
+
+	if (offTop < 0) {
+		// Element is above visible area — scroll up
+		container.scrollBy({ top: offTop, behavior: "smooth" });
+	} else if (offBottom > 0) {
+		// Element is below visible area — scroll down
+		container.scrollBy({ top: offBottom, behavior: "smooth" });
+	}
+}
+
+/** Walk up the DOM to find the first ancestor with overflow scroll/auto. */
+function findScrollParent(el: HTMLElement): HTMLElement | null {
+	let current = el.parentElement;
+	while (current) {
+		const style = getComputedStyle(current);
+		if (/(auto|scroll)/.test(style.overflowY)) {
+			return current;
+		}
+		current = current.parentElement;
+	}
+	return null;
+}
+
+/**
+ * Check whether candidates have meaningful spatial spread along the
+ * movement axis.  For horizontal movement (left/right), we check if
+ * candidate centerX values differ by more than a threshold.  For
+ * vertical (up/down), we check centerY.
+ *
+ * This prevents wrap-around when all elements sit in a single column
+ * (left/right wrap) or a single row (up/down wrap).
+ */
+const SPREAD_THRESHOLD = 10; // px — elements within this distance are considered aligned
+
+function hasSpatialSpread(direction: SpatialDirection, candidates: Array<{ id: string; rect: Rect }>): boolean {
+	if (candidates.length < 2) return false;
+
+	const isHorizontal = direction === "left" || direction === "right";
+	const values = candidates.map((c) => (isHorizontal ? c.rect.centerX : c.rect.centerY));
+	const min = Math.min(...values);
+	const max = Math.max(...values);
+
+	return max - min > SPREAD_THRESHOLD;
+}
+
 export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine {
 	const { wrap = true, initialFocusId } = options;
 
 	const entries = new Map<string, FocusableEntry>();
 	let currentId: string | null = initialFocusId ?? null;
 	const listeners = new Set<(id: string | null) => void>();
+	let pendingInitialFocus = false;
+
+	function getStorageKey(): string {
+		try {
+			return `mrbd-focus:${window.location.pathname}`;
+		} catch {
+			return "mrbd-focus:default";
+		}
+	}
+
+	function getSavedFocusId(): string | null {
+		try {
+			return sessionStorage.getItem(getStorageKey());
+		} catch {
+			return null;
+		}
+	}
+
+	function saveFocusId(id: string) {
+		try {
+			sessionStorage.setItem(getStorageKey(), id);
+		} catch {
+			// sessionStorage may be unavailable
+		}
+	}
 
 	function notify() {
 		for (const listener of listeners) {
@@ -129,7 +217,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		}
 	}
 
-	function applyFocus(id: string | null) {
+	function applyFocus(id: string | null, { persist = true } = {}) {
 		// Remove data-focused from previous
 		if (currentId) {
 			const prev = entries.get(currentId);
@@ -147,7 +235,13 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 			if (next?.element) {
 				next.element.setAttribute("data-focused", "true");
 				next.element.focus({ preventScroll: true });
+				scrollIntoScrollContainer(next.element);
 			}
+
+			// Persist for route-based focus restoration (skip during
+			// unregister cascades so intermediate IDs don't overwrite
+			// the user's intended focus target)
+			if (persist) saveFocusId(currentId);
 		}
 
 		notify();
@@ -156,23 +250,44 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	function register(entry: FocusableEntry) {
 		entries.set(entry.id, entry);
 
-		// If this is the initial focus target, or the first registered element
-		if (entry.id === initialFocusId || (currentId === null && entries.size === 1)) {
-			// Defer to allow DOM to settle
+		// If this is the initial focus target, focus immediately
+		if (entry.id === initialFocusId) {
 			requestAnimationFrame(() => applyFocus(entry.id));
+			return;
+		}
+
+		// When nothing is focused, batch the initial focus decision in a single
+		// rAF so all elements can register first. This lets us check for a
+		// saved focus ID (from a previous visit to this route) before falling
+		// back to the first registered element.
+		if (currentId === null && !pendingInitialFocus) {
+			pendingInitialFocus = true;
+			requestAnimationFrame(() => {
+				pendingInitialFocus = false;
+
+				// Priority: saved focus > first entry
+				const savedId = getSavedFocusId();
+				if (savedId && entries.has(savedId)) {
+					applyFocus(savedId);
+				} else {
+					const first = entries.keys().next().value;
+					if (first) applyFocus(first);
+				}
+			});
 		}
 	}
 
 	function unregister(id: string) {
 		entries.delete(id);
 		if (currentId === id) {
-			// Focus first remaining entry, or null
+			// Focus first remaining entry, or null.
+			// Don't persist — this is a teardown cascade, not user intent.
 			const first = entries.keys().next().value;
-			applyFocus(first ?? null);
+			applyFocus(first ?? null, { persist: false });
 		}
 	}
 
-	function move(direction: DpadDirection) {
+	function move(direction: SpatialDirection) {
 		if (entries.size === 0) return;
 
 		// If nothing focused, focus the first entry
@@ -213,8 +328,11 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 			}
 
 			applyFocus(bestId);
-		} else if (wrap) {
-			// No candidates in direction — wrap to opposite edge
+		} else if (wrap && hasSpatialSpread(direction, candidates)) {
+			// No candidates in direction — wrap to opposite edge, but only
+			// if elements are actually spread along the movement axis.
+			// This prevents left/right from wrapping in a purely vertical
+			// layout (and vice-versa).
 			const allWithRects = candidates.map((c) => ({ id: c.id, rect: c.rect }));
 			const wrapId = getWrapTarget(direction, allWithRects);
 			if (wrapId) applyFocus(wrapId);

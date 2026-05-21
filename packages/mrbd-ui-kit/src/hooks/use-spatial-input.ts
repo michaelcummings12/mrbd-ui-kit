@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type DpadKey = "up" | "down" | "left" | "right" | "select";
+export type SpatialInputKey = "up" | "down" | "left" | "right" | "select";
 
-export interface DpadState {
+export interface SpatialInputState {
 	/** The key currently being held, or null */
-	activeKey: DpadKey | null;
+	activeKey: SpatialInputKey | null;
 	/** Last key that was pressed (persists after release) */
-	lastKey: DpadKey | null;
+	lastKey: SpatialInputKey | null;
 }
 
-export interface UseDpadOptions {
-	/** Called on any D-pad key press */
-	onPress?: (key: DpadKey) => void;
+export interface UseSpatialInputOptions {
+	/** Called on any spatial input key press */
+	onPress?: (key: SpatialInputKey) => void;
 	/** Called on key release */
-	onRelease?: (key: DpadKey) => void;
+	onRelease?: (key: SpatialInputKey) => void;
 	/** Disable the hook */
 	disabled?: boolean;
 }
 
-const KEY_MAP: Record<string, DpadKey> = {
+const KEY_MAP: Record<string, SpatialInputKey> = {
 	ArrowUp: "up",
 	ArrowDown: "down",
 	ArrowLeft: "left",
@@ -26,9 +26,9 @@ const KEY_MAP: Record<string, DpadKey> = {
 	Enter: "select"
 };
 
-export function useDpad(options: UseDpadOptions = {}): DpadState {
+export function useSpatialInput(options: UseSpatialInputOptions = {}): SpatialInputState {
 	const { disabled = false } = options;
-	const [state, setState] = useState<DpadState>({
+	const [state, setState] = useState<SpatialInputState>({
 		activeKey: null,
 		lastKey: null
 	});
@@ -38,20 +38,20 @@ export function useDpad(options: UseDpadOptions = {}): DpadState {
 	callbacksRef.current = options;
 
 	const handleKeyDown = useCallback((e: KeyboardEvent) => {
-		const dpadKey = KEY_MAP[e.key];
-		if (!dpadKey) return;
+		const key = KEY_MAP[e.key];
+		if (!key) return;
 
 		e.preventDefault();
-		setState((prev) => ({ activeKey: dpadKey, lastKey: dpadKey }));
-		callbacksRef.current.onPress?.(dpadKey);
+		setState((prev) => ({ activeKey: key, lastKey: key }));
+		callbacksRef.current.onPress?.(key);
 	}, []);
 
 	const handleKeyUp = useCallback((e: KeyboardEvent) => {
-		const dpadKey = KEY_MAP[e.key];
-		if (!dpadKey) return;
+		const key = KEY_MAP[e.key];
+		if (!key) return;
 
 		setState((prev) => ({ ...prev, activeKey: null }));
-		callbacksRef.current.onRelease?.(dpadKey);
+		callbacksRef.current.onRelease?.(key);
 	}, []);
 
 	useEffect(() => {

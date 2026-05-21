@@ -1,27 +1,12 @@
 @source "../../dist";
 
 @theme {
-  /* Colors — additive display safe palette */
-  --color-mrbd-bg: rgba(0, 0, 0, 0);
-  --color-mrbd-surface: rgba(255, 255, 255, 0.06);
-  --color-mrbd-surface-hover: rgba(255, 255, 255, 0.12);
-  --color-mrbd-surface-active: rgba(255, 255, 255, 0.18);
+  /* Accent color */
+  --color-mrbd-accent: #ffffff;
+
+  /* Text color */
   --color-mrbd-text: rgba(255, 255, 255, 0.92);
-  --color-mrbd-text-dim: rgba(255, 255, 255, 0.55);
-  --color-mrbd-accent: rgba(100, 180, 255, 0.9);
-  --color-mrbd-danger: rgba(255, 100, 100, 0.85);
-  --color-mrbd-success: rgba(100, 255, 160, 0.85);
 
-  /* Sizing */
-  --width-mrbd: 600px;
-  --height-mrbd: 600px;
-
-  /* Typography */
-  --font-mrbd: 'Inter', 'Roboto', sans-serif;
-
-  /* Outer glows — NEVER use drop-shadow (looks like dirt on lens) */
-  --shadow-mrbd-glow: 0 0 8px rgba(255, 255, 255, 0.15);
-  --shadow-mrbd-glow-accent: 0 0 12px rgba(100, 180, 255, 0.3);
-  --shadow-mrbd-glow-focus: 0 0 0 2px rgba(100, 180, 255, 0.5);
-  --shadow-mrbd-glow-inner: inset 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 0 0 6px rgba(255, 255, 255, 0.02), inset 0 0 18px 6px rgba(255, 255, 255, 0.1);
+  /* Focus glow */
+  --shadow-mrbd-glow: inset -2px -2px 12px 6px color-mix(in srgb, var(--color-mrbd-accent) 40%, transparent), inset 0 0 18px 12px color-mix(in srgb, var(--color-mrbd-accent) 10%, transparent);
 }

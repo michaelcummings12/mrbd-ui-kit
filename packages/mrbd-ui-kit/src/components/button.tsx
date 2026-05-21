@@ -2,6 +2,7 @@ import type { ElementType, ReactNode } from "react";
 import { cn } from "../lib/cn";
 import { Focusable } from "./focusable";
 import { Icon } from "./icon";
+import { Slot } from "./slot";
 
 export interface ButtonProps {
 	children: ReactNode;
@@ -15,51 +16,84 @@ export interface ButtonProps {
 	icon?: ElementType;
 	/** @default false */
 	disabled?: boolean;
-	/** Called on D-pad select (Enter key) */
-	onPress?: () => void;
-	/** Full width. @default false */
-	fullWidth?: boolean;
-	/** Focus group for scoped navigation */
-	group?: string;
+	/** Called on select (Enter key) */
+	onClick?: () => void;
+	/** Called when this element receives focus */
+	onFocus?: () => void;
+	/** Called when this element loses focus */
+	onBlur?: () => void;
+	/** Called when select (Enter) is pressed while focused (alias for onClick) */
+	onSelect?: () => void;
 	className?: string;
+	/**
+	 * Merge button styles onto the child element instead of rendering a <button>.
+	 * Useful for `<Link>`, `<a>`, or any other element that should act as the
+	 * interactive target while still participating in the MRBD focus engine.
+	 *
+	 * The child must be a single valid React element.
+	 *
+	 * @example
+	 * <Button id="home" asChild>
+	 *   <Link href="/home">Home</Link>
+	 * </Button>
+	 */
+	asChild?: boolean;
 }
 
 const VARIANT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
-	primary: "bg-mrbd-accent text-black font-bold hover:brightness-110 active:brightness-90",
-	secondary: "bg-mrbd-surface text-mrbd-text border border-white/10 hover:bg-mrbd-surface-hover active:bg-mrbd-surface-active",
-	ghost: "bg-white/5 text-mrbd-text active:bg-white/10",
-	danger: "bg-mrbd-danger text-black font-bold hover:brightness-110 active:brightness-90"
+	primary: "bg-mrbd-accent/90 text-black",
+	secondary: "bg-mrbd-accent/10 text-mrbd-text border border-mrbd-accent/10 hover:bg-mrbd-accent/20 active:bg-mrbd-accent/30",
+	ghost: "border-l-2 border-t-2 border-mrbd-accent/10 hover:border-mrbd-accent/40 group-focus:border-mrbd-accent/40 bg-mrbd-accent/20 text-mrbd-text",
+	danger: "bg-red-400/85 text-black"
 };
 
 const SIZE_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
-	sm: "h-20 px-3 text-sm rounded-3xl gap-1.5",
+	sm: "h-12 px-4 text-sm rounded-3xl gap-1.5",
 	md: "h-24 px-4 text-base rounded-4xl gap-2",
-	lg: "h-28 px-6 text-lg rounded-4xl gap-2.5"
+	lg: "h-28 px-6 text-base rounded-4xl gap-2"
 };
 
-const ICON_SIZE: Record<NonNullable<ButtonProps["size"]>, number> = {
-	sm: 20,
-	md: 24,
-	lg: 28
+const ICON_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
+	sm: "size-5",
+	md: "size-6",
+	lg: "size-7"
 };
 
-export function Button({ children, variant = "ghost", size = "md", id, icon, disabled, onPress, group, className }: ButtonProps) {
-	const classes = [];
+export function Button({
+	children,
+	variant = "ghost",
+	size = "md",
+	id,
+	icon,
+	disabled,
+	onClick,
+	onFocus,
+	onBlur,
+	onSelect,
+	className,
+	asChild = false
+}: ButtonProps) {
+	const resolvedClass = cn(
+		"inline-flex items-center justify-center font-semibold transition-all group-focus:scale-103 hover:scale-103 focus:outline-none",
+		VARIANT_CLASSES[variant],
+		SIZE_CLASSES[size],
+		"hover:shadow-mrbd-glow group-focus:shadow-mrbd-glow",
+		disabled && "pointer-events-none opacity-40",
+		className
+	);
 
 	return (
-		<Focusable id={id} onSelect={onPress} disabled={disabled} group={group} className="group">
-			<button
-				className={cn(
-					"font-mrbd inline-flex items-center justify-center font-semibold transition-all duration-150 group-focus:scale-105 hover:scale-105 focus:outline-none",
-					VARIANT_CLASSES[variant],
-					SIZE_CLASSES[size],
-					"hover:shadow-mrbd-glow-inner group-focus:shadow-mrbd-glow-inner",
-					disabled && "pointer-events-none opacity-40",
-					className
-				)}>
-				{icon && <Icon icon={icon} size={ICON_SIZE[size]} />}
-				{children}
-			</button>
+		<Focusable id={id} onSelect={onSelect ?? onClick} onFocus={onFocus} onBlur={onBlur} disabled={disabled} className="group">
+			{asChild ? (
+				// Slot merges resolvedClass onto the single child element (e.g. <Link>).
+				// Must be exactly one child — no icon expression here.
+				<Slot className={resolvedClass}>{children}</Slot>
+			) : (
+				<button className={resolvedClass} onClick={onSelect ?? onClick}>
+					{icon && <Icon icon={icon} className={ICON_CLASSES[size]} />}
+					{children}
+				</button>
+			)}
 		</Focusable>
 	);
 }

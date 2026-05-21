@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
-import { createFocusEngine, type DpadDirection, type FocusEngine, type FocusEngineOptions } from "../focus/engine";
+import { createFocusEngine, type FocusEngine, type FocusEngineOptions, type SpatialDirection } from "../focus/engine";
 import { cn } from "../lib/cn";
 
 export interface DisplayRootProps {
@@ -7,7 +7,7 @@ export interface DisplayRootProps {
 	className?: string;
 	/** Focus engine configuration */
 	focusOptions?: FocusEngineOptions;
-	/** Called when D-pad select (Enter) is pressed on a focused element */
+	/** Called when select (Enter) is pressed on a focused element */
 	onSelect?: (focusedId: string) => void;
 }
 
@@ -25,7 +25,7 @@ export function useFocusContext(): FocusContextValue {
 	return ctx;
 }
 
-const ARROW_TO_DIRECTION: Record<string, DpadDirection> = {
+const ARROW_TO_DIRECTION: Record<string, SpatialDirection> = {
 	ArrowUp: "up",
 	ArrowDown: "down",
 	ArrowLeft: "left",
@@ -86,7 +86,7 @@ export function DisplayRoot({ children, className, focusOptions, onSelect }: Dis
 
 	return (
 		<FocusContext.Provider value={contextValue}>
-			<div ref={rootRef} className={cn("relative m-auto size-150 overflow-hidden bg-transparent p-4", className)} tabIndex={-1}>
+			<div ref={rootRef} className={cn("relative m-auto size-150 overflow-hidden bg-black p-2", className)} tabIndex={-1}>
 				{children}
 			</div>
 		</FocusContext.Provider>

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFocusContext } from "../components/display-root";
-import type { DpadDirection } from "../focus/engine";
+import type { SpatialDirection } from "../focus/engine";
 
 export interface FocusManager {
 	/** Move focus in a direction */
-	move: (direction: DpadDirection) => void;
+	move: (direction: SpatialDirection) => void;
 	/** Focus a specific element by ID */
 	focus: (id: string) => void;
 	/** Currently focused element ID, or null */
@@ -23,7 +23,7 @@ export function useFocusManager(): FocusManager {
 	}, [engine]);
 
 	const move = useCallback(
-		(direction: DpadDirection) => {
+		(direction: SpatialDirection) => {
 			engine.move(direction);
 		},
 		[engine]
