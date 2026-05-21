@@ -188,6 +188,31 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	const entries = new Map<string, FocusableEntry>();
 	let currentId: string | null = initialFocusId ?? null;
 	const listeners = new Set<(id: string | null) => void>();
+	let pendingInitialFocus = false;
+
+	function getStorageKey(): string {
+		try {
+			return `mrbd-focus:${window.location.pathname}`;
+		} catch {
+			return "mrbd-focus:default";
+		}
+	}
+
+	function getSavedFocusId(): string | null {
+		try {
+			return sessionStorage.getItem(getStorageKey());
+		} catch {
+			return null;
+		}
+	}
+
+	function saveFocusId(id: string) {
+		try {
+			sessionStorage.setItem(getStorageKey(), id);
+		} catch {
+			// sessionStorage may be unavailable
+		}
+	}
 
 	function notify() {
 		for (const listener of listeners) {
@@ -195,7 +220,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		}
 	}
 
-	function applyFocus(id: string | null) {
+	function applyFocus(id: string | null, { persist = true } = {}) {
 		// Remove data-focused from previous
 		if (currentId) {
 			const prev = entries.get(currentId);
@@ -215,6 +240,11 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 				next.element.focus({ preventScroll: true });
 				scrollIntoScrollContainer(next.element);
 			}
+
+			// Persist for route-based focus restoration (skip during
+			// unregister cascades so intermediate IDs don't overwrite
+			// the user's intended focus target)
+			if (persist) saveFocusId(currentId);
 		}
 
 		notify();
@@ -223,19 +253,40 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	function register(entry: FocusableEntry) {
 		entries.set(entry.id, entry);
 
-		// If this is the initial focus target, or the first registered element
-		if (entry.id === initialFocusId || (currentId === null && entries.size === 1)) {
-			// Defer to allow DOM to settle
+		// If this is the initial focus target, focus immediately
+		if (entry.id === initialFocusId) {
 			requestAnimationFrame(() => applyFocus(entry.id));
+			return;
+		}
+
+		// When nothing is focused, batch the initial focus decision in a single
+		// rAF so all elements can register first. This lets us check for a
+		// saved focus ID (from a previous visit to this route) before falling
+		// back to the first registered element.
+		if (currentId === null && !pendingInitialFocus) {
+			pendingInitialFocus = true;
+			requestAnimationFrame(() => {
+				pendingInitialFocus = false;
+
+				// Priority: saved focus > first entry
+				const savedId = getSavedFocusId();
+				if (savedId && entries.has(savedId)) {
+					applyFocus(savedId);
+				} else {
+					const first = entries.keys().next().value;
+					if (first) applyFocus(first);
+				}
+			});
 		}
 	}
 
 	function unregister(id: string) {
 		entries.delete(id);
 		if (currentId === id) {
-			// Focus first remaining entry, or null
+			// Focus first remaining entry, or null.
+			// Don't persist — this is a teardown cascade, not user intent.
 			const first = entries.keys().next().value;
-			applyFocus(first ?? null);
+			applyFocus(first ?? null, { persist: false });
 		}
 	}
 
