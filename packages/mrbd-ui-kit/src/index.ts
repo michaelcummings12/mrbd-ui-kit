@@ -8,7 +8,6 @@ export { Text } from "./components/text";
 // Components — Composites
 export { Button } from "./components/button";
 export { LoadingSpinner } from "./components/loading-indicator";
-export { NavigationBar } from "./components/navigation-bar";
 export { Pill } from "./components/pill";
 export { ScrollArea } from "./components/scroll-area";
 export { ScrollBar } from "./components/scroll-bar";
@@ -25,7 +24,6 @@ export type { DisplayRootProps } from "./components/display-root";
 export type { FocusableProps } from "./components/focusable";
 export type { IconProps } from "./components/icon";
 export type { LoadingSpinnerProps } from "./components/loading-indicator";
-export type { NavItem, NavigationBarProps } from "./components/navigation-bar";
 export type { PillProps } from "./components/pill";
 export type { ScrollAreaProps } from "./components/scroll-area";
 export type { ScrollBarProps } from "./components/scroll-bar";

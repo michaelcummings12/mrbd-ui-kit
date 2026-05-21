@@ -57,30 +57,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ## Quick Start
 
 ```tsx
-import { DisplayRoot, Button, NavigationBar, Text } from 'mrbd-ui-kit';
-import { useIsMRBD } from 'mrbd-ui-kit';
+import { Check } from "lucide-react";
+import { Button, DisplayRoot, Text } from "mrbd-ui-kit";
 
 export default function App() {
   return (
     <DisplayRoot>
       <div className="flex flex-col gap-4 p-6">
-        <Text size="xl" weight="bold">Hello, Display</Text>
+        <Text size="lg" weight="bold">Hello, Display</Text>
         <Text dim>Glanceable UI for your glasses.</Text>
 
-        <Button id="action-btn" variant="primary" onPress={() => console.log('pressed!')}>
+        <Button id="action-btn" variant="primary" icon={Check} onPress={() => console.log("pressed!")}>
           Get Started
         </Button>
       </div>
-
-      <NavigationBar
-        items={[
-          { id: 'home', label: 'Home', icon: 'home' },
-          { id: 'search', label: 'Search', icon: 'search' },
-          { id: 'settings', label: 'Settings', icon: 'settings' },
-        ]}
-        activeId="home"
-        onSelect={(id) => console.log('tab:', id)}
-      />
     </DisplayRoot>
   );
 }
@@ -109,8 +99,8 @@ Required root wrapper. Sets up the 600×600 viewport, focus engine context, and 
 
 ```tsx
 <DisplayRoot
-  focusOptions={{ wrap: true, initialFocusId: 'first-btn' }}
-  onSelect={(focusedId) => console.log('selected:', focusedId)}
+  focusOptions={{ wrap: true, initialFocusId: "first-btn" }}
+  onSelect={(focusedId) => console.log("selected:", focusedId)}
 >
   {children}
 </DisplayRoot>
@@ -133,27 +123,40 @@ Display-optimized typography with enforced minimum font weight.
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'md'` | Font size |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Font size |
 | `weight` | `'medium' \| 'semibold' \| 'bold'` | `'medium'` | Font weight (min 500) |
 | `glow` | `boolean` | `false` | Add outer glow for emphasis |
 | `dim` | `boolean` | `false` | Use dimmed text color |
 | `as` | `'p' \| 'span' \| 'h1' \| 'h2' \| 'h3' \| 'label'` | `'span'` | HTML element |
-
+| `className` | `string` | — | Additional classes |
 
 #### `<Icon>`
 
-SVG icon with 14 built-in icons. Supports custom SVG children.
+Renders an icon component (e.g. from `lucide-react`) or custom SVG children. No built-in icon set — pass any React component via the `icon` prop.
 
 ```tsx
-<Icon name="home" size={24} />
-<Icon name="bell" size={20} color="var(--color-mrbd-accent)" />
+import { Home, Bell } from "lucide-react";
+
+<Icon icon={Home} size={24} />
+<Icon icon={Bell} size={20} color="var(--color-mrbd-accent)" />
+
+{/* Custom SVG */}
+<Icon size={24}>
+  <circle cx="12" cy="12" r="10" />
+</Icon>
 ```
 
-Built-in icons: `chevron-left`, `chevron-right`, `chevron-up`, `chevron-down`, `check`, `x`, `home`, `settings`, `bell`, `search`, `play`, `pause`, `skip-forward`, `skip-back`
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `icon` | `ElementType` | — | Icon component to render (e.g. from lucide-react) |
+| `children` | `ReactNode` | — | Custom SVG children (used if `icon` is not provided) |
+| `size` | `number` | `24` | Size in pixels |
+| `color` | `string` | `'currentColor'` | CSS color value |
+| `className` | `string` | — | Additional classes |
 
 #### `<Focusable>`
 
-Makes any child D-pad focusable. Registers with the spatial focus engine.
+Makes any child D-pad focusable. Registers with the spatial focus engine. On Enter key, fires `onSelect` and clicks the first child element.
 
 ```tsx
 <Focusable id="my-item" onSelect={() => handleSelect()} onFocus={() => handleFocus()}>
@@ -169,70 +172,136 @@ Makes any child D-pad focusable. Registers with the spatial focus engine.
 | `onFocus` | `() => void` | — | Called when focused |
 | `onBlur` | `() => void` | — | Called when focus leaves |
 | `disabled` | `boolean` | `false` | Remove from focus order |
+| `className` | `string` | — | Additional classes |
+
+#### `<Slot>`
+
+Merges its own props onto a single child element — the child's props take precedence for conflicts, except `className` which is concatenated. Inspired by Radix UI. Used internally by `<Button>`'s `asChild` pattern.
+
+```tsx
+<Slot className="btn-styles">
+  <Link href="/home">Home</Link>
+</Slot>
+{/* Renders: <a href="/home" class="btn-styles">Home</a> */}
+```
 
 ### Composites
 
 #### `<Button>`
 
-D-pad focusable button with variants.
+D-pad focusable button with variants. Default variant is `ghost`. Wraps `<Focusable>` internally.
 
 ```tsx
-<Button id="confirm" variant="primary" icon="check" onPress={handleConfirm}>
+import { Check, X } from "lucide-react";
+
+<Button id="confirm" variant="primary" icon={Check} onPress={handleConfirm}>
   Confirm
 </Button>
-<Button id="cancel" variant="ghost" onPress={handleCancel}>
+<Button id="cancel" icon={X} onPress={handleCancel}>
   Cancel
 </Button>
 ```
 
+The `asChild` prop merges button styles onto a child element instead of rendering a `<button>`:
+
+```tsx
+<Button id="home-link" asChild>
+  <Link href="/home">Home</Link>
+</Button>
+```
+
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'danger'` | `'primary'` | Visual style |
+| `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'danger'` | `'ghost'` | Visual style |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
 | `id` | `string` | **required** | Focus engine ID |
-| `icon` | `BuiltInIcon` | — | Icon before label |
+| `icon` | `ElementType` | — | Icon component before label |
 | `onPress` | `() => void` | — | Called on D-pad select |
 | `disabled` | `boolean` | `false` | Disabled state |
 | `fullWidth` | `boolean` | `false` | Full width |
+| `asChild` | `boolean` | `false` | Merge styles onto child element instead of `<button>` |
+| `group` | `string` | — | Focus group for scoped navigation |
+| `className` | `string` | — | Additional classes |
 
-#### `<NavigationBar>`
+#### `<Pill>`
 
-Bottom-anchored tab bar with D-pad left/right navigation.
+Rounded pill/badge with a subtle gradient tint border.
 
 ```tsx
-<NavigationBar
-  items={[
-    { id: 'home', label: 'Home', icon: 'home' },
-    { id: 'search', label: 'Search', icon: 'search' },
-    { id: 'settings', label: 'Settings', icon: 'settings' },
-  ]}
-  activeId={activeTab}
-  onSelect={setActiveTab}
-/>
+<Pill>Status: Active</Pill>
+<Pill className="px-6">Custom styling</Pill>
 ```
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `items` | `NavItem[]` | **required** | Tab definitions |
-| `activeId` | `string` | **required** | Currently active tab ID |
-| `onSelect` | `(id: string) => void` | **required** | Tab selection handler |
+| `className` | `string` | — | Additional classes |
 
-#### `<LoadingIndicator>`
+#### `<LoadingSpinner>`
 
-Lightweight loading animation with three variants.
+CSS-only spinner animation.
 
 ```tsx
-<LoadingIndicator variant="spinner" size={32} />
-<LoadingIndicator variant="dots" size={24} />
-<LoadingIndicator variant="pulse" size={16} />
+<LoadingSpinner size={32} />
+<LoadingSpinner size={24} color="var(--color-mrbd-accent)" />
 ```
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `variant` | `'spinner' \| 'dots' \| 'pulse'` | `'spinner'` | Animation style |
 | `size` | `number` | `32` | Size in pixels |
 | `color` | `string` | Theme text color | CSS color value |
 | `label` | `string` | `'Loading'` | Accessible label |
+| `className` | `string` | — | Additional classes |
+
+#### `<ScrollArea>`
+
+A scroll viewport with fade gradients that indicate hidden content above or below. Pair with `useScroll()` and optionally `<ScrollBar>`.
+
+```tsx
+const scroll = useScroll();
+
+<ScrollArea
+  scrollRef={scroll.scrollRef}
+  canScrollUp={scroll.canScrollUp}
+  canScrollDown={scroll.canScrollDown}
+>
+  {/* Scrollable content */}
+</ScrollArea>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `scrollRef` | `React.RefObject<HTMLDivElement \| null>` | **required** | Ref from `useScroll()` |
+| `canScrollUp` | `boolean` | **required** | Show top fade gradient |
+| `canScrollDown` | `boolean` | **required** | Show bottom fade gradient |
+| `className` | `string` | — | Additional classes |
+
+#### `<ScrollBar>`
+
+A composable scrollbar indicator. The track is fixed height (112px). The thumb scales proportionally to content. Fades in only while scrolling.
+
+```tsx
+const scroll = useScroll();
+
+<div className="flex flex-row gap-2">
+  <ScrollArea scrollRef={scroll.scrollRef} canScrollUp={scroll.canScrollUp} canScrollDown={scroll.canScrollDown}>
+    {items}
+  </ScrollArea>
+  <ScrollBar
+    scrollHeight={scroll.scrollHeight}
+    clientHeight={scroll.clientHeight}
+    scrollTop={scroll.scrollTop}
+    isScrolling={scroll.isScrolling}
+  />
+</div>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `scrollHeight` | `number` | **required** | Total scrollable height |
+| `clientHeight` | `number` | **required** | Visible viewport height |
+| `scrollTop` | `number` | **required** | Current scroll position |
+| `isScrolling` | `boolean` | `false` | Show/hide the scrollbar |
+| `className` | `string` | — | Additional classes |
 
 ## Hooks
 
@@ -242,8 +311,8 @@ Subscribe to D-pad input events.
 
 ```tsx
 const { activeKey, lastKey } = useDpad({
-  onPress: (key) => console.log('pressed:', key),
-  onRelease: (key) => console.log('released:', key),
+  onPress: (key) => console.log("pressed:", key),
+  onRelease: (key) => console.log("released:", key),
 });
 ```
 
@@ -255,15 +324,15 @@ Programmatic focus control. Must be used inside `<DisplayRoot>`.
 const { focusedId, move, focus } = useFocusManager();
 
 // Move focus programmatically
-move('down');
+move("down");
 
 // Focus a specific element
-focus('my-button');
+focus("my-button");
 ```
 
 ### `useIsMRBD()`
 
-Client-side detection of Meta Ray-Ban Display via user agent.
+Client-side detection of Meta Ray-Ban Display via user agent. Returns `false` during SSR.
 
 ```tsx
 const isMRBD = useIsMRBD();
@@ -274,12 +343,28 @@ if (isMRBD) {
 return <StandardWebApp />;
 ```
 
+### `useScroll()`
+
+Tracks scroll position of a container element. Returns scroll metrics and a ref to attach. Designed to pair with `<ScrollArea>` and `<ScrollBar>`.
+
+```tsx
+const scroll = useScroll();
+
+// scroll.scrollRef      — attach to scrollable container
+// scroll.scrollTop      — current position (px)
+// scroll.scrollHeight   — total content height (px)
+// scroll.clientHeight   — visible viewport height (px)
+// scroll.canScrollUp    — true when content is hidden above
+// scroll.canScrollDown  — true when content is hidden below
+// scroll.isScrolling    — true while scroll position is actively changing
+```
+
 ## Server-Side Detection
 
 ### Generic server (any runtime)
 
 ```tsx
-import { isMRBD, isMRBDFromHeaders } from 'mrbd-ui-kit/server';
+import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
 
 // Check a raw user agent string
 isMRBD(userAgentString); // boolean
@@ -291,7 +376,7 @@ isMRBDFromHeaders(request.headers); // boolean
 ### Next.js (React Server Components)
 
 ```tsx
-import { isMRBDServer } from 'mrbd-ui-kit/next';
+import { isMRBDServer } from "mrbd-ui-kit/next";
 
 export default async function Page() {
   const isMRBD = await isMRBDServer();
@@ -303,25 +388,46 @@ export default async function Page() {
 }
 ```
 
+## Theming
+
+The entire color palette is driven by a single CSS variable: **`--color-mrbd-tint`**. By default it's white (`#ffffff`). Override it to theme your entire app with one line:
+
+```css
+/* global.css — after the mrbd-ui-kit imports */
+:root {
+  --color-mrbd-tint: #14b8a6; /* teal */
+}
+```
+
+All surface colors, accent, glows, and border tints are derived from this variable via `color-mix()`. Changing `--color-mrbd-tint` automatically updates:
+- `bg-mrbd-surface` (tint at 6% opacity)
+- `bg-mrbd-surface-hover` (tint at 12%)
+- `bg-mrbd-surface-active` (tint at 18%)
+- `bg-mrbd-accent` (tint at 90%)
+- All `shadow-mrbd-glow-*` values
+- Border tints on `Button`, `Pill`, etc.
+
 ## Tailwind Theme Tokens
 
 When you import `mrbd-ui-kit/css/theme`, these Tailwind utilities become available:
 
 ### Colors
+- `bg-mrbd-tint` — The raw tint color (default white)
 - `bg-mrbd-bg` — Transparent (black on additive display)
-- `bg-mrbd-surface` — Subtle surface (white at 6% opacity)
+- `bg-mrbd-surface` — Subtle surface (tint at 6% opacity)
 - `bg-mrbd-surface-hover` — Hover state surface
 - `bg-mrbd-surface-active` — Active/pressed surface
 - `text-mrbd-text` — Primary text (white at 92% — not pure white)
 - `text-mrbd-text-dim` — Secondary/dimmed text
-- `bg-mrbd-accent` — Accent blue
+- `bg-mrbd-accent` — Accent color (derived from tint)
 - `bg-mrbd-danger` — Danger red
 - `bg-mrbd-success` — Success green
 
 ### Shadows (Outer Glow)
-- `shadow-mrbd-glow` — Subtle white glow
-- `shadow-mrbd-glow-accent` — Blue accent glow
+- `shadow-mrbd-glow` — Subtle tint glow
+- `shadow-mrbd-glow-accent` — Stronger tint glow
 - `shadow-mrbd-glow-focus` — Focus ring glow
+- `shadow-mrbd-glow-inner` — Inner glow (used by Button hover/focus)
 
 ### Sizing
 - `w-mrbd` / `h-mrbd` — 600px (full display)
