@@ -1,20 +1,51 @@
 "use client";
 
-import { Eye, Glasses, Link as LinkIcon, Paintbrush, Pointer, TextCursor } from "lucide-react";
-import { Button, Icon, ScrollArea, ScrollBar, Text, useScroll } from "mrbd-ui-kit";
+import { Eye, Glasses, List, Paintbrush, Pointer, TextCursor } from "lucide-react";
+import { Button, Icon, ScrollContainer, Text } from "mrbd-ui-kit";
 import Link from "next/link";
+import type { ElementType } from "react";
+
+interface NavItemProps {
+	id: string;
+	href: string;
+	icon: ElementType;
+	label: string;
+	className?: string;
+}
+
+function NavItem({ id, href, icon, label, className }: NavItemProps) {
+	return (
+		<Button id={id} className={`w-full ${className ?? ""}`} size="lg" asChild>
+			<Link href={href}>
+				<div className="flex w-full flex-row items-center gap-4">
+					<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
+						<Icon icon={icon} size={28} color="white" />
+					</div>
+					<Text weight="semibold">{label}</Text>
+				</div>
+			</Link>
+		</Button>
+	);
+}
+
+const NAV_ITEMS: NavItemProps[] = [
+	{ id: "buttons", href: "/buttons", icon: Pointer, label: "Buttons" },
+	{ id: "typography", href: "/typography", icon: TextCursor, label: "Typography" },
+	{ id: "focus", href: "/focus", icon: Eye, label: "Focus & Navigation" },
+	{ id: "scroll", href: "/scroll", icon: List, label: "Scrolling" },
+	{
+		id: "themes",
+		href: "/themes",
+		icon: Paintbrush,
+		label: "Themes",
+		className:
+			"group-focus:border-none group-focus:bg-linear-to-br group-focus:from-red-500 group-focus:via-green-500 group-focus:to-blue-500 hover:border-none hover:bg-linear-to-br hover:from-red-500 hover:via-green-500 hover:via-70% hover:to-blue-500"
+	}
+];
 
 export default function HomeTab() {
-	const scroll = useScroll();
 	return (
 		<div className="flex h-full flex-col gap-4">
-			{/* <Pill>
-				<div className="flex h-full flex-row items-center justify-center gap-2">
-					<div className="size-3 rounded-full bg-white" />
-					<div className="size-3 rounded-full bg-white/50" />
-					<div className="size-3 rounded-full bg-white/50" />
-				</div>
-			</Pill> */}
 			<div className="flex flex-col items-center gap-2">
 				<div className="flex size-12 items-center justify-center rounded-full bg-linear-to-br from-blue-400 to-blue-600">
 					<Icon icon={Glasses} className="h-full text-white" />
@@ -26,77 +57,13 @@ export default function HomeTab() {
 					The easiest way to build an app for Meta Ray-Ban Display
 				</Text>
 			</div>
-			<div className="flex min-h-0 flex-1 flex-row gap-2">
-				<ScrollArea scrollRef={scroll.scrollRef} canScrollUp={scroll.canScrollUp} canScrollDown={scroll.canScrollDown}>
-					<div className="flex flex-col gap-4">
-						<Button id="buttons" className="w-full" size="lg" asChild>
-							<Link href="/buttons">
-								<div className="flex w-full flex-row items-center gap-4">
-									<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-										<Icon icon={Pointer} size={28} color="white" />
-									</div>
-									<div className="flex flex-col items-start">
-										<Text weight="semibold">Buttons</Text>
-									</div>
-								</div>
-							</Link>
-						</Button>
-						<Button id="focus" className="w-full" size="lg" asChild>
-							<Link href="/focus">
-								<div className="flex w-full flex-row items-center gap-4">
-									<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-										<Icon icon={Eye} size={28} color="white" />
-									</div>
-									<div className="flex flex-col items-start">
-										<Text weight="semibold">Focus</Text>
-									</div>
-								</div>
-							</Link>
-						</Button>
-						<Button id="navigation" className="w-full" size="lg" asChild>
-							<Link href="/navigation">
-								<div className="flex w-full flex-row items-center gap-4">
-									<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-										<Icon icon={LinkIcon} size={28} color="white" />
-									</div>
-									<div className="flex flex-col items-start">
-										<Text weight="semibold">Navigation</Text>
-									</div>
-								</div>
-							</Link>
-						</Button>
-						<Button id="typography" className="w-full" size="lg" asChild>
-							<Link href="/typography">
-								<div className="flex w-full flex-row items-center gap-4">
-									<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-										<Icon icon={TextCursor} size={28} color="white" />
-									</div>
-									<div className="flex flex-col items-start">
-										<Text weight="semibold">Typography</Text>
-									</div>
-								</div>
-							</Link>
-						</Button>
-						<Button
-							id="themes"
-							className="w-full group-focus:border-none group-focus:bg-linear-to-br group-focus:from-red-500 group-focus:via-green-500 group-focus:to-blue-500 hover:border-none hover:bg-linear-to-br hover:from-red-500 hover:via-green-500 hover:via-70% hover:to-blue-500"
-							size="lg"
-							asChild>
-							<Link href="/themes">
-								<div className="flex w-full flex-row items-center gap-4">
-									<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-										<Icon icon={Paintbrush} size={28} color="white" />
-									</div>
-									<div className="flex flex-col items-start">
-										<Text weight="semibold">Themes</Text>
-									</div>
-								</div>
-							</Link>
-						</Button>
-					</div>
-				</ScrollArea>
-				<ScrollBar scrollHeight={scroll.scrollHeight} clientHeight={scroll.clientHeight} scrollTop={scroll.scrollTop} isScrolling={scroll.isScrolling} />
-			</div>
+			<ScrollContainer>
+				<div className="flex flex-col gap-4">
+					{NAV_ITEMS.map((item) => (
+						<NavItem key={item.id} {...item} />
+					))}
+				</div>
+			</ScrollContainer>
 		</div>
 	);
 }
