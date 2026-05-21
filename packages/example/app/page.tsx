@@ -77,7 +77,11 @@ export default function HomeTab() {
 								</div>
 							</Link>
 						</Button>
-						<Button id="themes" className="w-full" size="lg" asChild>
+						<Button
+							id="themes"
+							className="w-full group-focus:border-none group-focus:bg-linear-to-br group-focus:from-red-500 group-focus:via-green-500 group-focus:to-blue-500 hover:border-none hover:bg-linear-to-br hover:from-red-500 hover:via-green-500 hover:via-70% hover:to-blue-500"
+							size="lg"
+							asChild>
 							<Link href="/themes">
 								<div className="flex w-full flex-row items-center gap-4">
 									<div className="flex size-14 items-center justify-center rounded-full bg-black/50">

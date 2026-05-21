@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { useFocusContext } from "./display-root";
+import { cn } from "../lib/cn";
 
 export interface FocusableProps {
 	children: ReactNode;
@@ -76,7 +77,7 @@ export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disa
 			ref={elementRef}
 			id={id}
 			tabIndex={disabled ? -1 : 0}
-			className={`mrbd-focusable ${className ?? ""}`.trim()}
+			className={cn("mrbd-focusable", className)}
 			onKeyDown={handleKeyDown}
 			aria-disabled={disabled || undefined}>
 			{children}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "../lib/cn";
 
 export interface TextProps {
 	children: ReactNode;
@@ -28,15 +29,13 @@ const WEIGHT_CLASSES: Record<NonNullable<TextProps["weight"]>, string> = {
 };
 
 export function Text({ children, size = "md", weight = "medium", glow = false, dim = false, as: Tag = "span", className }: TextProps) {
-	const classes = [
+	const classes = cn(
 		SIZE_CLASSES[size],
 		WEIGHT_CLASSES[weight],
 		dim ? "text-mrbd-text-dim" : "text-mrbd-text",
-		glow ? "shadow-mrbd-glow" : "",
-		className ?? ""
-	]
-		.filter(Boolean)
-		.join(" ");
+		glow && "shadow-mrbd-glow",
+		className
+	);
 
 	return <Tag className={classes}>{children}</Tag>;
 }
