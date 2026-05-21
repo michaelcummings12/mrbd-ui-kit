@@ -63,6 +63,9 @@ export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disa
 				e.preventDefault();
 				e.stopPropagation();
 				callbacksRef.current.onSelect?.();
+				// Click the first child element (or the wrapper itself as fallback).
+				const target = (elementRef.current?.firstElementChild ?? elementRef.current) as HTMLElement | null;
+				target?.click();
 			}
 		},
 		[disabled]
