@@ -1,7 +1,7 @@
 "use client";
 
-import { Bell, Check, MessageCircle, Star, Wifi } from "lucide-react";
-import { Button, Card, Icon, Text } from "mrbd-ui-kit";
+import { Bell, MessageCircle, Wifi } from "lucide-react";
+import { Card, Icon, Text } from "mrbd-ui-kit";
 import { PageHeader } from "../../components/page-header";
 
 export default function CardPage() {
@@ -18,6 +18,9 @@ export default function CardPage() {
 			</Card>
 
 			{/* With icon + description */}
+			<Text size="sm" className="text-gray-400">
+				With icon and description
+			</Text>
 			<Card>
 				<div className="flex flex-row items-center gap-3">
 					<div className="bg-mrbd-accent/10 flex size-9 shrink-0 items-center justify-center rounded-full">
@@ -32,27 +35,9 @@ export default function CardPage() {
 				</div>
 			</Card>
 
-			{/* With action row */}
-			<Card>
-				<div className="flex flex-col gap-3">
-					<div className="flex flex-row items-center gap-2">
-						<Icon icon={Star} className="text-mrbd-accent size-4" />
-						<Text weight="semibold">Confirm action</Text>
-					</div>
-					<div className="flex flex-row gap-2">
-						<Button id="card-accept" variant="primary" icon={Check}>
-							Accept
-						</Button>
-						<Button id="card-dismiss" variant="ghost">
-							Dismiss
-						</Button>
-					</div>
-				</div>
-			</Card>
-
 			{/* Status rows */}
 			<Text size="sm" className="text-gray-400">
-				Status panel pattern
+				Status panel
 			</Text>
 			<Card className="flex flex-col gap-1">
 				{[

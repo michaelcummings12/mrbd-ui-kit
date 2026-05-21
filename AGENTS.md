@@ -212,7 +212,7 @@ CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-text`. Customize
 
 ```tsx
 <LoadingSpinner />
-<LoadingSpinner className="size-6 text-mrbd-tint" />
+<LoadingSpinner className="size-6 text-mrbd-accent" />
 ```
 
 Props: `label?: string`, `className?`
