@@ -65,7 +65,7 @@ export default function App() {
     <DisplayRoot>
       <div className="flex flex-col gap-4 p-6">
         <Text size="lg" weight="bold">Hello, Display</Text>
-        <Text dim>Glanceable UI for your glasses.</Text>
+        <Text className="text-mrbd-text-dim">Glanceable UI for your glasses.</Text>
 
         <Button id="action-btn" variant="primary" icon={Check} onClick={() => console.log("pressed!")}>
           Get Started
@@ -117,31 +117,29 @@ Required root wrapper. Sets up the 600×600 viewport, focus engine context, and 
 Display-optimized typography with enforced minimum font weight.
 
 ```tsx
-<Text size="lg" weight="bold" glow>Important Message</Text>
-<Text size="sm" dim>Secondary info</Text>
+<Text size="lg" weight="bold">Important Message</Text>
+<Text size="sm" className="text-mrbd-text-dim">Secondary info</Text>
 ```
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Font size |
 | `weight` | `'medium' \| 'semibold' \| 'bold'` | `'medium'` | Font weight (min 500) |
-| `glow` | `boolean` | `false` | Add outer glow for emphasis |
-| `dim` | `boolean` | `false` | Use dimmed text color |
 | `as` | `'p' \| 'span' \| 'h1' \| 'h2' \| 'h3' \| 'label'` | `'span'` | HTML element |
 | `className` | `string` | — | Additional classes |
 
 #### `<Icon>`
 
-Renders an icon component (e.g. from `lucide-react`) or custom SVG children. No built-in icon set — pass any React component via the `icon` prop.
+Renders an icon component (e.g. from `lucide-react`) or custom SVG children. No built-in icon set — pass any React component via the `icon` prop. Style with `className`.
 
 ```tsx
 import { Home, Bell } from "lucide-react";
 
-<Icon icon={Home} size={24} />
-<Icon icon={Bell} size={20} color="var(--color-mrbd-accent)" />
+<Icon icon={Home} className="size-6" />
+<Icon icon={Bell} className="size-5 text-mrbd-accent" />
 
 {/* Custom SVG */}
-<Icon size={24}>
+<Icon className="size-6">
   <circle cx="12" cy="12" r="10" />
 </Icon>
 ```
@@ -150,8 +148,6 @@ import { Home, Bell } from "lucide-react";
 |---|---|---|---|
 | `icon` | `ElementType` | — | Icon component to render (e.g. from lucide-react) |
 | `children` | `ReactNode` | — | Custom SVG children (used if `icon` is not provided) |
-| `size` | `number` | `24` | Size in pixels |
-| `color` | `string` | `'currentColor'` | CSS color value |
 | `className` | `string` | — | Additional classes |
 
 #### `<Focusable>`
@@ -173,17 +169,6 @@ Makes any child spatially navigable. Registers with the spatial focus engine. On
 | `onBlur` | `() => void` | — | Called when focus leaves |
 | `disabled` | `boolean` | `false` | Remove from focus order |
 | `className` | `string` | — | Additional classes |
-
-#### `<Slot>`
-
-Merges its own props onto a single child element — the child's props take precedence for conflicts, except `className` which is concatenated. Inspired by Radix UI. Used internally by `<Button>`'s `asChild` pattern.
-
-```tsx
-<Slot className="btn-styles">
-  <Link href="/home">Home</Link>
-</Slot>
-{/* Renders: <a href="/home" class="btn-styles">Home</a> */}
-```
 
 ### Composites
 
@@ -222,7 +207,6 @@ The `asChild` prop merges button styles onto a child element instead of renderin
 | `onSelect` | `() => void` | — | Alias for `onClick` |
 | `disabled` | `boolean` | `false` | Disabled state |
 | `asChild` | `boolean` | `false` | Merge styles onto child element instead of `<button>` |
-| `group` | `string` | — | Focus group for scoped navigation |
 | `className` | `string` | — | Additional classes |
 
 #### `<Pill>`
@@ -256,7 +240,7 @@ CSS-only spinner animation.
 
 #### `<ScrollContainer>`
 
-The easiest way to add a scrollable region. Handles the layout, fade gradients, and scrollbar automatically — no `useScroll()` needed.
+The easiest way to add a scrollable region. Handles the layout, fade, and scrollbar automatically.
 
 Place it inside any `flex h-full flex-col` parent and it expands to fill the remaining space:
 
@@ -436,7 +420,7 @@ The entire color palette is driven by a single CSS variable: **`--color-mrbd-tin
 ```css
 /* global.css — after the mrbd-ui-kit imports */
 :root {
-  --color-mrbd-tint: #14b8a6; /* teal */
+  --color-mrbd-tint: var(--color-teal-400); 
 }
 ```
 

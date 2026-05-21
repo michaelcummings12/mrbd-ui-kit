@@ -1,16 +1,89 @@
 "use client";
 
+import { Check, Clipboard } from "lucide-react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import remarkGfm from "remark-gfm";
 
 interface ReadmeContentProps {
 	content: string;
 }
 
+/** Language display labels for the code block title bar. */
+const LANGUAGE_LABELS: Record<string, string> = {
+	tsx: "TSX",
+	ts: "TypeScript",
+	typescript: "TypeScript",
+	jsx: "JSX",
+	js: "JavaScript",
+	javascript: "JavaScript",
+	css: "CSS",
+	bash: "Terminal",
+	sh: "Terminal",
+	shell: "Terminal",
+	json: "JSON",
+	html: "HTML"
+};
+
+function CopyButton({ text }: { text: string }) {
+	const [copied, setCopied] = useState(false);
+
+	async function copy() {
+		await navigator.clipboard.writeText(text);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000);
+	}
+
+	return (
+		<button
+			onClick={copy}
+			className="flex size-7 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/10 hover:text-zinc-200"
+			aria-label="Copy to clipboard"
+		>
+			{copied ? <Check className="size-3.5 text-green-400" /> : <Clipboard className="size-3.5" />}
+		</button>
+	);
+}
+
 /**
- * Renders README.md with GitHub-flavored markdown and syntax-highlighted code.
+ * VS Code–style fenced code block with a title bar (language label)
+ * and a copy-to-clipboard button.
+ */
+function CodeBlock({ language, code }: { language: string; code: string }) {
+	const label = LANGUAGE_LABELS[language] ?? language;
+
+	return (
+		<div className="group overflow-hidden rounded-xl border border-white/8 bg-[#1e1e1e]">
+			{/* Title bar */}
+			<div className="flex items-center justify-between border-b border-white/6 bg-[#252526] px-4 py-1.5">
+				<span className="text-[0.6875rem] font-medium text-zinc-500">{label}</span>
+				<CopyButton text={code} />
+			</div>
+
+			{/* Code */}
+			<SyntaxHighlighter
+				style={vscDarkPlus}
+				language={language}
+				PreTag="div"
+				customStyle={{
+					margin: 0,
+					padding: "1rem 1.25rem",
+					background: "transparent",
+					fontSize: "0.8125rem",
+					lineHeight: "1.7"
+				}}
+			>
+				{code}
+			</SyntaxHighlighter>
+		</div>
+	);
+}
+
+/**
+ * Renders README.md with GitHub-flavored markdown and
+ * VS Code–style syntax-highlighted code blocks.
  */
 export function ReadmeContent({ content }: ReadmeContentProps) {
 	return (
@@ -23,21 +96,7 @@ export function ReadmeContent({ content }: ReadmeContentProps) {
 						const codeString = String(children).replace(/\n$/, "");
 
 						if (match) {
-							return (
-								<SyntaxHighlighter
-									style={oneDark}
-									language={match[1]}
-									PreTag="div"
-									customStyle={{
-										borderRadius: "0.75rem",
-										fontSize: "0.8125rem",
-										margin: "0",
-										border: "1px solid rgba(255,255,255,0.06)"
-									}}
-								>
-									{codeString}
-								</SyntaxHighlighter>
-							);
+							return <CodeBlock language={match[1]} code={codeString} />;
 						}
 
 						return (
