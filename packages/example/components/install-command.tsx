@@ -26,7 +26,7 @@ export function InstallCommand() {
 	}
 
 	return (
-		<div className="flex flex-col overflow-hidden rounded-xl border border-white/8 bg-white/4">
+		<div className="flex w-full flex-col overflow-hidden rounded-xl border border-white/8 bg-white/4">
 			{/* Tabs */}
 			<div className="flex border-b border-white/6">
 				{MANAGERS.map((m) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, ExternalLink, Glasses, Package } from "lucide-react";
+import { BookOpen, Download, Glasses, Package } from "lucide-react";
 import { GlassesFrame } from "./glasses-frame";
 import { InstallCommand } from "./install-command";
 import { ReadmeContent } from "./readme-content";
@@ -10,6 +10,7 @@ interface DesktopShellProps {
 }
 
 const GITHUB_URL = "https://github.com/michaelcummings12/mrbd-ui-kit";
+const INSTALL_URL = "https://facebook.com/fb_viewapp/web_app_deep_link?appName=mrbd-ui-kit&appUrl=https%3A%2F%2Fwww.mrbd.fun";
 const NPM_URL = "https://www.npmjs.com/package/mrbd-ui-kit";
 
 function GitHubIcon({ className }: { className?: string }) {
@@ -61,10 +62,9 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 							href={GITHUB_URL}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/8 px-3.5 py-1.5 text-[0.8125rem] font-semibold text-zinc-50 no-underline transition-colors hover:border-white/16 hover:bg-white/12">
+							className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[0.8125rem] font-medium text-zinc-400 no-underline transition-colors hover:bg-white/6 hover:text-zinc-50">
 							<GitHubIcon className="size-4" />
 							<span>GitHub</span>
-							<ExternalLink className="size-3 opacity-50" />
 						</a>
 					</div>
 				</div>
@@ -86,16 +86,28 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 								Slightly opinionated, fully customizable. Ship your first app in minutes.
 							</p>
 						</div>
-						<div className="flex flex-col items-start gap-4 pt-2 max-lg:flex-col">
-							<a
-								href={GITHUB_URL}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="inline-flex items-center gap-2 rounded-xl border border-blue-500/50 bg-linear-to-br from-blue-400 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white no-underline shadow-[0_0_20px_rgba(59,130,246,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.15)]">
-								<GitHubIcon className="size-4" />
-								View on GitHub
-							</a>
-							<InstallCommand />
+						<div className="flex">
+							<div className="flex flex-col justify-center gap-4 pt-2 lg:items-start">
+								<div className="flex flex-row gap-4">
+									<a
+										href={GITHUB_URL}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="inline-flex items-center gap-2 rounded-xl border border-blue-500/50 bg-linear-to-br from-blue-400 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-600">
+										<GitHubIcon className="size-4" />
+										View on GitHub
+									</a>
+									<a
+										href={INSTALL_URL}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="inline-flex items-center gap-2 rounded-xl border border-white/8 bg-white/4 px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all hover:-translate-y-0.5 hover:bg-white/8 hover:from-blue-400 hover:to-blue-600">
+										<Download className="size-4" />
+										Add to Glasses
+									</a>
+								</div>
+								<InstallCommand />
+							</div>
 						</div>
 					</div>
 
