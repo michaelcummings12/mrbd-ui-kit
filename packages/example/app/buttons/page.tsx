@@ -2,7 +2,7 @@
 
 import { Check, Star, Trash2, X } from "lucide-react";
 import { Button, Text } from "mrbd-ui-kit";
-import { PageHeader } from "../components/page-header";
+import { PageHeader } from "../../components/page-header";
 
 export default function ButtonsPage() {
 	return (

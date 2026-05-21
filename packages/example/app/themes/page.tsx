@@ -2,7 +2,7 @@
 
 import { Button, Text } from "mrbd-ui-kit";
 import { useState } from "react";
-import { PageHeader } from "../components/page-header";
+import { PageHeader } from "../../components/page-header";
 
 const TINTS = [
 	{ label: "Default", value: "#dbeafe" },

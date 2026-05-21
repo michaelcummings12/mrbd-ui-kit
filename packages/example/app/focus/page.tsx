@@ -2,7 +2,7 @@
 
 import { Button, Text } from "mrbd-ui-kit";
 import { useState } from "react";
-import { PageHeader } from "../components/page-header";
+import { PageHeader } from "../../components/page-header";
 
 export default function FocusPage() {
 	const [lastFocused, setLastFocused] = useState<string | null>(null);
@@ -10,7 +10,7 @@ export default function FocusPage() {
 
 	return (
 		<div className="flex h-full flex-col gap-4 p-4">
-			<PageHeader title="Focus & D-pad" />
+			<PageHeader title="Focus & Navigation" />
 
 			<Text size="sm" dim>
 				Explore the focusable grid below

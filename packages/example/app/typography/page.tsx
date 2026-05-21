@@ -1,7 +1,7 @@
 "use client";
 
 import { Text } from "mrbd-ui-kit";
-import { PageHeader } from "../components/page-header";
+import { PageHeader } from "../../components/page-header";
 
 export default function TypographyPage() {
 	return (

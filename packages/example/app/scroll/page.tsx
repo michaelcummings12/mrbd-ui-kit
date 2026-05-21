@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, ScrollArea, ScrollBar, Text, useScroll } from "mrbd-ui-kit";
-import { PageHeader } from "../components/page-header";
+import { PageHeader } from "../../components/page-header";
 
 const ITEMS = Array.from({ length: 12 }, (_, i) => `Item ${i + 1}`);
 
@@ -34,15 +34,19 @@ export default function ScrollPage() {
 			</div>
 
 			{/* Live scroll metrics — demonstrates what useScroll() exposes */}
-			<div className="bg-mrbd-surface rounded-xl p-3 flex flex-col gap-1">
+			<div className="bg-mrbd-surface flex flex-col gap-1 rounded-xl p-3">
 				{[
 					{ label: "scrollTop", value: `${Math.round(scroll.scrollTop)}px` },
 					{ label: "canScrollDown", value: String(scroll.canScrollDown) },
-					{ label: "isScrolling", value: String(scroll.isScrolling) },
+					{ label: "isScrolling", value: String(scroll.isScrolling) }
 				].map(({ label, value }) => (
 					<div key={label} className="flex flex-row justify-between">
-						<Text size="sm" dim>{label}</Text>
-						<Text size="sm" weight="semibold">{value}</Text>
+						<Text size="sm" dim>
+							{label}
+						</Text>
+						<Text size="sm" weight="semibold">
+							{value}
+						</Text>
 					</div>
 				))}
 			</div>
