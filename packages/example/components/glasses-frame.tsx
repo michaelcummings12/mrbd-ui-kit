@@ -17,7 +17,6 @@ export function GlassesFrame() {
 
 			{/* Label */}
 			<div className="mt-3 flex items-center justify-center gap-2 text-[0.6875rem] font-medium tracking-widest text-zinc-600 uppercase">
-				<span className="size-1.5 rounded-full bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]" />
 				Use arrow keys to navigate and enter to select
 			</div>
 		</div>

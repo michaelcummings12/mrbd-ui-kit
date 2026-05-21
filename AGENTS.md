@@ -430,6 +430,6 @@ export default function MyMRBDApp() {
 
 ## Testing Your App
 
-1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys for spatial navigation, Enter for select.
+1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys to navigate and enter to select.
 2. On device: Deploy to HTTPS URL → Meta AI app → Devices → Display Glasses → App connections → Web apps → Add URL.
 3. Device detection: Override user agent in Chrome DevTools to include "Greatwhite" to test `useIsMRBD()`.
