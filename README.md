@@ -4,9 +4,9 @@
 [![GitHub](https://img.shields.io/github/license/michaelcummings12/mrbd-ui-kit)](https://github.com/michaelcummings12/mrbd-ui-kit/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/michaelcummings12/mrbd-ui-kit?style=social)](https://github.com/michaelcummings12/mrbd-ui-kit)
 
-React component library for [Meta Ray-Ban Display](https://www.meta.com/smart-glasses/) web apps. Opinionated defaults, fully customizable.
+React component library for Meta Ray-Ban Display web apps. Opinionated defaults, fully customizable.
 
-See it in action: [**mrbd.fun live example app**](https://www.mrbd.fun/)
+See it in action: [**Live demo**](https://www.mrbd.fun/)
 
 
 ## Install

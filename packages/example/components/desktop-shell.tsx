@@ -75,16 +75,18 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 				<div className="mx-auto flex max-w-7xl items-center gap-16 max-lg:flex-col max-lg:text-center">
 					{/* Left — copy */}
 					<div className="flex min-w-0 flex-1 flex-col gap-6 max-lg:items-center">
-						<div className="flex flex-col gap-2">
-							<h1 className="m-0 text-[3.25rem] leading-[1.1] font-extrabold tracking-tight text-zinc-50 max-lg:text-4xl">
+						<div className="flex flex-col gap-6 text-center lg:text-left">
+							<h1 className="m-0 text-[3.5rem] leading-[1.1] font-extrabold tracking-tight text-zinc-50 max-lg:text-4xl">
 								Build apps for
 								<br />
 								<span className="bg-linear-to-br from-cyan-400 via-blue-400 to-blue-600 bg-clip-text text-transparent">Meta Ray-Ban Display</span>
 							</h1>
-							<h3 className="text-2xl font-light text-zinc-200">A full UI component library for Meta Ray-Ban Display web apps</h3>
-							<p className="m-0 max-w-lg leading-relaxed text-balance text-zinc-400 max-lg:text-center">
-								Slightly opinionated, fully customizable. Ship your first app in minutes.
-							</p>
+							<div className="flex flex-col gap-2">
+								<h2 className="m-0 text-2xl font-medium tracking-tight text-zinc-200">A UI kit built for the glasses-first web.</h2>
+								<p className="m-0 text-lg leading-relaxed text-balance text-zinc-400">
+									Pre-built components, spatial navigation, and optimized styling — everything you need to ship your first app.
+								</p>
+							</div>
 						</div>
 						<div className="flex">
 							<div className="flex flex-col justify-center gap-4 pt-2 lg:items-start">
