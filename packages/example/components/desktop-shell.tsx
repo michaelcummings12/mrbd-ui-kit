@@ -62,7 +62,7 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 							href={GITHUB_URL}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[0.8125rem] font-medium text-zinc-400 no-underline transition-colors hover:bg-white/6 hover:text-zinc-50">
+							className="hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-[0.8125rem] font-medium text-zinc-400 no-underline transition-colors hover:bg-white/6 hover:text-zinc-50 md:block md:flex">
 							<GitHubIcon className="size-4" />
 							<span>GitHub</span>
 						</a>
@@ -112,7 +112,7 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 					</div>
 
 					{/* Right — glasses preview */}
-					<div className="shrink-0">
+					<div className="hidden lg:block">
 						<GlassesFrame />
 					</div>
 				</div>

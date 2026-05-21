@@ -53,7 +53,7 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en" className={`${nunito.variable}`}>
-			<body>
+			<body className="bg-black">
 				<OpenReplay />
 				<AdaptiveLayout readmeContent={readmeContent}>{children}</AdaptiveLayout>
 			</body>

@@ -42,8 +42,8 @@ export function InstallCommand() {
 			</div>
 
 			{/* Command + copy */}
-			<div className="flex items-center gap-2 px-4 py-2.5">
-				<code className="flex-1 font-mono text-[0.8125rem] text-zinc-300">{COMMANDS[manager]}</code>
+			<div className="flex items-center justify-between gap-2 px-4 py-2.5">
+				<code className="w-full flex-1 text-left font-mono text-[0.8125rem] text-zinc-300">{COMMANDS[manager]}</code>
 				<button
 					onClick={copy}
 					className="flex size-7 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/8 hover:text-zinc-200"
