@@ -88,7 +88,7 @@ export default function HomeTab() {
 						</Button>
 					</div>
 				</ScrollArea>
-				<ScrollBar scrollHeight={scroll.scrollHeight} clientHeight={scroll.clientHeight} scrollTop={scroll.scrollTop} />
+				<ScrollBar scrollHeight={scroll.scrollHeight} clientHeight={scroll.clientHeight} scrollTop={scroll.scrollTop} isScrolling={scroll.isScrolling} />
 			</div>
 		</div>
 	);

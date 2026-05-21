@@ -13,6 +13,8 @@ export interface ScrollState {
 	canScrollUp: boolean;
 	/** true when there is content below the visible area */
 	canScrollDown: boolean;
+	/** true while the user is actively scrolling (scrollTop is changing) */
+	isScrolling: boolean;
 }
 
 export interface UseScrollReturn extends ScrollState {
@@ -46,19 +48,43 @@ export function useScroll(): UseScrollReturn {
 		clientHeight: 0,
 		canScrollUp: false,
 		canScrollDown: false,
+		isScrolling: false,
 	});
+
+	// Track previous scrollTop so we only set isScrolling when position actually changes
+	const prevScrollTopRef = useRef<number>(0);
+	const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const isScrollingRef = useRef<boolean>(false);
 
 	const update = useCallback(() => {
 		const el = scrollRef.current;
 		if (!el) return;
 
 		const { scrollTop, scrollHeight, clientHeight } = el;
+		const positionChanged = Math.abs(scrollTop - prevScrollTopRef.current) > 0;
+		prevScrollTopRef.current = scrollTop;
+
+		if (positionChanged && !isScrollingRef.current) {
+			isScrollingRef.current = true;
+		}
+
+		if (positionChanged) {
+			// Reset idle timer on every position change
+			if (idleTimerRef.current !== null) clearTimeout(idleTimerRef.current);
+			idleTimerRef.current = setTimeout(() => {
+				isScrollingRef.current = false;
+				setState((prev) => ({ ...prev, isScrolling: false }));
+				idleTimerRef.current = null;
+			}, 1000);
+		}
+
 		setState({
 			scrollTop,
 			scrollHeight,
 			clientHeight,
 			canScrollUp: scrollTop > 1,
 			canScrollDown: scrollTop + clientHeight < scrollHeight - 1,
+			isScrolling: positionChanged ? true : isScrollingRef.current,
 		});
 	}, []);
 
@@ -83,6 +109,7 @@ export function useScroll(): UseScrollReturn {
 		return () => {
 			el.removeEventListener("scroll", update);
 			resizeObserver.disconnect();
+			if (idleTimerRef.current !== null) clearTimeout(idleTimerRef.current);
 		};
 	}, [update]);
 
