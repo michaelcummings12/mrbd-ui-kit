@@ -48,7 +48,7 @@ export function useScroll(): UseScrollReturn {
 		clientHeight: 0,
 		canScrollUp: false,
 		canScrollDown: false,
-		isScrolling: false,
+		isScrolling: false
 	});
 
 	// Track previous scrollTop so we only set isScrolling when position actually changes
@@ -84,7 +84,7 @@ export function useScroll(): UseScrollReturn {
 			clientHeight,
 			canScrollUp: scrollTop > 1,
 			canScrollDown: scrollTop + clientHeight < scrollHeight - 1,
-			isScrolling: positionChanged ? true : isScrollingRef.current,
+			isScrolling: positionChanged ? true : isScrollingRef.current
 		});
 	}, []);
 
@@ -115,6 +115,6 @@ export function useScroll(): UseScrollReturn {
 
 	return {
 		scrollRef,
-		...state,
+		...state
 	};
 }

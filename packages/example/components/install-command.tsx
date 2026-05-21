@@ -35,8 +35,7 @@ export function InstallCommand() {
 						onClick={() => setManager(m)}
 						className={`px-4 py-1.5 text-xs font-semibold transition-colors ${
 							m === manager ? "bg-white/8 text-zinc-50" : "text-zinc-500 hover:text-zinc-300"
-						}`}
-					>
+						}`}>
 						{m}
 					</button>
 				))}
@@ -48,8 +47,7 @@ export function InstallCommand() {
 				<button
 					onClick={copy}
 					className="flex size-7 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/8 hover:text-zinc-200"
-					aria-label="Copy to clipboard"
-				>
+					aria-label="Copy to clipboard">
 					{copied ? <Check className="size-3.5 text-green-400" /> : <Clipboard className="size-3.5" />}
 				</button>
 			</div>

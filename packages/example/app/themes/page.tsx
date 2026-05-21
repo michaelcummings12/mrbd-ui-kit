@@ -18,14 +18,14 @@ export default function ThemesPage() {
 
 	function applyTint(value: string) {
 		setActiveTint(value);
-		document.documentElement.style.setProperty("--color-mrbd-tint", value);
+		document.documentElement.style.setProperty("--color-mrbd-accent", value);
 	}
 
 	return (
 		<div className="flex h-full flex-col gap-4 p-4">
 			<PageHeader title="Themes" />
 
-			<Text size="sm" className="text-mrbd-text-dim">
+			<Text size="sm" className="text-gray-400">
 				Select a color to preview the tint system
 			</Text>
 
@@ -43,7 +43,7 @@ export default function ThemesPage() {
 
 			{/* Preview */}
 			<div className="flex w-full flex-col gap-2">
-				<Text size="sm" className="text-mrbd-text-dim">
+				<Text size="sm" className="text-gray-400">
 					Preview
 				</Text>
 				<div className="grid grid-cols-2 gap-4">

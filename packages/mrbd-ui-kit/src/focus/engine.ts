@@ -168,10 +168,7 @@ function findScrollParent(el: HTMLElement): HTMLElement | null {
  */
 const SPREAD_THRESHOLD = 10; // px — elements within this distance are considered aligned
 
-function hasSpatialSpread(
-	direction: SpatialDirection,
-	candidates: Array<{ id: string; rect: Rect }>
-): boolean {
+function hasSpatialSpread(direction: SpatialDirection, candidates: Array<{ id: string; rect: Rect }>): boolean {
 	if (candidates.length < 2) return false;
 
 	const isHorizontal = direction === "left" || direction === "right";

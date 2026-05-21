@@ -41,10 +41,10 @@ export interface ButtonProps {
 }
 
 const VARIANT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
-	primary: "bg-mrbd-accent text-black",
-	secondary: "bg-mrbd-surface text-mrbd-text border border-mrbd-tint/10 hover:bg-mrbd-surface-hover active:bg-mrbd-surface-active",
-	ghost: "border-l-2 border-t-2 border-mrbd-tint/10 hover:border-mrbd-tint/40 group-focus:border-mrbd-tint/40 bg-mrbd-tint/20 text-mrbd-text",
-	danger: "bg-mrbd-danger text-black"
+	primary: "bg-mrbd-accent/90 text-black",
+	secondary: "bg-mrbd-accent/10 text-mrbd-text border border-mrbd-accent/10 hover:bg-mrbd-accent/20 active:bg-mrbd-accent/30",
+	ghost: "border-l-2 border-t-2 border-mrbd-accent/10 hover:border-mrbd-accent/40 group-focus:border-mrbd-accent/40 bg-mrbd-accent/20 text-mrbd-text",
+	danger: "bg-red-400/85 text-black"
 };
 
 const SIZE_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
@@ -77,7 +77,7 @@ export function Button({
 		"inline-flex items-center justify-center font-semibold transition-all group-focus:scale-103 hover:scale-103 focus:outline-none",
 		VARIANT_CLASSES[variant],
 		SIZE_CLASSES[size],
-		"hover:shadow-mrbd-glow-inner group-focus:shadow-mrbd-glow-inner",
+		"hover:shadow-mrbd-glow group-focus:shadow-mrbd-glow",
 		disabled && "pointer-events-none opacity-40",
 		className
 	);

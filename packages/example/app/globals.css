@@ -4,5 +4,5 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --color-mrbd-tint: var(--color-blue-100);
+  --color-mrbd-accent: var(--color-blue-100);
 }

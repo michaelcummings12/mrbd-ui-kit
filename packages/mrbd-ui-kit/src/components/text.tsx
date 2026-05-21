@@ -25,12 +25,7 @@ const WEIGHT_CLASSES: Record<NonNullable<TextProps["weight"]>, string> = {
 };
 
 export function Text({ children, size = "md", weight = "medium", as: Tag = "span", className }: TextProps) {
-	const classes = cn(
-		SIZE_CLASSES[size],
-		WEIGHT_CLASSES[weight],
-		"text-mrbd-text",
-		className
-	);
+	const classes = cn(SIZE_CLASSES[size], WEIGHT_CLASSES[weight], "text-mrbd-text", className);
 
 	return <Tag className={classes}>{children}</Tag>;
 }

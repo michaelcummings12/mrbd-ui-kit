@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ScrollArea, ScrollBar, Text, useScroll } from "mrbd-ui-kit";
+import { Button, Card, ScrollArea, ScrollBar, Text, useScroll } from "mrbd-ui-kit";
 import { PageHeader } from "../../components/page-header";
 
 const ITEMS = Array.from({ length: 12 }, (_, i) => `Item ${i + 1}`);
@@ -9,13 +9,12 @@ export default function ScrollPage() {
 	// useScroll() is needed here only to power the live metrics panel below.
 	// In a normal app, just use <ScrollContainer> and you don't need useScroll() at all.
 	const scroll = useScroll();
-
 	return (
 		<div className="flex h-full flex-col gap-4 p-4">
 			<PageHeader title="Scrolling" />
 
-			<Text size="sm" className="text-mrbd-text-dim">
-				Use arrow keys to move between items. Scroll the list to see the fade gradients and scrollbar animate.
+			<Text size="sm" className="text-gray-400">
+				Scroll to see the fade and scrollbar animate.
 			</Text>
 
 			<div className="flex min-h-0 flex-1 flex-row gap-2">
@@ -34,14 +33,14 @@ export default function ScrollPage() {
 			</div>
 
 			{/* Live scroll metrics — demonstrates what useScroll() exposes */}
-			<div className="bg-mrbd-surface flex flex-col gap-1 rounded-xl p-3">
+			<Card className="flex flex-col gap-1">
 				{[
 					{ label: "scrollTop", value: `${Math.round(scroll.scrollTop)}px` },
 					{ label: "canScrollDown", value: String(scroll.canScrollDown) },
 					{ label: "isScrolling", value: String(scroll.isScrolling) }
 				].map(({ label, value }) => (
 					<div key={label} className="flex flex-row justify-between">
-						<Text size="sm" className="text-mrbd-text-dim">
+						<Text size="sm" className="text-gray-400">
 							{label}
 						</Text>
 						<Text size="sm" weight="semibold">
@@ -49,7 +48,7 @@ export default function ScrollPage() {
 						</Text>
 					</div>
 				))}
-			</div>
+			</Card>
 		</div>
 	);
 }

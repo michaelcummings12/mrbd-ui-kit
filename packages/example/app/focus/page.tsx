@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Text } from "mrbd-ui-kit";
+import { Button, Card, Text } from "mrbd-ui-kit";
 import { useState } from "react";
 import { PageHeader } from "../../components/page-header";
 
@@ -12,7 +12,7 @@ export default function FocusPage() {
 		<div className="flex h-full flex-col gap-4 p-4">
 			<PageHeader title="Focus & Navigation" />
 
-			<Text size="sm" className="text-mrbd-text-dim">
+			<Text size="sm" className="text-gray-400">
 				Explore the focusable grid below
 			</Text>
 
@@ -31,9 +31,9 @@ export default function FocusPage() {
 			</div>
 
 			{/* Status */}
-			<div className="bg-mrbd-surface mt-auto rounded-xl p-3">
+			<Card className="mt-auto">
 				<div className="flex flex-row justify-between">
-					<Text size="sm" className="text-mrbd-text-dim">
+					<Text size="sm" className="text-gray-400">
 						Focused
 					</Text>
 					<Text size="sm" weight="semibold">
@@ -41,14 +41,14 @@ export default function FocusPage() {
 					</Text>
 				</div>
 				<div className="flex flex-row justify-between">
-					<Text size="sm" className="text-mrbd-text-dim">
+					<Text size="sm" className="text-gray-400">
 						Selected
 					</Text>
 					<Text size="sm" weight="semibold">
 						{lastSelected ?? "—"}
 					</Text>
 				</div>
-			</div>
+			</Card>
 		</div>
 	);
 }

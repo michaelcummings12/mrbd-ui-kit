@@ -40,8 +40,7 @@ function CopyButton({ text }: { text: string }) {
 		<button
 			onClick={copy}
 			className="flex size-7 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/10 hover:text-zinc-200"
-			aria-label="Copy to clipboard"
-		>
+			aria-label="Copy to clipboard">
 			{copied ? <Check className="size-3.5 text-green-400" /> : <Clipboard className="size-3.5" />}
 		</button>
 	);
@@ -73,8 +72,7 @@ function CodeBlock({ language, code }: { language: string; code: string }) {
 					background: "transparent",
 					fontSize: "0.8125rem",
 					lineHeight: "1.7"
-				}}
-			>
+				}}>
 				{code}
 			</SyntaxHighlighter>
 		</div>
@@ -87,7 +85,7 @@ function CodeBlock({ language, code }: { language: string; code: string }) {
  */
 export function ReadmeContent({ content }: ReadmeContentProps) {
 	return (
-		<div className="prose prose-invert max-w-none text-zinc-300 prose-headings:text-zinc-50 prose-h1:border-b prose-h1:border-white/6 prose-h1:pb-3 prose-h1:first:hidden prose-h2:border-b prose-h2:border-white/4 prose-h2:pb-2 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-code:rounded-md prose-code:border prose-code:border-white/6 prose-code:bg-white/6 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-zinc-200 prose-code:before:content-[''] prose-code:after:content-[''] prose-blockquote:border-blue-500/30 prose-blockquote:bg-blue-500/4 prose-blockquote:rounded-r-lg prose-th:text-zinc-400 prose-td:border-white/4 prose-th:border-white/8">
+		<div className="prose prose-invert prose-headings:text-zinc-50 prose-h1:border-b prose-h1:border-white/6 prose-h1:pb-3 prose-h1:first:hidden prose-h2:border-b prose-h2:border-white/4 prose-h2:pb-2 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-code:rounded-md prose-code:border prose-code:border-white/6 prose-code:bg-white/6 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-zinc-200 prose-code:before:content-[''] prose-code:after:content-[''] prose-blockquote:border-blue-500/30 prose-blockquote:bg-blue-500/4 prose-blockquote:rounded-r-lg prose-th:text-zinc-400 prose-td:border-white/4 prose-th:border-white/8 max-w-none text-zinc-300">
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
 				components={{
@@ -105,8 +103,7 @@ export function ReadmeContent({ content }: ReadmeContentProps) {
 							</code>
 						);
 					}
-				}}
-			>
+				}}>
 				{content}
 			</ReactMarkdown>
 		</div>

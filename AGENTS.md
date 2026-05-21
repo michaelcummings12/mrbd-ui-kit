@@ -13,9 +13,9 @@ These are NOT suggestions. Violating them creates a broken experience on the har
 ### DO:
 
 - Use `<DisplayRoot>` as the outermost wrapper for all MRBD UI
-- Use dark/transparent backgrounds (`bg-mrbd-bg`, `bg-mrbd-surface`)
+- Use dark/transparent backgrounds (`bg-mrbd-accent/5`)
 - Use `text-mrbd-text` for primary text (92% white, NOT pure white)
-- Use `shadow-mrbd-glow-*` for emphasis effects (outer glow)
+- Use `shadow-mrbd-glow` for emphasis effects (inner glow)
 - Use `font-weight: 500` or higher for all text
 - Use `Nunito` or a similar bold sans-serif font (weights 500+)
 - Keep layouts right-anchored or F-pattern (display is in the right lens)
@@ -27,7 +27,7 @@ These are NOT suggestions. Violating them creates a broken experience on the har
 ### NEVER:
 
 - Use `#FFFFFF` or `rgb(255,255,255)` — causes ghosting. Use `text-mrbd-text` instead
-- Use `drop-shadow` or `box-shadow` for decorative shadows — looks like dirt on lens. Use `shadow-mrbd-glow-*`
+- Use `drop-shadow` or `box-shadow` for decorative shadows — looks like dirt on lens. Use `shadow-mrbd-glow`
 - Use `font-weight` below 500 — illegible on additive display
 - Use mouse/touch event handlers as primary interaction — use spatial input events
 - Create scrollable content without focus management — spatial input can't scroll
@@ -59,6 +59,7 @@ Both CSS imports are required. `theme` provides Tailwind v4 tokens. `base` provi
 // Components + client hooks (has "use client" banner)
 import {
   Button,
+  Card,
   DisplayRoot,
   Focusable,
   Icon,
@@ -116,7 +117,7 @@ Display-optimized typography. Enforces minimum font weight.
 
 ```tsx
 <Text size="lg" weight="bold">Title</Text>
-<Text size="sm" className="text-mrbd-text-dim">Subtitle</Text>
+<Text size="sm" className="text-gray-400">Subtitle</Text>
 ```
 
 Props: `children`, `size?: 'sm' | 'md' | 'lg'`, `weight?: 'medium' | 'semibold' | 'bold'`, `as?: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'label'`, `className?`
@@ -177,6 +178,23 @@ The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 
 Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
 
+### Card
+
+Content container with rounded corners and subtle tint-derived background. Good for grouping related content like notifications, status panels, or action prompts.
+
+```tsx
+<Card>Basic card content</Card>
+<Card className="mt-auto">Pushed to bottom</Card>
+<Card className="flex flex-col gap-1">
+  <div className="flex flex-row justify-between">
+    <Text size="sm" className="text-gray-400">Status</Text>
+    <Text size="sm" weight="semibold">Active</Text>
+  </div>
+</Card>
+```
+
+Props: `children`, `className?`
+
 ### Pill
 
 Rounded pill/badge with a subtle gradient tint border.
@@ -190,14 +208,14 @@ Props: `children`, `className?`
 
 ### LoadingSpinner
 
-CSS-only spinner animation.
+CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-text`. Customize size and color via `className`.
 
 ```tsx
-<LoadingSpinner size={32} />
-<LoadingSpinner size={24} color="var(--color-mrbd-accent)" />
+<LoadingSpinner />
+<LoadingSpinner className="size-6 text-mrbd-tint" />
 ```
 
-Props: `size?: number`, `color?: string`, `label?: string`, `className?`
+Props: `label?: string`, `className?`
 
 ### ScrollContainer
 
@@ -323,29 +341,26 @@ const isMRBD = await isMRBDServer(); // boolean
 
 ## Theming
 
-The entire color palette is driven by a single CSS variable: `--color-mrbd-tint`. By default it's white (`#ffffff`). Override it to theme your entire app with one line:
+The entire color palette is driven by a single CSS variable: `--color-mrbd-accent`. By default it's white (`#ffffff`). Override it to theme your entire app with one line:
 
 ```css
 /* global.css — after the mrbd-ui-kit imports */
 :root {
-  --color-mrbd-tint: #14b8a6; /* teal */
+  --color-mrbd-accent: #14b8a6; /* teal */
 }
 ```
 
-All surface colors, accent, glows, and border tints are derived from this variable via `color-mix()`. Changing `--color-mrbd-tint` automatically updates everything.
+All surface colors, accent, glows, and border tints are derived from this variable via `color-mix()`. Changing `--color-mrbd-accent` automatically updates everything.
 
 ## Tailwind Tokens Available After Import
 
 ### Colors
-`mrbd-tint`, `mrbd-bg`, `mrbd-surface`, `mrbd-surface-hover`, `mrbd-surface-active`, `mrbd-text`, `mrbd-text-dim`, `mrbd-accent`, `mrbd-danger`, `mrbd-success`
+`mrbd-accent`, `mrbd-text`
 
-### Shadows (Outer Glow)
-`mrbd-glow`, `mrbd-glow-accent`, `mrbd-glow-focus`, `mrbd-glow-inner`
+### Shadows
+`mrbd-glow`
 
-### Sizing
-`w-mrbd` / `h-mrbd` — 600px (full display)
-
-Use as: `bg-mrbd-surface`, `text-mrbd-text`, `shadow-mrbd-glow`
+Use as: `bg-mrbd-accent/10`, `text-mrbd-text`, `shadow-mrbd-glow`
 
 ## Full App Example
 
@@ -356,6 +371,7 @@ import { useState } from "react";
 import { Check, Search, X } from "lucide-react";
 import {
   Button,
+  Card,
   DisplayRoot,
   Icon,
   LoadingSpinner,
@@ -377,14 +393,14 @@ export default function MyMRBDApp() {
         </div>
 
         {/* Content card */}
-        <div className="bg-mrbd-surface rounded-lg p-4">
+        <Card>
           <div className="flex flex-col gap-2">
             <Text weight="semibold">New message from Alex</Text>
-            <Text size="sm" className="text-mrbd-text-dim">
+            <Text size="sm" className="text-gray-400">
               Hey, are you free for lunch?
             </Text>
           </div>
-        </div>
+        </Card>
 
         {/* Actions */}
         <div className="flex flex-row gap-3">
@@ -403,7 +419,7 @@ export default function MyMRBDApp() {
 
         {loading && (
           <div className="flex flex-col items-center">
-            <LoadingSpinner size={24} />
+            <LoadingSpinner className="size-6" />
           </div>
         )}
       </div>

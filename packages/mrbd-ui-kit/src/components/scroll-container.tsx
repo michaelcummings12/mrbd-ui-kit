@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { cn } from "../lib/cn";
 import { useScroll } from "../hooks/use-scroll";
+import { cn } from "../lib/cn";
 import { ScrollArea } from "./scroll-area";
 import { ScrollBar } from "./scroll-bar";
 

@@ -11,7 +11,7 @@ export default function ButtonsPage() {
 
 			{/* Variants */}
 			<div className="flex flex-col gap-2">
-				<Text size="sm" className="text-mrbd-text-dim">
+				<Text size="sm" className="text-gray-400">
 					Variants
 				</Text>
 				<div className="flex flex-row flex-wrap gap-2">
@@ -32,7 +32,7 @@ export default function ButtonsPage() {
 
 			{/* Sizes */}
 			<div className="flex flex-col gap-2">
-				<Text size="sm" className="text-mrbd-text-dim">
+				<Text size="sm" className="text-gray-400">
 					Sizes
 				</Text>
 				<div className="flex flex-row items-center gap-2">
@@ -50,7 +50,7 @@ export default function ButtonsPage() {
 
 			{/* States */}
 			<div className="flex flex-col gap-2">
-				<Text size="sm" className="text-mrbd-text-dim">
+				<Text size="sm" className="text-gray-400">
 					States
 				</Text>
 				<div className="flex flex-row gap-2">

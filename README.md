@@ -65,7 +65,7 @@ export default function App() {
     <DisplayRoot>
       <div className="flex flex-col gap-4 p-6">
         <Text size="lg" weight="bold">Hello, Display</Text>
-        <Text className="text-mrbd-text-dim">Glanceable UI for your glasses.</Text>
+        <Text className="text-gray-400">Glanceable UI for your glasses.</Text>
 
         <Button id="action-btn" variant="primary" icon={Check} onClick={() => console.log("pressed!")}>
           Get Started
@@ -118,7 +118,7 @@ Display-optimized typography with enforced minimum font weight.
 
 ```tsx
 <Text size="lg" weight="bold">Important Message</Text>
-<Text size="sm" className="text-mrbd-text-dim">Secondary info</Text>
+<Text size="sm" className="text-gray-400">Secondary info</Text>
 ```
 
 | Prop | Type | Default | Description |
@@ -209,6 +209,25 @@ The `asChild` prop merges button styles onto a child element instead of renderin
 | `asChild` | `boolean` | `false` | Merge styles onto child element instead of `<button>` |
 | `className` | `string` | — | Additional classes |
 
+#### `<Card>`
+
+Content container with rounded corners and subtle tint-derived background. Good for grouping related content like notifications, status panels, or action prompts.
+
+```tsx
+<Card>Basic card content</Card>
+<Card className="mt-auto">Pushed to bottom</Card>
+<Card className="flex flex-col gap-1">
+  <div className="flex flex-row justify-between">
+    <Text size="sm" className="text-gray-400">Status</Text>
+    <Text size="sm" weight="semibold">Active</Text>
+  </div>
+</Card>
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `className` | `string` | — | Additional classes |
+
 #### `<Pill>`
 
 Rounded pill/badge with a subtle gradient tint border.
@@ -224,19 +243,17 @@ Rounded pill/badge with a subtle gradient tint border.
 
 #### `<LoadingSpinner>`
 
-CSS-only spinner animation.
+CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-text`. Customize size and color via `className`.
 
 ```tsx
-<LoadingSpinner size={32} />
-<LoadingSpinner size={24} color="var(--color-mrbd-accent)" />
+<LoadingSpinner />
+<LoadingSpinner className="size-6 text-mrbd-tint" />
 ```
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `size` | `number` | `32` | Size in pixels |
-| `color` | `string` | Theme text color | CSS color value |
 | `label` | `string` | `'Loading'` | Accessible label |
-| `className` | `string` | — | Additional classes |
+| `className` | `string` | — | Additional classes (size, color, etc.) |
 
 #### `<ScrollContainer>`
 
@@ -415,21 +432,19 @@ export default async function Page() {
 
 ## Theming
 
-The entire color palette is driven by a single CSS variable: **`--color-mrbd-tint`**. By default it's white (`#ffffff`). Override it to theme your entire app with one line:
+The entire color palette is driven by a single CSS variable: **`--color-mrbd-accent`**. By default it's white (`#ffffff`). Override it to theme your entire app with one line:
 
 ```css
 /* global.css — after the mrbd-ui-kit imports */
 :root {
-  --color-mrbd-tint: var(--color-teal-400); 
+  --color-mrbd-accent: var(--color-teal-400); 
 }
 ```
 
-All surface colors, accent, glows, and border tints are derived from this variable via `color-mix()`. Changing `--color-mrbd-tint` automatically updates:
-- `bg-mrbd-surface` (tint at 6% opacity)
-- `bg-mrbd-surface-hover` (tint at 12%)
-- `bg-mrbd-surface-active` (tint at 18%)
-- `bg-mrbd-accent` (tint at 90%)
-- All `shadow-mrbd-glow-*` values
+All surface colors, glows, and border tints are derived from this variable via opacity modifiers. Changing `--color-mrbd-accent` automatically updates:
+- `bg-mrbd-accent/90` (primary button)
+- `bg-mrbd-accent/10` (secondary button)
+- `shadow-mrbd-glow` value
 - Border tints on `Button`, `Pill`, etc.
 
 ## Tailwind Theme Tokens
@@ -437,30 +452,17 @@ All surface colors, accent, glows, and border tints are derived from this variab
 When you import `mrbd-ui-kit/css/theme`, these Tailwind utilities become available:
 
 ### Colors
-- `bg-mrbd-tint` — The raw tint color (default white)
-- `bg-mrbd-bg` — Transparent (black on additive display)
-- `bg-mrbd-surface` — Subtle surface (tint at 6% opacity)
-- `bg-mrbd-surface-hover` — Hover state surface
-- `bg-mrbd-surface-active` — Active/pressed surface
+- `bg-mrbd-accent` — The tint color (default white); use with opacity modifiers like `bg-mrbd-accent/10`
 - `text-mrbd-text` — Primary text (white at 92% — not pure white)
-- `text-mrbd-text-dim` — Secondary/dimmed text
-- `bg-mrbd-accent` — Accent color (derived from tint)
-- `bg-mrbd-danger` — Danger red
-- `bg-mrbd-success` — Success green
 
 ### Shadows (Outer Glow)
-- `shadow-mrbd-glow` — Subtle tint glow
-- `shadow-mrbd-glow-accent` — Stronger tint glow
-- `shadow-mrbd-glow-focus` — Focus ring glow
-- `shadow-mrbd-glow-inner` — Inner glow (used by Button hover/focus)
+- `shadow-mrbd-glow` — Inner glow (used by Button hover/focus)
 
-### Sizing
-- `w-mrbd` / `h-mrbd` — 600px (full display)
 
 ## Design Guidelines
 
 1. **Never use pure white (`#FFFFFF`)** — It causes ghosting on additive displays. Use `text-mrbd-text` (92% opacity white) instead.
-2. **Never use drop shadows** — They look like dirt on the lens. Use outer glows (`shadow-mrbd-glow-*`).
+2. **Never use drop shadows** — They look like dirt on the lens. Use outer glows (`shadow-mrbd-glow`).
 3. **Keep it glanceable** — Users scan in under 2 seconds. Prioritize hierarchy and brevity.
 4. **Right-anchor important content** — The display is monocular (right eye). Use F-pattern layouts.
 5. **Use bold fonts** — Minimum `font-weight: 500`. Thin fonts are illegible on the display.

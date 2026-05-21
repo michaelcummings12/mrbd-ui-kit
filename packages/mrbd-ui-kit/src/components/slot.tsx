@@ -35,6 +35,6 @@ export function Slot({ children, className, ...slotProps }: SlotProps) {
 		...slotProps,
 		...childProps,
 		// className is merged (slot first, child second)
-		className: cn(className, childProps.className as string | undefined),
+		className: cn(className, childProps.className as string | undefined)
 	});
 }

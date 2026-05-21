@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
-import { useFocusContext } from "./display-root";
 import { cn } from "../lib/cn";
+import { useFocusContext } from "./display-root";
 
 export interface FocusableProps {
 	children: ReactNode;

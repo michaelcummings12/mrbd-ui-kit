@@ -47,7 +47,7 @@ export function ScrollArea({ children, scrollRef, canScrollUp, canScrollDown, cl
 			/>
 
 			{/* Scrollable content */}
-			<div ref={scrollRef} className="size-full overflow-x-hidden overflow-y-auto p-2 scrollbar-none">
+			<div ref={scrollRef} className="size-full scrollbar-none overflow-x-hidden overflow-y-auto p-2">
 				{children}
 			</div>
 

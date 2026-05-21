@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
-import { createFocusEngine, type SpatialDirection, type FocusEngine, type FocusEngineOptions } from "../focus/engine";
+import { createFocusEngine, type FocusEngine, type FocusEngineOptions, type SpatialDirection } from "../focus/engine";
 import { cn } from "../lib/cn";
 
 export interface DisplayRootProps {

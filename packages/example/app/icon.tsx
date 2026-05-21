@@ -14,8 +14,7 @@ export default function Icon() {
 				justifyContent: "center",
 				background: "linear-gradient(135deg, #60a5fa, #2563eb)",
 				borderRadius: "50%"
-			}}
-		>
+			}}>
 			{/* Glasses icon — simplified SVG matching lucide's Glasses */}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -26,8 +25,7 @@ export default function Icon() {
 				stroke="white"
 				strokeWidth="2.5"
 				strokeLinecap="round"
-				strokeLinejoin="round"
-			>
+				strokeLinejoin="round">
 				<circle cx="6" cy="15" r="4" />
 				<circle cx="18" cy="15" r="4" />
 				<path d="M14 15a2 2 0 0 0-4 0" />

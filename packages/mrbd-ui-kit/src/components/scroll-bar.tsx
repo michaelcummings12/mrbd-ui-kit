@@ -42,17 +42,16 @@ export function ScrollBar({ scrollHeight, clientHeight, scrollTop, isScrolling =
 	return (
 		<div
 			className={cn(
-				"bg-mrbd-tint/30 relative h-28 w-2 shrink-0 self-center rounded-full transition-opacity duration-300 ease-in-out",
+				"bg-mrbd-accent/30 relative h-28 w-2 shrink-0 self-center rounded-full transition-opacity duration-300 ease-in-out",
 				isScrolling ? "opacity-100" : "opacity-0",
-				className,
+				className
 			)}
-			aria-hidden="true"
-		>
+			aria-hidden="true">
 			<div
-				className="bg-mrbd-tint absolute left-0 w-full rounded-full transition-transform duration-150 ease-out"
+				className="bg-mrbd-accent absolute left-0 w-full rounded-full transition-transform duration-150 ease-out"
 				style={{
 					height: `${thumbHeight}px`,
-					top: `${thumbOffset}px`,
+					top: `${thumbOffset}px`
 				}}
 			/>
 		</div>
