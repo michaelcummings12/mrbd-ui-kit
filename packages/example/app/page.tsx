@@ -19,7 +19,7 @@ function NavItem({ id, href, icon, label, className }: NavItemProps) {
 			<Link href={href}>
 				<div className="flex w-full flex-row items-center gap-4">
 					<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-						<Icon icon={icon} size={28} color="white" />
+						<Icon icon={icon} className="size-7 text-white" />
 					</div>
 					<Text weight="semibold">{label}</Text>
 				</div>
@@ -53,7 +53,7 @@ export default function HomeTab() {
 				<Text size="lg" weight="bold">
 					mrbd-ui-kit
 				</Text>
-				<Text size="sm" dim>
+				<Text size="sm" className="text-mrbd-text-dim">
 					The easiest way to build an app for Meta Ray-Ban Display
 				</Text>
 			</div>

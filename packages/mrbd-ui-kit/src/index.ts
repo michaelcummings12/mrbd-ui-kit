@@ -2,7 +2,6 @@
 export { DisplayRoot } from "./components/display-root";
 export { Focusable } from "./components/focusable";
 export { Icon } from "./components/icon";
-export { Slot } from "./components/slot";
 export { Text } from "./components/text";
 
 // Components — Composites
@@ -29,7 +28,6 @@ export type { PillProps } from "./components/pill";
 export type { ScrollAreaProps } from "./components/scroll-area";
 export type { ScrollBarProps } from "./components/scroll-bar";
 export type { ScrollContainerProps } from "./components/scroll-container";
-export type { SlotProps } from "./components/slot";
 export type { TextProps } from "./components/text";
 
 // Types — Hooks

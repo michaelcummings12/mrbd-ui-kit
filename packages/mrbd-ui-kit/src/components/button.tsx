@@ -24,8 +24,6 @@ export interface ButtonProps {
 	onBlur?: () => void;
 	/** Called when select (Enter) is pressed while focused (alias for onClick) */
 	onSelect?: () => void;
-	/** Focus group for scoped navigation */
-	group?: string;
 	className?: string;
 	/**
 	 * Merge button styles onto the child element instead of rendering a <button>.
@@ -55,10 +53,10 @@ const SIZE_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
 	lg: "h-28 px-6 text-base rounded-4xl gap-2"
 };
 
-const ICON_SIZE: Record<NonNullable<ButtonProps["size"]>, number> = {
-	sm: 20,
-	md: 24,
-	lg: 28
+const ICON_CLASSES: Record<NonNullable<ButtonProps["size"]>, string> = {
+	sm: "size-5",
+	md: "size-6",
+	lg: "size-7"
 };
 
 export function Button({
@@ -72,7 +70,6 @@ export function Button({
 	onFocus,
 	onBlur,
 	onSelect,
-	group,
 	className,
 	asChild = false
 }: ButtonProps) {
@@ -86,14 +83,14 @@ export function Button({
 	);
 
 	return (
-		<Focusable id={id} onSelect={onSelect ?? onClick} onFocus={onFocus} onBlur={onBlur} disabled={disabled} group={group} className="group">
+		<Focusable id={id} onSelect={onSelect ?? onClick} onFocus={onFocus} onBlur={onBlur} disabled={disabled} className="group">
 			{asChild ? (
 				// Slot merges resolvedClass onto the single child element (e.g. <Link>).
 				// Must be exactly one child — no icon expression here.
 				<Slot className={resolvedClass}>{children}</Slot>
 			) : (
 				<button className={resolvedClass} onClick={onSelect ?? onClick}>
-					{icon && <Icon icon={icon} size={ICON_SIZE[size]} />}
+					{icon && <Icon icon={icon} className={ICON_CLASSES[size]} />}
 					{children}
 				</button>
 			)}

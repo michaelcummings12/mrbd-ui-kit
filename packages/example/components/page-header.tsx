@@ -13,7 +13,7 @@ export function PageHeader({ title }: PageHeaderProps) {
 		<div className="flex flex-row items-center gap-3">
 			<Button id="back" size="sm" variant="secondary" asChild>
 				<Link href="/">
-					<Icon icon={ArrowLeft} size={16} />
+					<Icon icon={ArrowLeft} className="size-4" />
 				</Link>
 			</Button>
 			<Text size="lg" weight="bold">

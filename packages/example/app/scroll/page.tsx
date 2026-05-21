@@ -14,7 +14,7 @@ export default function ScrollPage() {
 		<div className="flex h-full flex-col gap-4 p-4">
 			<PageHeader title="Scrolling" />
 
-			<Text size="sm" dim>
+			<Text size="sm" className="text-mrbd-text-dim">
 				Use arrow keys to move between items. Scroll the list to see the fade gradients and scrollbar animate.
 			</Text>
 
@@ -41,7 +41,7 @@ export default function ScrollPage() {
 					{ label: "isScrolling", value: String(scroll.isScrolling) }
 				].map(({ label, value }) => (
 					<div key={label} className="flex flex-row justify-between">
-						<Text size="sm" dim>
+						<Text size="sm" className="text-mrbd-text-dim">
 							{label}
 						</Text>
 						<Text size="sm" weight="semibold">

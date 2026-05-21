@@ -67,7 +67,6 @@ import {
   ScrollArea,
   ScrollBar,
   ScrollContainer,
-  Slot,
   Text,
 } from "mrbd-ui-kit";
 
@@ -116,29 +115,29 @@ Props: `children`, `className?`, `focusOptions?: { wrap?: boolean, initialFocusI
 Display-optimized typography. Enforces minimum font weight.
 
 ```tsx
-<Text size="lg" weight="bold" glow>Title</Text>
-<Text size="sm" dim>Subtitle</Text>
+<Text size="lg" weight="bold">Title</Text>
+<Text size="sm" className="text-mrbd-text-dim">Subtitle</Text>
 ```
 
-Props: `children`, `size?: 'sm' | 'md' | 'lg'`, `weight?: 'medium' | 'semibold' | 'bold'`, `glow?: boolean`, `dim?: boolean`, `as?: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'label'`, `className?`
+Props: `children`, `size?: 'sm' | 'md' | 'lg'`, `weight?: 'medium' | 'semibold' | 'bold'`, `as?: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'label'`, `className?`
 
 ### Icon
 
-Renders an icon component (e.g. from `lucide-react`) or custom SVG children. **No built-in icon set** — pass any `ElementType` via the `icon` prop.
+Renders an icon component (e.g. from `lucide-react`) or custom SVG children. **No built-in icon set** — pass any `ElementType` via the `icon` prop. Style with `className` (e.g. `className="size-6 text-mrbd-accent"`).
 
 ```tsx
 import { Home, Bell } from "lucide-react";
 
-<Icon icon={Home} size={24} />
-<Icon icon={Bell} size={20} color="var(--color-mrbd-accent)" />
+<Icon icon={Home} className="size-6" />
+<Icon icon={Bell} className="size-5 text-mrbd-accent" />
 
 {/* Custom SVG */}
-<Icon size={24}>
+<Icon className="size-6">
   <circle cx="12" cy="12" r="10" />
 </Icon>
 ```
 
-Props: `icon?: ElementType`, `children?: ReactNode` (custom SVG), `size?: number`, `color?: string`, `className?`
+Props: `icon?: ElementType`, `children?: ReactNode` (custom SVG), `className?`
 
 ### Focusable
 
@@ -152,18 +151,6 @@ Makes children spatially navigable. Every `id` must be unique. On Enter key pres
 
 Props: `id: string` (required), `children`, `group?: string`, `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`, `className?`
 
-### Slot
-
-Merges its own props onto a single child element — the child's props take precedence for conflicts, except `className` which is concatenated. Used internally by `Button`'s `asChild` pattern. Inspired by Radix UI.
-
-```tsx
-<Slot className="btn-styles">
-  <Link href="/home">Home</Link>
-</Slot>
-{/* Renders: <a href="/home" class="btn-styles">Home</a> */}
-```
-
-Props: `children` (must be a single valid React element), plus any HTML attributes to merge.
 
 ### Button
 
@@ -188,7 +175,7 @@ The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 </Button>
 ```
 
-Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `group?: string`, `className?`
+Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
 
 ### Pill
 
@@ -383,7 +370,7 @@ export default function MyMRBDApp() {
       <div className="flex flex-col gap-4 p-6">
         {/* Header */}
         <div className="flex flex-row gap-2 items-center">
-          <Icon icon={Search} size={20} color="var(--color-mrbd-accent)" />
+          <Icon icon={Search} className="size-5 text-mrbd-accent" />
           <Text size="lg" weight="bold">
             Notifications
           </Text>
@@ -393,7 +380,7 @@ export default function MyMRBDApp() {
         <div className="bg-mrbd-surface rounded-lg p-4">
           <div className="flex flex-col gap-2">
             <Text weight="semibold">New message from Alex</Text>
-            <Text size="sm" dim>
+            <Text size="sm" className="text-mrbd-text-dim">
               Hey, are you free for lunch?
             </Text>
           </div>

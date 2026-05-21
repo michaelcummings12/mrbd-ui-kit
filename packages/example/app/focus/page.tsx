@@ -12,7 +12,7 @@ export default function FocusPage() {
 		<div className="flex h-full flex-col gap-4 p-4">
 			<PageHeader title="Focus & Navigation" />
 
-			<Text size="sm" dim>
+			<Text size="sm" className="text-mrbd-text-dim">
 				Explore the focusable grid below
 			</Text>
 
@@ -33,7 +33,7 @@ export default function FocusPage() {
 			{/* Status */}
 			<div className="bg-mrbd-surface mt-auto rounded-xl p-3">
 				<div className="flex flex-row justify-between">
-					<Text size="sm" dim>
+					<Text size="sm" className="text-mrbd-text-dim">
 						Focused
 					</Text>
 					<Text size="sm" weight="semibold">
@@ -41,7 +41,7 @@ export default function FocusPage() {
 					</Text>
 				</div>
 				<div className="flex flex-row justify-between">
-					<Text size="sm" dim>
+					<Text size="sm" className="text-mrbd-text-dim">
 						Selected
 					</Text>
 					<Text size="sm" weight="semibold">

@@ -25,7 +25,7 @@ export default function ThemesPage() {
 		<div className="flex h-full flex-col gap-4 p-4">
 			<PageHeader title="Themes" />
 
-			<Text size="sm" dim>
+			<Text size="sm" className="text-mrbd-text-dim">
 				Select a color to preview the tint system
 			</Text>
 
@@ -43,7 +43,7 @@ export default function ThemesPage() {
 
 			{/* Preview */}
 			<div className="flex w-full flex-col gap-2">
-				<Text size="sm" dim>
+				<Text size="sm" className="text-mrbd-text-dim">
 					Preview
 				</Text>
 				<div className="grid grid-cols-2 gap-4">
