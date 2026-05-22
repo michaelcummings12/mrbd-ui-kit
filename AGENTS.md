@@ -75,13 +75,13 @@ import {
 import { Check, Home, Search, Settings } from "lucide-react";
 
 // Hooks
-import { useSpatialInput, useFocusManager, useIsMRBD, useScroll } from "mrbd-ui-kit";
+import { useSpatialInput, useFocusManager, useIsMrbd, useScroll } from "mrbd-ui-kit";
 
 // Server-side device detection (no "use client")
-import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
+import { isMrbd, isMrbdFromHeaders } from "mrbd-ui-kit/server";
 
 // Next.js RSC device detection (uses next/headers)
-import { isMRBDServer } from "mrbd-ui-kit/next";
+import { isMrbdServer } from "mrbd-ui-kit/next";
 ```
 
 ### Component Hierarchy
@@ -303,12 +303,12 @@ move("down");        // Move focus spatially
 focus("my-button");  // Focus by ID
 ```
 
-### useIsMRBD()
+### useIsMrbd()
 
 Client-side device detection (checks for "Greatwhite" in user agent). Returns `false` during SSR.
 
 ```tsx
-const isMRBD = useIsMRBD(); // boolean
+const isMrbd = useIsMrbd(); // boolean
 ```
 
 ### useScroll()
@@ -330,13 +330,13 @@ const scroll = useScroll();
 
 ```typescript
 // Any server runtime
-import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
-isMRBD(userAgentString);           // boolean
-isMRBDFromHeaders(request.headers); // boolean
+import { isMrbd, isMrbdFromHeaders } from "mrbd-ui-kit/server";
+isMrbd(userAgentString);           // boolean
+isMrbdFromHeaders(request.headers); // boolean
 
 // Next.js RSC / Server Actions
-import { isMRBDServer } from "mrbd-ui-kit/next";
-const isMRBD = await isMRBDServer(); // boolean
+import { isMrbdServer } from "mrbd-ui-kit/next";
+const isMrbd = await isMrbdServer(); // boolean
 ```
 
 ## Theming
@@ -432,4 +432,4 @@ export default function MyMRBDApp() {
 
 1. Desktop browser: Open your app at `localhost:3000`. Use arrow keys to navigate and enter to select.
 2. On device: Deploy to HTTPS URL → Meta AI app → Devices → Display Glasses → App connections → Web apps → Add URL.
-3. Device detection: Override user agent in Chrome DevTools to include "Greatwhite" to test `useIsMRBD()`.
+3. Device detection: Override user agent in Chrome DevTools to include "Greatwhite" to test `useIsMrbd()`.

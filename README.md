@@ -372,14 +372,14 @@ move("down");
 focus("my-button");
 ```
 
-### `useIsMRBD()`
+### `useIsMrbd()`
 
 Client-side detection of Meta Ray-Ban Display via user agent. Returns `false` during SSR.
 
 ```tsx
-const isMRBD = useIsMRBD();
+const isMrbd = useIsMrbd();
 
-if (isMRBD) {
+if (isMrbd) {
   return <MRBDApp />;
 }
 return <StandardWebApp />;
@@ -406,24 +406,24 @@ const scroll = useScroll();
 ### Generic server (any runtime)
 
 ```tsx
-import { isMRBD, isMRBDFromHeaders } from "mrbd-ui-kit/server";
+import { isMrbd, isMrbdFromHeaders } from "mrbd-ui-kit/server";
 
 // Check a raw user agent string
-isMRBD(userAgentString); // boolean
+isMrbd(userAgentString); // boolean
 
 // Check from a Headers object
-isMRBDFromHeaders(request.headers); // boolean
+isMrbdFromHeaders(request.headers); // boolean
 ```
 
 ### Next.js (React Server Components)
 
 ```tsx
-import { isMRBDServer } from "mrbd-ui-kit/next";
+import { isMrbdServer } from "mrbd-ui-kit/next";
 
 export default async function Page() {
-  const isMRBD = await isMRBDServer();
+  const isMrbd = await isMrbdServer();
 
-  if (isMRBD) {
+  if (isMrbd) {
     return <MRBDLayout />;
   }
   return <StandardLayout />;

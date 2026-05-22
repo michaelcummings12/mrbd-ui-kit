@@ -15,7 +15,7 @@ export { ScrollContainer } from "./components/scroll-container";
 
 // Hooks
 export { useFocusManager } from "./hooks/use-focus-manager";
-export { useIsMRBD } from "./hooks/use-is-mrbd";
+export { useIsMrbd } from "./hooks/use-is-mrbd";
 export { useScroll } from "./hooks/use-scroll";
 export { useSpatialInput } from "./hooks/use-spatial-input";
 

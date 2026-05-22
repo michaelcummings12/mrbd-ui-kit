@@ -6,15 +6,15 @@ const MRBD_UA_TOKEN = "Greatwhite";
  * @example
  * ```ts
  * // In an API route or server handler
- * import { isMRBD } from 'mrbd-ui-kit/server';
+ * import { isMrbd } from 'mrbd-ui-kit/server';
  *
  * const ua = request.headers.get('user-agent') ?? '';
- * if (isMRBD(ua)) {
+ * if (isMrbd(ua)) {
  *   // Serve MRBD-optimized response
  * }
  * ```
  */
-export function isMRBD(userAgent: string): boolean {
+export function isMrbd(userAgent: string): boolean {
 	return userAgent.includes(MRBD_UA_TOKEN);
 }
 
@@ -23,15 +23,15 @@ export function isMRBD(userAgent: string): boolean {
  *
  * @example
  * ```ts
- * import { isMRBDFromHeaders } from 'mrbd-ui-kit/server';
+ * import { isMrbdFromHeaders } from 'mrbd-ui-kit/server';
  *
  * export async function GET(request: Request) {
- *   if (isMRBDFromHeaders(request.headers)) {
+ *   if (isMrbdFromHeaders(request.headers)) {
  *     return Response.json({ display: 'mrbd' });
  *   }
  * }
  * ```
  */
-export function isMRBDFromHeaders(headers: Headers): boolean {
-	return isMRBD(headers.get("user-agent") ?? "");
+export function isMrbdFromHeaders(headers: Headers): boolean {
+	return isMrbd(headers.get("user-agent") ?? "");
 }

@@ -9,19 +9,19 @@ const MRBD_UA_TOKEN = "Greatwhite";
  * @example
  * ```tsx
  * // In a React Server Component
- * import { isMRBDServer } from 'mrbd-ui-kit/next';
+ * import { isMrbdServer } from 'mrbd-ui-kit/next';
  *
  * export default async function Page() {
- *   const isMRBD = await isMRBDServer();
+ *   const isMrbd = await isMrbdServer();
  *
- *   if (isMRBD) {
+ *   if (isMrbd) {
  *     return <MRBDLayout />;
  *   }
  *   return <StandardLayout />;
  * }
  * ```
  */
-export async function isMRBDServer(): Promise<boolean> {
+export async function isMrbdServer(): Promise<boolean> {
 	const h = await headers();
 	return (h.get("user-agent") ?? "").includes(MRBD_UA_TOKEN);
 }

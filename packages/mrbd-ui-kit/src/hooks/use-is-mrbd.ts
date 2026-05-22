@@ -10,21 +10,21 @@ const MRBD_UA_TOKEN = "Greatwhite";
  *
  * @example
  * ```tsx
- * const isMRBD = useIsMRBD();
+ * const isMrbd = useIsMrbd();
  *
- * if (isMRBD) {
+ * if (isMrbd) {
  *   // Render MRBD-optimized UI
  * } else {
  *   // Render standard web UI
  * }
  * ```
  */
-export function useIsMRBD(): boolean {
-	const [isMRBD, setIsMRBD] = useState(false);
+export function useIsMrbd(): boolean {
+	const [isMrbd, setIsMrbd] = useState(false);
 
 	useEffect(() => {
-		setIsMRBD(navigator.userAgent.includes(MRBD_UA_TOKEN));
+		setIsMrbd(navigator.userAgent.includes(MRBD_UA_TOKEN));
 	}, []);
 
-	return isMRBD;
+	return isMrbd;
 }
