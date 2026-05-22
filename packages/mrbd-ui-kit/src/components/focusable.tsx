@@ -77,7 +77,7 @@ export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disa
 			ref={elementRef}
 			id={id}
 			tabIndex={disabled ? -1 : 0}
-			className={cn("mrbd-focusable", className)}
+			className={cn("focus:outline-none focus-visible:outline-none", className)}
 			onKeyDown={handleKeyDown}
 			aria-disabled={disabled || undefined}>
 			{children}

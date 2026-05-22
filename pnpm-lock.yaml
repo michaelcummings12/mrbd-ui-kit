@@ -120,6 +120,9 @@ importers:
       tailwindcss:
         specifier: ^4.0.0
         version: 4.3.0
+      tailwindcss-text-box-trim:
+        specifier: ^1.0.5
+        version: 1.0.5
     devDependencies:
       '@types/react':
         specifier: ^19.0.0
@@ -2818,6 +2821,9 @@ packages:
 
   tailwind-merge@3.6.0:
     resolution: {integrity: sha512-uxL7qAVQriqRQPAyK3pj66VqskWqoZ37PW94jwOTwNfq/z9oyu1V+eqrZqtR2+fCiXdYOZe/Modt8GtvqNzu+w==}
+
+  tailwindcss-text-box-trim@1.0.5:
+    resolution: {integrity: sha512-egghS9Y+jdsa7lN2vgiMoMxXokrxSshkOKuLfWPRvPLcfTAP3sgw18NI9JtQM8y/zGkh7NkmvDug/OmD/FLvcw==}
 
   tailwindcss@4.3.0:
     resolution: {integrity: sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==}
@@ -5930,6 +5936,8 @@ snapshots:
       tslib: 2.8.1
 
   tailwind-merge@3.6.0: {}
+
+  tailwindcss-text-box-trim@1.0.5: {}
 
   tailwindcss@4.3.0: {}
 

@@ -75,7 +75,7 @@ export function Button({
 	asChild = false
 }: ButtonProps) {
 	const resolvedClass = cn(
-		"inline-flex items-center justify-center font-semibold transition-all group-focus:scale-103 hover:scale-103 focus:outline-none",
+		"box-trim-both box-edge-cap inline-flex items-center justify-center font-semibold transition-all group-focus:scale-103 hover:scale-103 focus:outline-none",
 		VARIANT_CLASSES[variant],
 		SIZE_CLASSES[size],
 		"hover:shadow-mrbd-glow group-focus:shadow-mrbd-glow",

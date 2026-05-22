@@ -1,6 +1,5 @@
 @import "tailwindcss";
-@import "mrbd-ui-kit/css/theme";
-@import "mrbd-ui-kit/css/base";
+@import "mrbd-ui-kit/css";
 @plugin "@tailwindcss/typography";
 
 :root {

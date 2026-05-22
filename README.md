@@ -22,11 +22,10 @@ Add the theme and base styles to your app's global CSS:
 ```css
 /* global.css */
 @import "tailwindcss";
-@import "mrbd-ui-kit/css/theme";
-@import "mrbd-ui-kit/css/base";
+@import "mrbd-ui-kit/css";
 ```
 
-The theme provides Tailwind v4 tokens via `@theme` — colors, fonts, shadows, and sizing designed specifically for additive displays.
+This single import provides Tailwind v4 theme tokens (colors, shadows), focus ring styles, scrollbar hiding, transition defaults, and [`tailwindcss-text-box-trim`](https://www.npmjs.com/package/tailwindcss-text-box-trim) utilities for pixel-perfect typographic spacing.
 
 ### Font Configuration
 
@@ -85,7 +84,7 @@ The Meta Ray-Ban Display is fundamentally different from phones and monitors. Th
 | Resolution | 600 × 600 px | `<DisplayRoot>` sets the viewport |
 | Display type | Additive (LCoS) | Black = transparent. No pure `#FFF` in the palette — prevents ghosting |
 | Input | Spatial (Neural Band / temple touch) | Spatial focus engine handles arrow-key navigation automatically |
-| Typography | Bold sans-serif | `<Text>` enforces minimum `font-weight: 500` |
+| Typography | Bold sans-serif | `<Text>` enforces minimum `font-weight: 500` and applies `text-box-trim` for pixel-perfect alignment |
 | Shadows | Never drop-shadow | All shadows are outer glows (drop shadows look like dirt on the lens) |
 | Layout | Monocular, right eye | F-pattern, right-anchored layouts recommended |
 
@@ -114,7 +113,7 @@ Required root wrapper. Sets up the 600×600 viewport, focus engine context, and 
 
 #### `<Text>`
 
-Display-optimized typography with enforced minimum font weight.
+Display-optimized typography with enforced minimum font weight. Applies `box-trim-both box-edge-cap` by default to eliminate internal leading — critical for the 600×600 display where every pixel counts. Override with `box-trim-none` via `className` if needed.
 
 ```tsx
 <Text size="lg" weight="bold">Important Message</Text>
@@ -174,7 +173,7 @@ Makes any child spatially navigable. Registers with the spatial focus engine. On
 
 #### `<Button>`
 
-Spatially navigable button with variants. Default variant is `secondary`. Wraps `<Focusable>` internally.
+Spatially navigable button with variants. Default variant is `secondary`. Wraps `<Focusable>` internally. Applies `box-trim-both box-edge-cap` for precise text centering within fixed button heights.
 
 ```tsx
 import { Check, X } from "lucide-react";
@@ -230,7 +229,7 @@ Content container with rounded corners and subtle tint-derived background. Good 
 
 #### `<Pill>`
 
-Rounded pill/badge with a subtle gradient tint border.
+Rounded pill/badge with a subtle gradient tint border. Applies `box-trim-both box-edge-cap` by default for consistent alignment with other trimmed text elements.
 
 ```tsx
 <Pill>Status: Active</Pill>

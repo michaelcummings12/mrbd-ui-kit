@@ -1,3 +1,5 @@
+@import "tailwindcss-text-box-trim";
+
 @source "../../dist";
 
 @theme {
@@ -9,4 +11,7 @@
 
   /* Focus glow */
   --shadow-mrbd-glow: inset -2px -2px 12px 6px color-mix(in srgb, var(--color-mrbd-accent) 40%, transparent), inset 0 0 18px 12px color-mix(in srgb, var(--color-mrbd-accent) 10%, transparent);
+
+  /* Default transition easing */
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

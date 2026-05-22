@@ -45,11 +45,10 @@ npm install mrbd-ui-kit
 
 ```css
 @import "tailwindcss";
-@import "mrbd-ui-kit/css/theme";
-@import "mrbd-ui-kit/css/base";
+@import "mrbd-ui-kit/css";
 ```
 
-Both CSS imports are required. `theme` provides Tailwind v4 tokens. `base` provides focus ring styles, scrollbar hiding, and transition defaults.
+This single import provides Tailwind v4 theme tokens (colors, shadows), focus ring styles, scrollbar hiding, transition defaults, and [`tailwindcss-text-box-trim`](https://www.npmjs.com/package/tailwindcss-text-box-trim) utilities (`box-trim-*`, `box-edge-*`) for pixel-perfect typographic spacing.
 
 ## Architecture
 
@@ -113,7 +112,7 @@ Props: `children`, `className?`, `focusOptions?: { wrap?: boolean, initialFocusI
 
 ### Text
 
-Display-optimized typography. Enforces minimum font weight.
+Display-optimized typography. Enforces minimum font weight. Applies `box-trim-both box-edge-cap` by default to eliminate internal leading for pixel-perfect vertical alignment. Override with `box-trim-none` via `className` if needed.
 
 ```tsx
 <Text size="lg" weight="bold">Title</Text>
@@ -155,7 +154,7 @@ Props: `id: string` (required), `children`, `group?: string`, `onSelect?: () => 
 
 ### Button
 
-Spatially navigable button with variants. Default variant is `secondary`. Wraps `<Focusable>` internally.
+Spatially navigable button with variants. Default variant is `secondary`. Wraps `<Focusable>` internally. Applies `box-trim-both box-edge-cap` for precise text centering within the fixed button heights.
 
 ```tsx
 import { Check, X } from "lucide-react";
@@ -197,7 +196,7 @@ Props: `children`, `className?`
 
 ### Pill
 
-Rounded pill/badge with a subtle gradient tint border.
+Rounded pill/badge with a subtle gradient tint border. Applies `box-trim-both box-edge-cap` by default for consistent alignment with other trimmed text elements.
 
 ```tsx
 <Pill>Status: Active</Pill>
