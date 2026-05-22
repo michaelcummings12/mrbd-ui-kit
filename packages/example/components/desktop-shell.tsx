@@ -62,7 +62,7 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 							href={GITHUB_URL}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-[0.8125rem] font-medium text-zinc-400 no-underline transition-colors hover:bg-white/6 hover:text-zinc-50 md:block md:flex">
+							className="hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-[0.8125rem] font-medium text-zinc-400 no-underline transition-colors hover:bg-white/6 hover:text-zinc-50 md:flex">
 							<GitHubIcon className="size-4" />
 							<span>GitHub</span>
 						</a>
@@ -77,7 +77,7 @@ export function DesktopShell({ readmeContent }: DesktopShellProps) {
 					<div className="flex min-w-0 flex-1 flex-col gap-6 max-lg:items-center">
 						<div className="flex flex-col gap-6 text-center lg:text-left">
 							<h1 className="m-0 text-[3.5rem] leading-[1.1] font-extrabold tracking-tight text-zinc-50 max-lg:text-4xl">
-								Build apps for
+								Build beautiful apps for
 								<br />
 								<span className="bg-linear-to-br from-cyan-400 via-blue-400 to-blue-600 bg-clip-text text-transparent">Meta Ray-Ban Display</span>
 							</h1>
