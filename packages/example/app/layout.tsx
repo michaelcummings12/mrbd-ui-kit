@@ -1,5 +1,5 @@
 import { AdaptiveLayout } from "@/components/adaptive-layout";
-import { OpenReplay } from "@/components/openreplay";
+import Providers from "@/components/providers";
 import { APP_URL } from "@/lib/config";
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
@@ -54,8 +54,9 @@ export default async function RootLayout({
 	return (
 		<html lang="en" className={`${nunito.variable}`}>
 			<body className="bg-black">
-				<OpenReplay />
-				<AdaptiveLayout readmeContent={readmeContent}>{children}</AdaptiveLayout>
+				<Providers>
+					<AdaptiveLayout readmeContent={readmeContent}>{children}</AdaptiveLayout>
+				</Providers>
 			</body>
 		</html>
 	);

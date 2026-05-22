@@ -13,6 +13,7 @@
     "@openreplay/tracker": "^18.0.8",
     "@tailwindcss/typography": "^0.5.19",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.16.0",
     "mrbd-ui-kit": "workspace:*",
     "next": "16.2.6",
