@@ -29,9 +29,14 @@ This single import provides Tailwind v4 theme tokens (colors, shadows), focus ri
 
 ### Font Configuration
 
-The UI kit ships with no default font bundled to keep your application lightweight. We highly recommend using **Nunito** (weights 500, 600, and 700), as we've found it looks exceptionally clear and is highly legible on the Meta Ray-Ban Display.
+The UI kit ships with no default font bundled to keep your application lightweight. We highly recommend using a clear, bold sans-serif font family. 
 
-You can configure it in a Next.js application using `next/font/google`:
+- **For Latin & Cyrillic scripts:** We recommend **Nunito** (weights 500, 600, and 700), as we've found it looks exceptionally clear and is highly legible on the Meta Ray-Ban Display.
+- **For CJK, Thai, Arabic, and other scripts:** Nunito does not support these writing systems. For full Unicode coverage, we recommend configuring a fallback bold sans-serif font such as **Noto Sans** (e.g. Noto Sans CJK, Noto Sans Thai).
+
+Setting the correct HTML `lang` attribute (e.g. `lang="ja"`, `lang="th"`) is also highly recommended to ensure the browser selects appropriate localized font glyphs.
+
+You can configure fonts in a Next.js application using `next/font/google`:
 
 ```tsx
 // app/layout.tsx
@@ -50,6 +55,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>{children}</body>
     </html>
   );
+}
+```
+
+You can configure fonts in a standard React application by importing Google Fonts directly in your CSS file and overriding the default sans font:
+
+```css
+/* global.css */
+@import "tailwindcss";
+@import "mrbd-ui-kit/css";
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700&display=swap');
+
+@theme {
+  --font-sans: "Nunito", "Noto Sans", sans-serif;
 }
 ```
 
@@ -125,28 +143,7 @@ Display-optimized typography with enforced minimum font weight. Applies `box-tri
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Font size |
 | `weight` | `'medium' \| 'semibold' \| 'bold'` | `'medium'` | Font weight (min 500) |
 | `as` | `'p' \| 'span' \| 'h1' \| 'h2' \| 'h3' \| 'label'` | `'span'` | HTML element |
-| `className` | `string` | — | Additional classes |
-
-#### `<Icon>`
-
-Renders an icon component (e.g. from `lucide-react`) or custom SVG children. No built-in icon set — pass any React component via the `icon` prop. Style with `className`.
-
-```tsx
-import { Home, Bell } from "lucide-react";
-
-<Icon icon={Home} className="size-6" />
-<Icon icon={Bell} className="size-5 text-mrbd-accent" />
-
-{/* Custom SVG */}
-<Icon className="size-6">
-  <circle cx="12" cy="12" r="10" />
-</Icon>
-```
-
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `icon` | `ElementType` | — | Icon component to render (e.g. from lucide-react) |
-| `children` | `ReactNode` | — | Custom SVG children (used if `icon` is not provided) |
+| `dir` | `'ltr' \| 'rtl' \| 'auto'` | `'auto'` | Text direction |
 | `className` | `string` | — | Additional classes |
 
 #### `<Focusable>`
@@ -199,7 +196,7 @@ The `asChild` prop merges button styles onto a child element instead of renderin
 | `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'danger'` | `'ghost'` | Visual style |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
 | `id` | `string` | **required** | Focus engine ID |
-| `icon` | `ElementType` | — | Icon component before label |
+| `icon` | `ComponentType` | — | Icon component before label |
 | `onClick` | `() => void` | — | Called on select (Enter key) |
 | `onFocus` | `() => void` | — | Called when focused |
 | `onBlur` | `() => void` | — | Called when focus leaves |
@@ -246,12 +243,12 @@ CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-accent`. Customi
 
 ```tsx
 <LoadingSpinner />
-<LoadingSpinner className="size-6 text-blue-500" />
+<LoadingSpinner label="Saving data..." className="size-6 text-blue-500" />
 ```
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `label` | `string` | `'Loading'` | Accessible label |
+| `label` | `string` | `'Loading'` | Accessible label (screen reader announcement) |
 | `className` | `string` | — | Additional classes (size, color, etc.) |
 
 #### `<ScrollContainer>`
@@ -457,6 +454,21 @@ When you import `mrbd-ui-kit/css/theme`, these Tailwind utilities become availab
 ### Shadows (Outer Glow)
 - `shadow-mrbd-glow` — Inner glow (used by Button hover/focus)
 
+
+## Localization (i18n)
+
+The `mrbd-ui-kit` library is architected from the ground up to be translation-agnostic and easy to localize:
+
+1. **No Hardcoded Strings:** There are no translation dictionaries or hardcoded user-facing strings that cannot be customized. Developer-facing exceptions (such as `<Slot>` or context errors) are in English but are never shown to end-users.
+2. **Translation via Props:** All text, subtitles, accessibility labels, and content flow purely through standard component props or children.
+3. **Accessibility & Localization:** Visual-only interactive components (such as `<LoadingSpinner>`) allow passing an explicit, localized `label` prop to ensure screen readers announce them properly in any target language (defaulting to `'Loading'`).
+
+### Right-to-Left (RTL) Support
+
+RTL locales (such as Arabic and Hebrew) are supported out of the box:
+- Use the `dir` prop on the `<Text>` component (`'ltr' | 'rtl' | 'auto'`) to specify or automatically detect text direction (defaults to `'auto'`).
+- Set `dir="rtl"` on your outer layout container or on the `<html>` tag to align layouts accordingly.
+- Because Meta Ray-Ban Display layouts are right-aligned/F-pattern for the monocular display, RTL flows integrate naturally on the hardware.
 
 ## Design Guidelines
 
