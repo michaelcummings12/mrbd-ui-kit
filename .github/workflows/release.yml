@@ -1,4 +1,4 @@
-name: Create GitHub Release
+name: Release
 
 on:
   push:
@@ -6,27 +6,16 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
-  release:
+  check-version:
     runs-on: ubuntu-latest
+    outputs:
+      should_publish: ${{ steps.check.outputs.should_publish }}
+      version: ${{ steps.check.outputs.version }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # Retrieve full git history to accurately find previous tags and generate diffs
-
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "latest"
-          registry-url: "https://registry.npmjs.org"
-          cache: "pnpm"
-
-      - name: Install dependencies  
-        run: pnpm install --frozen-lockfile
-
-      - name: Build packages
-        run: pnpm build --filter "mrbd-ui-kit"
 
       - name: Check latest version
         id: check
@@ -44,8 +33,20 @@ jobs:
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
           fi
 
+  release:
+    needs: check-version
+    if: needs.check-version.outputs.should_publish == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Retrieve full git history to accurately find previous tags and generate diffs
+
+      - name: Setup and Build
+        uses: ./.github/actions/build
+
       - name: Retrieve git changes
-        if: steps.check.outputs.should_publish == 'true'
         id: git_changes
         run: |
           # Find the previous release tag relative to the current commit
@@ -74,7 +75,6 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Generate release notes via Vercel AI Gateway
-        if: steps.check.outputs.should_publish == 'true'
         uses: vercel/ai-action@v2
         id: ai_generation
         with:
@@ -83,7 +83,7 @@ jobs:
           prompt: |
             You are a senior software engineer and professional open-source package maintainer for mrbd-ui-kit (a UI component library for Meta Ray-Ban Display smart glasses).
             
-            Write a beautiful, clean, and professional GitHub release description and changelog for version v${{ steps.check.outputs.version }} based on the commits and code diff below.
+            Write a beautiful, clean, and professional GitHub release description and changelog for version v${{ needs.check-version.outputs.version }} based on the commits and code diff below.
             
             Strictly adhere to these guidelines:
             1. Summarize the release main objective/focus in 1-2 sentences.
@@ -103,12 +103,17 @@ jobs:
             ${{ steps.git_changes.outputs.diff }}
 
       - name: Create GitHub Release
-        if: steps.check.outputs.should_publish == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AI_NOTES: ${{ steps.ai_generation.outputs.text }}
         run: |
           printf "%s\n" "$AI_NOTES" > release_notes.md
-          gh release create v${{ steps.check.outputs.version }} \
+          gh release create v${{ needs.check-version.outputs.version }} \
             --notes-file release_notes.md \
-            --title "v${{ steps.check.outputs.version }}"
+            --title "v${{ needs.check-version.outputs.version }}"
+
+      - name: Publish to NPM
+        working-directory: packages/mrbd-ui-kit
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

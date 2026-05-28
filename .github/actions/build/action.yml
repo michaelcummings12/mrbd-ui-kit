@@ -1,0 +1,18 @@
+name: "Setup and Build"
+description: "Sets up Node, pnpm, installs dependencies and builds the package"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: pnpm/action-setup@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: "latest"
+        registry-url: "https://registry.npmjs.org"
+        cache: "pnpm"
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
+    - name: Build packages
+      shell: bash
+      run: pnpm build --filter "mrbd-ui-kit"
