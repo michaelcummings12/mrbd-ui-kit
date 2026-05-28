@@ -74,7 +74,7 @@ import {
 import { Check, Home, Search, Settings } from "lucide-react";
 
 // Hooks
-import { useSpatialInput, useFocusManager, useIsMrbd, useScroll } from "mrbd-ui-kit";
+import { useSpatialInput, useFocusManager, usePreferredFocus, useIsMrbd, useScroll } from "mrbd-ui-kit";
 
 // Server-side device detection (no "use client")
 import { isMrbd, isMrbdFromHeaders } from "mrbd-ui-kit/server";
@@ -283,6 +283,29 @@ const { focusedId, move, focus } = useFocusManager();
 move("down");        // Move focus spatially
 focus("my-button");  // Focus by ID
 ```
+
+### usePreferredFocus()
+
+Declare the preferred initial focus target for the current page.
+
+Takes priority over sessionStorage restore and first-element auto-focus. Cleans up on unmount so the next page gets normal auto-focus behavior.
+
+```tsx
+// Focus the currently selected item
+usePreferredFocus(selectedItemId);
+
+// Or pass null to use default auto-focus behavior
+usePreferredFocus(null);
+```
+
+Focus priority model:
+
+| Priority | Source |
+|---|---|
+| 1st | `usePreferredFocus(id)` |
+| 2nd | Explicit `focus()` via `useFocusManager` |
+| 3rd | SessionStorage restore (back-nav) |
+| 4th | First auto-focusable element |
 
 ### useIsMrbd()
 
