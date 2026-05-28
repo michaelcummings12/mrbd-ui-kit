@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Text } from "mrbd-ui-kit";
+import { Button, Text, usePreferredFocus } from "mrbd-ui-kit";
 import { useState } from "react";
 import { PageHeader } from "../../components/page-header";
 
@@ -14,11 +14,14 @@ const TINTS = [
 ];
 
 export default function ThemesPage() {
-	const [activeTint, setActiveTint] = useState(TINTS[0].value);
+	const [activeIndex, setActiveIndex] = useState(0);
 
-	function applyTint(value: string) {
-		setActiveTint(value);
-		document.documentElement.style.setProperty("--color-mrbd-accent", value);
+	// Focus the currently active tint when this page mounts
+	usePreferredFocus(`tint-color-${TINTS[activeIndex].label}`);
+
+	function applyTint(index: number) {
+		setActiveIndex(index);
+		document.documentElement.style.setProperty("--color-mrbd-accent", TINTS[index].value);
 	}
 
 	return (
@@ -31,8 +34,13 @@ export default function ThemesPage() {
 
 			{/* Color swatches */}
 			<div className="grid grid-cols-3 gap-2">
-				{TINTS.map((tint) => (
-					<Button onClick={() => applyTint(tint.value)} id={`tint-color-${tint.label}`} variant="secondary" className="w-full flex-col items-center justify-center gap-1">
+				{TINTS.map((tint, i) => (
+					<Button
+						key={tint.label}
+						onClick={() => applyTint(i)}
+						id={`tint-color-${tint.label}`}
+						variant={i === activeIndex ? "primary" : "secondary"}
+						className="w-full flex-col items-center justify-center gap-1">
 						<div className="flex flex-row items-center gap-1.5">
 							<div className="size-5 rounded-full border border-white/20" style={{ backgroundColor: tint.value }} />
 						</div>
