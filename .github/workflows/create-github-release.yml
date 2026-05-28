@@ -1,0 +1,114 @@
+name: Create GitHub Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Retrieve full git history to accurately find previous tags and generate diffs
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "latest"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+
+      - name: Install dependencies  
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build --filter "mrbd-ui-kit"
+
+      - name: Check latest version
+        id: check
+        working-directory: packages/mrbd-ui-kit
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          NAME=$(node -p "require('./package.json').name")
+          PUBLISHED_VERSION=$(npm view "$NAME" version 2>/dev/null || echo "")
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          if [ "$VERSION" != "$PUBLISHED_VERSION" ]; then
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Retrieve git changes
+        if: steps.check.outputs.should_publish == 'true'
+        id: git_changes
+        run: |
+          # Find the previous release tag relative to the current commit
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+          
+          echo "Previous Tag: $PREVIOUS_TAG"
+          
+          if [ -n "$PREVIOUS_TAG" ]; then
+            # Get list of commit messages since the previous tag
+            COMMITS=$(git log "$PREVIOUS_TAG..HEAD" --oneline)
+            # Get git diff, excluding package-lock, build, or format noise
+            DIFF=$(git diff "$PREVIOUS_TAG..HEAD" -- . ':!pnpm-lock.yaml' ':!package-lock.json' ':!yarn.lock' | head -c 20000)
+          else
+            COMMITS=$(git log HEAD --oneline)
+            INITIAL_COMMIT=$(git rev-list --max-parents=0 HEAD | head -n 1)
+            DIFF=$(git diff "$INITIAL_COMMIT..HEAD" -- . ':!pnpm-lock.yaml' ':!package-lock.json' ':!yarn.lock' | head -c 20000)
+          fi
+          
+          # Safely output variables for downstream steps
+          echo "commits<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMITS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "diff<<EOF" >> $GITHUB_OUTPUT
+          echo "$DIFF" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes via Vercel AI Gateway
+        if: steps.check.outputs.should_publish == 'true'
+        uses: vercel/ai-action@v2
+        id: ai_generation
+        with:
+          model: "deepseek/deepseek-v4-flash"
+          api-key: ${{ secrets.AI_GATEWAY_API_KEY }}
+          prompt: |
+            You are a senior software engineer and professional open-source package maintainer for mrbd-ui-kit (a UI component library for Meta Ray-Ban Display smart glasses).
+            
+            Write a beautiful, clean, and professional GitHub release description and changelog for version v${{ steps.check.outputs.version }} based on the commits and code diff below.
+            
+            Strictly adhere to these guidelines:
+            1. Summarize the release main objective/focus in 1-2 sentences.
+            2. Group the changes into logical sections:
+               - 🚀 Features
+               - 🐛 Bug Fixes
+               - 📝 Documentation
+               - 🔧 Chore & Maintenance
+            3. Detect and explicitly highlight any potential BREAKING CHANGES. Examples: CSS file path changes, prop name/type changes, modified hook behavior, or changed Tailwind theme tokens. Use a prominent warning callout or quote block to draw developer attention.
+            4. Do not include lockfile updates, trivial formatting edits, or workflow files in the public changelog unless they represent important improvements.
+            5. Output ONLY the raw markdown content for the release notes (do not wrap your entire output in backticks or a markdown block).
+            
+            Commits:
+            ${{ steps.git_changes.outputs.commits }}
+            
+            Code Diff (summarized):
+            ${{ steps.git_changes.outputs.diff }}
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.should_publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AI_NOTES: ${{ steps.ai_generation.outputs.text }}
+        run: |
+          printf "%s\n" "$AI_NOTES" > release_notes.md
+          gh release create v${{ steps.check.outputs.version }} \
+            --notes-file release_notes.md \
+            --title "v${{ steps.check.outputs.version }}"
