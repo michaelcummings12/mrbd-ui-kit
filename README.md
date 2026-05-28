@@ -116,7 +116,7 @@ Required root wrapper. Sets up the 600×600 viewport, focus engine context, and 
 
 ```tsx
 <DisplayRoot
-  focusOptions={{ wrap: true, initialFocusId: "first-btn" }}
+  focusOptions={{ wrap: true }}
   onSelect={(focusedId) => console.log("selected:", focusedId)}
 >
   {children}
@@ -125,7 +125,7 @@ Required root wrapper. Sets up the 600×600 viewport, focus engine context, and 
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `focusOptions` | `FocusEngineOptions` | `{ wrap: true }` | Configure focus wrapping, initial focus |
+| `focusOptions` | `FocusEngineOptions` | `{ wrap: true }` | Configure focus wrapping |
 | `onSelect` | `(id: string) => void` | — | Called on Enter/select while an element is focused |
 | `className` | `string` | — | Additional classes for the root div |
 

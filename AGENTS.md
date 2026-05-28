@@ -101,14 +101,14 @@ Root wrapper. Required. Sets up the 600×600 viewport, focus engine context, and
 
 ```tsx
 <DisplayRoot
-  focusOptions={{ wrap: true, initialFocusId: "first-btn" }}
+  focusOptions={{ wrap: true }}
   onSelect={(focusedId) => handleAction(focusedId)}
 >
   {children}
 </DisplayRoot>
 ```
 
-Props: `children`, `className?`, `focusOptions?: { wrap?: boolean, initialFocusId?: string }`, `onSelect?: (id: string) => void`
+Props: `children`, `className?`, `focusOptions?: { wrap?: boolean }`, `onSelect?: (id: string) => void`
 
 ### Text
 
@@ -362,7 +362,7 @@ export default function MyMRBDApp() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <DisplayRoot focusOptions={{ initialFocusId: "action-btn" }}>
+    <DisplayRoot>
       <div className="flex flex-col gap-4 p-6">
         {/* Header */}
         <div className="flex flex-row gap-2 items-center">

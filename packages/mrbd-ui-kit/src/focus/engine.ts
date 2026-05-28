@@ -9,8 +9,6 @@ export interface FocusableEntry {
 export interface FocusEngineOptions {
 	/** Wrap focus at boundaries. @default true */
 	wrap?: boolean;
-	/** ID to focus on mount */
-	initialFocusId?: string;
 }
 
 export interface FocusEngine {
@@ -180,12 +178,12 @@ function hasSpatialSpread(direction: SpatialDirection, candidates: Array<{ id: s
 }
 
 export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine {
-	const { wrap = true, initialFocusId } = options;
+	const { wrap = true } = options;
 
 	const entries = new Map<string, FocusableEntry>();
-	let currentId: string | null = initialFocusId ?? null;
+	let currentId: string | null = null;
 	const listeners = new Set<(id: string | null) => void>();
-	let pendingInitialFocus = false;
+	let pendingInitialFocusFrame: number | null = null;
 
 	function getStorageKey(): string {
 		try {
@@ -250,20 +248,13 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	function register(entry: FocusableEntry) {
 		entries.set(entry.id, entry);
 
-		// If this is the initial focus target, focus immediately
-		if (entry.id === initialFocusId) {
-			requestAnimationFrame(() => applyFocus(entry.id));
-			return;
-		}
-
 		// When nothing is focused, batch the initial focus decision in a single
 		// rAF so all elements can register first. This lets us check for a
 		// saved focus ID (from a previous visit to this route) before falling
 		// back to the first registered element.
-		if (currentId === null && !pendingInitialFocus) {
-			pendingInitialFocus = true;
-			requestAnimationFrame(() => {
-				pendingInitialFocus = false;
+		if (currentId === null && pendingInitialFocusFrame === null) {
+			pendingInitialFocusFrame = requestAnimationFrame(() => {
+				pendingInitialFocusFrame = null;
 
 				// Priority: saved focus > first entry
 				const savedId = getSavedFocusId();
@@ -340,6 +331,11 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	}
 
 	function focusById(id: string) {
+		// Cancel pending auto-focus — explicit focus takes priority
+		if (pendingInitialFocusFrame !== null) {
+			cancelAnimationFrame(pendingInitialFocusFrame);
+			pendingInitialFocusFrame = null;
+		}
 		if (entries.has(id)) {
 			applyFocus(id);
 		}
@@ -357,6 +353,10 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	}
 
 	function destroy() {
+		if (pendingInitialFocusFrame !== null) {
+			cancelAnimationFrame(pendingInitialFocusFrame);
+			pendingInitialFocusFrame = null;
+		}
 		entries.clear();
 		listeners.clear();
 		currentId = null;
