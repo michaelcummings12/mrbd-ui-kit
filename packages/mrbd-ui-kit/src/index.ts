@@ -1,7 +1,6 @@
 // Components — Primitives
 export { DisplayRoot } from "./components/display-root";
 export { Focusable } from "./components/focusable";
-export { Icon } from "./components/icon";
 export { Text } from "./components/text";
 
 // Components — Composites
@@ -24,7 +23,6 @@ export type { ButtonProps } from "./components/button";
 export type { CardProps } from "./components/card";
 export type { DisplayRootProps } from "./components/display-root";
 export type { FocusableProps } from "./components/focusable";
-export type { IconProps } from "./components/icon";
 export type { LoadingSpinnerProps } from "./components/loading-spinner";
 export type { PillProps } from "./components/pill";
 export type { ScrollAreaProps } from "./components/scroll-area";

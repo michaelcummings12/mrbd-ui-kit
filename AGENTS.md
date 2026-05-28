@@ -17,12 +17,13 @@ These are NOT suggestions. Violating them creates a broken experience on the har
 - Use `text-mrbd-text` for primary text (92% white, NOT pure white)
 - Use `shadow-mrbd-glow` for emphasis effects (inner glow)
 - Use `font-weight: 500` or higher for all text
-- Use `Nunito` or a similar bold sans-serif font (weights 500+)
+- Use `Nunito` (or a fallback like `Noto Sans` for CJK/Thai/etc.) bold sans-serif font (weights 500+)
 - Keep layouts right-anchored or F-pattern (display is in the right lens)
 - Make all interactive elements spatially navigable via `<Focusable>` or composite components
 - Give every `<Focusable>` and `<Button>` a unique `id`
 - Keep content glanceable — users scan in <2 seconds
-- Use `lucide-react` icons via the `<Icon>` component
+- Use `lucide-react` icons directly in your layouts, or pass them to components (like `<Button>`) that support them
+- If needed, you can localize user-facing strings and customize the LoadingSpinner `label` for non-English screen readers
 
 ### NEVER:
 
@@ -61,7 +62,6 @@ import {
   Card,
   DisplayRoot,
   Focusable,
-  Icon,
   LoadingSpinner,
   Pill,
   ScrollArea,
@@ -119,25 +119,7 @@ Display-optimized typography. Enforces minimum font weight. Applies `box-trim-bo
 <Text size="sm" className="text-gray-400">Subtitle</Text>
 ```
 
-Props: `children`, `size?: 'sm' | 'md' | 'lg'`, `weight?: 'medium' | 'semibold' | 'bold'`, `as?: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'label'`, `className?`
-
-### Icon
-
-Renders an icon component (e.g. from `lucide-react`) or custom SVG children. **No built-in icon set** — pass any `ElementType` via the `icon` prop. Style with `className` (e.g. `className="size-6 text-mrbd-accent"`).
-
-```tsx
-import { Home, Bell } from "lucide-react";
-
-<Icon icon={Home} className="size-6" />
-<Icon icon={Bell} className="size-5 text-mrbd-accent" />
-
-{/* Custom SVG */}
-<Icon className="size-6">
-  <circle cx="12" cy="12" r="10" />
-</Icon>
-```
-
-Props: `icon?: ElementType`, `children?: ReactNode` (custom SVG), `className?`
+Props: `children`, `size?: 'sm' | 'md' | 'lg'`, `weight?: 'medium' | 'semibold' | 'bold'`, `as?: 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'label'`, `dir?: 'ltr' | 'rtl' | 'auto'` (default `'auto'`), `className?`
 
 ### Focusable
 
@@ -175,7 +157,7 @@ The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 </Button>
 ```
 
-Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ElementType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
+Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ComponentType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
 
 ### Card
 
@@ -214,7 +196,7 @@ CSS-only spinner animation. Defaults to `size-8` and `text-mrbd-text`. Customize
 <LoadingSpinner className="size-6 text-mrbd-accent" />
 ```
 
-Props: `label?: string`, `className?`
+Props: `label?: string` (default `'Loading'`), `className?`
 
 ### ScrollContainer
 
@@ -372,7 +354,6 @@ import {
   Button,
   Card,
   DisplayRoot,
-  Icon,
   LoadingSpinner,
   Text,
 } from "mrbd-ui-kit";
@@ -385,7 +366,7 @@ export default function MyMRBDApp() {
       <div className="flex flex-col gap-4 p-6">
         {/* Header */}
         <div className="flex flex-row gap-2 items-center">
-          <Icon icon={Search} className="size-5 text-mrbd-accent" />
+          <Search className="size-5 text-mrbd-accent" />
           <Text size="lg" weight="bold">
             Notifications
           </Text>

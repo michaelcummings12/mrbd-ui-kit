@@ -56,13 +56,13 @@ jobs:
           
           if [ -n "$PREVIOUS_TAG" ]; then
             # Get list of commit messages since the previous tag
-            COMMITS=$(git log "$PREVIOUS_TAG..HEAD" --oneline)
-            # Get git diff, excluding package-lock, build, or format noise
-            DIFF=$(git diff "$PREVIOUS_TAG..HEAD" -- . ':!pnpm-lock.yaml' ':!package-lock.json' ':!yarn.lock' | head -c 20000)
+            COMMITS=$(git log "$PREVIOUS_TAG..HEAD" --oneline -- . ':!packages/example')
+            # Get git diff, excluding package-lock, build, format noise, and example app
+            DIFF=$(git diff "$PREVIOUS_TAG..HEAD" -- . ':!pnpm-lock.yaml' ':!package-lock.json' ':!yarn.lock' ':!packages/example' | head -c 20000)
           else
-            COMMITS=$(git log HEAD --oneline)
+            COMMITS=$(git log HEAD --oneline -- . ':!packages/example')
             INITIAL_COMMIT=$(git rev-list --max-parents=0 HEAD | head -n 1)
-            DIFF=$(git diff "$INITIAL_COMMIT..HEAD" -- . ':!pnpm-lock.yaml' ':!package-lock.json' ':!yarn.lock' | head -c 20000)
+            DIFF=$(git diff "$INITIAL_COMMIT..HEAD" -- . ':!pnpm-lock.yaml' ':!package-lock.json' ':!yarn.lock' ':!packages/example' | head -c 20000)
           fi
           
           # Safely output variables for downstream steps

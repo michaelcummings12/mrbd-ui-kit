@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, MessageCircle, Wifi } from "lucide-react";
-import { Card, Icon, Text } from "mrbd-ui-kit";
+import { Card, Text } from "mrbd-ui-kit";
 import { PageHeader } from "../../components/page-header";
 
 export default function CardPage() {
@@ -24,7 +24,7 @@ export default function CardPage() {
 			<Card>
 				<div className="flex flex-row items-center gap-3">
 					<div className="bg-mrbd-accent/10 flex size-9 shrink-0 items-center justify-center rounded-full">
-						<Icon icon={Bell} className="text-mrbd-accent size-5" />
+						<Bell className="text-mrbd-accent size-5" />
 					</div>
 					<div className="flex flex-col gap-0.5">
 						<Text weight="semibold">New message from Alex</Text>
@@ -44,13 +44,13 @@ export default function CardPage() {
 					{ label: "Connection", value: "Connected", icon: Wifi },
 					{ label: "Messages", value: "3 unread", icon: MessageCircle },
 					{ label: "Battery", value: "82%", icon: null }
-				].map(({ label, value, icon }) => (
+				].map(({ label, value, icon: IconComponent }) => (
 					<div key={label} className="flex flex-row items-center justify-between">
 						<Text size="sm" className="text-gray-400">
 							{label}
 						</Text>
 						<div className="flex flex-row items-center gap-1.5">
-							{icon && <Icon icon={icon} className="text-mrbd-accent size-3.5" />}
+							{IconComponent && <IconComponent className="text-mrbd-accent size-3.5" />}
 							<Text size="sm" weight="semibold">
 								{value}
 							</Text>

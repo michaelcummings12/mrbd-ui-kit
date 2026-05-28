@@ -9,6 +9,8 @@ export interface TextProps {
 	weight?: "medium" | "semibold" | "bold";
 	/** HTML element to render as. @default 'span' */
 	as?: "p" | "span" | "h1" | "h2" | "h3" | "label";
+	/** Text direction. Use 'auto' to let the browser detect from content, or specify 'ltr' or 'rtl'. @default 'auto' */
+	dir?: "ltr" | "rtl" | "auto";
 	className?: string;
 }
 
@@ -24,8 +26,10 @@ const WEIGHT_CLASSES: Record<NonNullable<TextProps["weight"]>, string> = {
 	bold: "font-bold"
 };
 
-export function Text({ children, size = "md", weight = "medium", as: Tag = "span", className }: TextProps) {
-	const classes = cn("box-trim-both box-edge-cap", SIZE_CLASSES[size], WEIGHT_CLASSES[weight], "text-mrbd-text", className);
-
-	return <Tag className={classes}>{children}</Tag>;
+export function Text({ children, size = "md", weight = "medium", as: Tag = "span", dir = "auto", className }: TextProps) {
+	return (
+		<Tag className={cn("box-trim-both box-edge-cap", SIZE_CLASSES[size], WEIGHT_CLASSES[weight], "text-mrbd-text", className)} dir={dir}>
+			{children}
+		</Tag>
+	);
 }

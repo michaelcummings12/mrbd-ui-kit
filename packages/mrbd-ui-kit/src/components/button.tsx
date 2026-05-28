@@ -1,7 +1,6 @@
-import type { ElementType, ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { cn } from "../lib/cn";
 import { Focusable } from "./focusable";
-import { Icon } from "./icon";
 import { Slot } from "./slot";
 
 export interface ButtonProps {
@@ -13,7 +12,7 @@ export interface ButtonProps {
 	/** Required — used for focus engine registration */
 	id: string;
 	/** Icon to render before children */
-	icon?: ElementType;
+	icon?: ComponentType<{ className?: string }>;
 	/** @default false */
 	disabled?: boolean;
 	/** Called on select (Enter key) */
@@ -65,7 +64,7 @@ export function Button({
 	variant = "secondary",
 	size = "md",
 	id,
-	icon,
+	icon: Icon,
 	disabled,
 	onClick,
 	onFocus,
@@ -91,7 +90,7 @@ export function Button({
 				<Slot className={resolvedClass}>{children}</Slot>
 			) : (
 				<button className={resolvedClass}>
-					{icon && <Icon icon={icon} className={ICON_CLASSES[size]} />}
+					{Icon && <Icon className={ICON_CLASSES[size]} />}
 					{children}
 				</button>
 			)}

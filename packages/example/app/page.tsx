@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, Glasses, LayoutPanelTop, List, Paintbrush, Pointer, TextCursor } from "lucide-react";
-import { Button, Icon, ScrollContainer, Text } from "mrbd-ui-kit";
+import { Button, ScrollContainer, Text } from "mrbd-ui-kit";
 import Link from "next/link";
 import type { ElementType } from "react";
 
@@ -13,13 +13,13 @@ interface NavItemProps {
 	className?: string;
 }
 
-function NavItem({ id, href, icon, label, className }: NavItemProps) {
+function NavItem({ id, href, icon: Icon, label, className }: NavItemProps) {
 	return (
 		<Button id={id} variant="secondary" className={`w-full ${className ?? ""}`} size="lg" asChild>
 			<Link href={href}>
 				<div className="flex w-full flex-row items-center gap-4">
 					<div className="flex size-14 items-center justify-center rounded-full bg-black/50">
-						<Icon icon={icon} className="size-7 text-white" />
+						<Icon className="size-7 text-white" />
 					</div>
 					<Text weight="semibold">{label}</Text>
 				</div>
@@ -49,7 +49,7 @@ export default function HomeTab() {
 		<div className="flex h-full flex-col gap-4">
 			<div className="flex flex-col items-center gap-2">
 				<div className="flex size-12 items-center justify-center rounded-full bg-linear-to-br from-blue-400 to-blue-700">
-					<Icon icon={Glasses} className="h-full text-white" />
+					<Glasses className="h-full text-white" />
 				</div>
 				<Text size="lg" weight="bold">
 					mrbd-ui-kit

@@ -1,7 +1,7 @@
 import { cn } from "../lib/cn";
 
 export interface LoadingSpinnerProps {
-	/** Accessible label. @default 'Loading' */
+	/** Accessible label. Can be a translated string for localization. @default 'Loading' */
 	label?: string;
 	className?: string;
 }
