@@ -22,6 +22,12 @@ export interface FocusEngine {
 	unregister: (id: string) => void;
 	move: (direction: SpatialDirection) => void;
 	focusById: (id: string) => void;
+	/**
+	 * Declare the preferred focus target.
+	 * Takes priority over sessionStorage restore and first-element auto-focus.
+	 * Pass `null` to clear the preference and restore normal auto-focus behavior.
+	 */
+	setPreferredFocus: (id: string | null) => void;
 	getCurrentId: () => string | null;
 	subscribe: (listener: (id: string | null) => void) => () => void;
 	destroy: () => void;
@@ -190,6 +196,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	let currentId: string | null = null;
 	const listeners = new Set<(id: string | null) => void>();
 	let pendingInitialFocusFrame: number | null = null;
+	let preferredFocusId: string | null = null;
 
 	function getStorageKey(): string {
 		try {
@@ -242,10 +249,16 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 				scrollIntoScrollContainer(next.element);
 			}
 
-			// Persist for route-based focus restoration (skip during
-			// unregister cascades so intermediate IDs don't overwrite
-			// the user's intended focus target)
-			if (persist) saveFocusId(currentId);
+			// Persist for route-based focus restoration.
+			// Skip during unregister cascades (persist=false) and for
+			// chrome items (autoFocus=false) so back-nav restores the
+			// last content item, not toolbar buttons.
+			if (persist) {
+				const entry = entries.get(currentId);
+				if (entry?.autoFocus !== false) {
+					saveFocusId(currentId);
+				}
+			}
 		}
 
 		notify();
@@ -262,15 +275,28 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	function register(entry: FocusableEntry) {
 		entries.set(entry.id, entry);
 
-		// When nothing is focused, batch the initial focus decision in a single
-		// rAF so all elements can register first. This lets us check for a
-		// saved focus ID (from a previous visit to this route) before falling
-		// back to the first registered element.
+		// If this element is the preferred focus target, focus it immediately
+		if (preferredFocusId === entry.id) {
+			if (pendingInitialFocusFrame !== null) {
+				cancelAnimationFrame(pendingInitialFocusFrame);
+				pendingInitialFocusFrame = null;
+			}
+			requestAnimationFrame(() => applyFocus(entry.id));
+			return;
+		}
+
+		// Normal auto-focus: batch the decision in a single rAF so all
+		// elements can register first.
+		// Priority: preferred focus > saved focus > first auto-focusable > first entry
 		if (currentId === null && pendingInitialFocusFrame === null) {
 			pendingInitialFocusFrame = requestAnimationFrame(() => {
 				pendingInitialFocusFrame = null;
 
-				// Priority: saved focus > first auto-focusable > first entry
+				if (preferredFocusId && entries.has(preferredFocusId)) {
+					applyFocus(preferredFocusId);
+					return;
+				}
+
 				const savedId = getSavedFocusId();
 				if (savedId && entries.has(savedId)) {
 					applyFocus(savedId);
@@ -279,6 +305,24 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 					if (first) applyFocus(first);
 				}
 			});
+		}
+	}
+
+	function setPreferredFocus(id: string | null) {
+		preferredFocusId = id;
+		if (id === null) {
+			return;
+		}
+
+		// Cancel any pending auto-focus — preferred focus takes priority
+		if (pendingInitialFocusFrame !== null) {
+			cancelAnimationFrame(pendingInitialFocusFrame);
+			pendingInitialFocusFrame = null;
+		}
+		// If the element is already registered, focus it immediately.
+		// Otherwise register() will pick it up when the element mounts.
+		if (entries.has(id)) {
+			applyFocus(id);
 		}
 	}
 
@@ -374,6 +418,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		entries.clear();
 		listeners.clear();
 		currentId = null;
+		preferredFocusId = null;
 	}
 
 	return {
@@ -381,6 +426,7 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		unregister,
 		move,
 		focusById,
+		setPreferredFocus,
 		getCurrentId,
 		subscribe,
 		destroy

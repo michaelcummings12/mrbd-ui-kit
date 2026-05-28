@@ -370,6 +370,46 @@ move("down");
 focus("my-button");
 ```
 
+### `usePreferredFocus()`
+
+Declare the preferred initial focus target for the current page. 
+
+Takes priority over sessionStorage restore and first-element auto-focus. Cleans up on unmount so the next page gets normal auto-focus behavior.
+
+```tsx
+import { usePreferredFocus } from "mrbd-ui-kit";
+
+// Focus the currently active item when the page mounts
+function LanguagePicker({ selectedLocale }: { selectedLocale: string }) {
+  usePreferredFocus(`lang-${selectedLocale}`);
+
+  return (
+    <ScrollContainer>
+      {locales.map((l) => (
+        <Button key={l} id={`lang-${l}`}>{l}</Button>
+      ))}
+    </ScrollContainer>
+  );
+}
+
+// Pass null to use default auto-focus behavior
+usePreferredFocus(null);
+```
+
+**Focus priority model:**
+
+| Priority | Source |
+|---|---|
+| 1st | `usePreferredFocus(id)` |
+| 2nd | Explicit `focus()` via `useFocusManager` |
+| 3rd | SessionStorage restore (back-nav) |
+| 4th | First auto-focusable element |
+
+All four methods can focus any element, including `autoFocus={false}` elements. The `autoFocus` flag only controls two things:
+
+- **Auto-focus selection** — `autoFocus={false}` elements are skipped when choosing the initial focus target (priority 4)
+- **SessionStorage persistence** — focusing an `autoFocus={false}` element never overwrites the saved focus ID, so back-navigation restores the last *content* item instead of toolbar chrome
+
 ### `useIsMrbd()`
 
 Client-side detection of Meta Ray-Ban Display via user agent. Returns `false` during SSR.
