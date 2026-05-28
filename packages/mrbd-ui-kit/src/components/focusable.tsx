@@ -8,6 +8,12 @@ export interface FocusableProps {
 	id: string;
 	/** Focus group for scoped navigation */
 	group?: string;
+	/**
+	 * When false, skip this element for initial auto-focus but keep it
+	 * navigable via arrow keys and explicit focus() calls.
+	 * @default true
+	 */
+	autoFocus?: boolean;
 	/** Called when this element receives focus */
 	onFocus?: () => void;
 	/** Called when this element loses focus */
@@ -19,7 +25,7 @@ export interface FocusableProps {
 	className?: string;
 }
 
-export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disabled = false, className }: FocusableProps) {
+export function Focusable({ children, id, group, autoFocus, onFocus, onBlur, onSelect, disabled = false, className }: FocusableProps) {
 	const { engine } = useFocusContext();
 	const elementRef = useRef<HTMLDivElement>(null);
 	const callbacksRef = useRef({ onFocus, onBlur, onSelect });
@@ -31,11 +37,11 @@ export function Focusable({ children, id, group, onFocus, onBlur, onSelect, disa
 	useEffect(() => {
 		if (disabled || !elementRef.current) return;
 
-		engine.register({ id, element: elementRef.current, group });
+		engine.register({ id, element: elementRef.current, group, autoFocus });
 		return () => {
 			engine.unregister(id);
 		};
-	}, [engine, id, group, disabled]);
+	}, [engine, id, group, autoFocus, disabled]);
 
 	// Subscribe to focus changes for callbacks
 	useEffect(() => {

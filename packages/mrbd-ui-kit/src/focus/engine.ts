@@ -4,13 +4,17 @@ export interface FocusableEntry {
 	id: string;
 	element: HTMLElement;
 	group?: string;
+	/**
+	 * When false, this entry is skipped during initial auto-focus selection.
+	 * It remains fully reachable via arrow-key navigation, explicit focusById(), and restore.
+	 * @default true
+	 */
+	autoFocus?: boolean;
 }
 
 export interface FocusEngineOptions {
 	/** Wrap focus at boundaries. @default true */
 	wrap?: boolean;
-	/** ID to focus on mount */
-	initialFocusId?: string;
 }
 
 export interface FocusEngine {
@@ -180,12 +184,12 @@ function hasSpatialSpread(direction: SpatialDirection, candidates: Array<{ id: s
 }
 
 export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine {
-	const { wrap = true, initialFocusId } = options;
+	const { wrap = true } = options;
 
 	const entries = new Map<string, FocusableEntry>();
-	let currentId: string | null = initialFocusId ?? null;
+	let currentId: string | null = null;
 	const listeners = new Set<(id: string | null) => void>();
-	let pendingInitialFocus = false;
+	let pendingInitialFocusFrame: number | null = null;
 
 	function getStorageKey(): string {
 		try {
@@ -247,30 +251,31 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		notify();
 	}
 
+	/** Return the first entry eligible for initial auto-focus (autoFocus !== false). */
+	function findFirstAutoFocusable(): string | undefined {
+		for (const [id, entry] of entries) {
+			if (entry.autoFocus !== false) return id;
+		}
+		return undefined;
+	}
+
 	function register(entry: FocusableEntry) {
 		entries.set(entry.id, entry);
-
-		// If this is the initial focus target, focus immediately
-		if (entry.id === initialFocusId) {
-			requestAnimationFrame(() => applyFocus(entry.id));
-			return;
-		}
 
 		// When nothing is focused, batch the initial focus decision in a single
 		// rAF so all elements can register first. This lets us check for a
 		// saved focus ID (from a previous visit to this route) before falling
 		// back to the first registered element.
-		if (currentId === null && !pendingInitialFocus) {
-			pendingInitialFocus = true;
-			requestAnimationFrame(() => {
-				pendingInitialFocus = false;
+		if (currentId === null && pendingInitialFocusFrame === null) {
+			pendingInitialFocusFrame = requestAnimationFrame(() => {
+				pendingInitialFocusFrame = null;
 
-				// Priority: saved focus > first entry
+				// Priority: saved focus > first auto-focusable > first entry
 				const savedId = getSavedFocusId();
 				if (savedId && entries.has(savedId)) {
 					applyFocus(savedId);
 				} else {
-					const first = entries.keys().next().value;
+					const first = findFirstAutoFocusable() ?? entries.keys().next().value;
 					if (first) applyFocus(first);
 				}
 			});
@@ -340,6 +345,11 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	}
 
 	function focusById(id: string) {
+		// Cancel pending auto-focus — explicit focus takes priority
+		if (pendingInitialFocusFrame !== null) {
+			cancelAnimationFrame(pendingInitialFocusFrame);
+			pendingInitialFocusFrame = null;
+		}
 		if (entries.has(id)) {
 			applyFocus(id);
 		}
@@ -357,6 +367,10 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 	}
 
 	function destroy() {
+		if (pendingInitialFocusFrame !== null) {
+			cancelAnimationFrame(pendingInitialFocusFrame);
+			pendingInitialFocusFrame = null;
+		}
 		entries.clear();
 		listeners.clear();
 		currentId = null;

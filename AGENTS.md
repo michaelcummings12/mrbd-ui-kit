@@ -101,14 +101,14 @@ Root wrapper. Required. Sets up the 600×600 viewport, focus engine context, and
 
 ```tsx
 <DisplayRoot
-  focusOptions={{ wrap: true, initialFocusId: "first-btn" }}
+  focusOptions={{ wrap: true }}
   onSelect={(focusedId) => handleAction(focusedId)}
 >
   {children}
 </DisplayRoot>
 ```
 
-Props: `children`, `className?`, `focusOptions?: { wrap?: boolean, initialFocusId?: string }`, `onSelect?: (id: string) => void`
+Props: `children`, `className?`, `focusOptions?: { wrap?: boolean }`, `onSelect?: (id: string) => void`
 
 ### Text
 
@@ -131,7 +131,7 @@ Makes children spatially navigable. Every `id` must be unique. On Enter key pres
 </Focusable>
 ```
 
-Props: `id: string` (required), `children`, `group?: string`, `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`, `className?`
+Props: `id: string` (required), `children`, `group?: string`, `autoFocus?: boolean` (default `true` — set to `false` to skip initial auto-focus while keeping the element navigable), `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`, `className?`
 
 
 ### Button
@@ -157,7 +157,7 @@ The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 </Button>
 ```
 
-Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ComponentType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
+Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ComponentType`, `autoFocus?: boolean` (default `true`), `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
 
 ### Card
 
@@ -362,7 +362,7 @@ export default function MyMRBDApp() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <DisplayRoot focusOptions={{ initialFocusId: "action-btn" }}>
+    <DisplayRoot>
       <div className="flex flex-col gap-4 p-6">
         {/* Header */}
         <div className="flex flex-row gap-2 items-center">
