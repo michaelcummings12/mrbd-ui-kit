@@ -4,6 +4,12 @@ export interface FocusableEntry {
 	id: string;
 	element: HTMLElement;
 	group?: string;
+	/**
+	 * When false, this entry is skipped during initial auto-focus selection.
+	 * It remains fully reachable via arrow-key navigation, explicit focusById(), and restore.
+	 * @default true
+	 */
+	autoFocus?: boolean;
 }
 
 export interface FocusEngineOptions {
@@ -245,6 +251,14 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 		notify();
 	}
 
+	/** Return the first entry eligible for initial auto-focus (autoFocus !== false). */
+	function findFirstAutoFocusable(): string | undefined {
+		for (const [id, entry] of entries) {
+			if (entry.autoFocus !== false) return id;
+		}
+		return undefined;
+	}
+
 	function register(entry: FocusableEntry) {
 		entries.set(entry.id, entry);
 
@@ -256,12 +270,12 @@ export function createFocusEngine(options: FocusEngineOptions = {}): FocusEngine
 			pendingInitialFocusFrame = requestAnimationFrame(() => {
 				pendingInitialFocusFrame = null;
 
-				// Priority: saved focus > first entry
+				// Priority: saved focus > first auto-focusable > first entry
 				const savedId = getSavedFocusId();
 				if (savedId && entries.has(savedId)) {
 					applyFocus(savedId);
 				} else {
-					const first = entries.keys().next().value;
+					const first = findFirstAutoFocusable() ?? entries.keys().next().value;
 					if (first) applyFocus(first);
 				}
 			});

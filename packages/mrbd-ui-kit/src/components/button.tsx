@@ -13,6 +13,9 @@ export interface ButtonProps {
 	id: string;
 	/** Icon to render before children */
 	icon?: ComponentType<{ className?: string }>;
+	/** When false, skip this button for initial auto-focus.
+	 * @default true */
+	autoFocus?: boolean;
 	/** @default false */
 	disabled?: boolean;
 	/** Called on select (Enter key) */
@@ -65,6 +68,7 @@ export function Button({
 	size = "md",
 	id,
 	icon: Icon,
+	autoFocus,
 	disabled,
 	onClick,
 	onFocus,
@@ -83,7 +87,7 @@ export function Button({
 	);
 
 	return (
-		<Focusable id={id} onSelect={onSelect ?? onClick} onFocus={onFocus} onBlur={onBlur} disabled={disabled} className="group">
+		<Focusable id={id} autoFocus={autoFocus} onSelect={onSelect ?? onClick} onFocus={onFocus} onBlur={onBlur} disabled={disabled} className="group">
 			{asChild ? (
 				// Slot merges resolvedClass onto the single child element (e.g. <Link>).
 				// Must be exactly one child — no icon expression here.

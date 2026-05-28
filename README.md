@@ -160,6 +160,7 @@ Makes any child spatially navigable. Registers with the spatial focus engine. On
 |---|---|---|---|
 | `id` | `string` | **required** | Unique ID for focus registration |
 | `group` | `string` | — | Scope focus navigation to this group |
+| `autoFocus` | `boolean` | `true` | When `false`, skip for initial auto-focus (still navigable via arrows, `focus()`, and session restore) |
 | `onSelect` | `() => void` | — | Called on Enter key |
 | `onFocus` | `() => void` | — | Called when focused |
 | `onBlur` | `() => void` | — | Called when focus leaves |
@@ -197,6 +198,7 @@ The `asChild` prop merges button styles onto a child element instead of renderin
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
 | `id` | `string` | **required** | Focus engine ID |
 | `icon` | `ComponentType` | — | Icon component before label |
+| `autoFocus` | `boolean` | `true` | When `false`, skip for initial auto-focus (still navigable) |
 | `onClick` | `() => void` | — | Called on select (Enter key) |
 | `onFocus` | `() => void` | — | Called when focused |
 | `onBlur` | `() => void` | — | Called when focus leaves |

@@ -131,7 +131,7 @@ Makes children spatially navigable. Every `id` must be unique. On Enter key pres
 </Focusable>
 ```
 
-Props: `id: string` (required), `children`, `group?: string`, `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`, `className?`
+Props: `id: string` (required), `children`, `group?: string`, `autoFocus?: boolean` (default `true` — set to `false` to skip initial auto-focus while keeping the element navigable), `onSelect?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `disabled?: boolean`, `className?`
 
 
 ### Button
@@ -157,7 +157,7 @@ The `asChild` prop merges button styles onto a child element (e.g. `<Link>`):
 </Button>
 ```
 
-Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ComponentType`, `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
+Props: `id: string` (required), `children`, `variant?: 'primary' | 'secondary' | 'ghost' | 'danger'` (default `'ghost'`), `size?: 'sm' | 'md' | 'lg'`, `icon?: ComponentType`, `autoFocus?: boolean` (default `true`), `onClick?: () => void`, `onFocus?: () => void`, `onBlur?: () => void`, `onSelect?: () => void`, `disabled?: boolean`, `asChild?: boolean`, `className?`
 
 ### Card
 
