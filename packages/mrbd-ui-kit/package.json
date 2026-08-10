@@ -1,6 +1,6 @@
 {
   "name": "mrbd-ui-kit",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "React component library for Meta Ray-Ban Display web apps",
   "repository": {
     "type": "git",
@@ -70,13 +70,13 @@
     }
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "next": "^16.2.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tsup": "^8.3.0",
-    "typescript": "^5.7.0"
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "next": "^16.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
   },
   "keywords": [
     "meta",
@@ -91,8 +91,8 @@
   "license": "MIT",
   "dependencies": {
     "clsx": "^2.1.1",
-    "lucide-react": "^1.16.0",
+    "lucide-react": "^1.30.0",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss-text-box-trim": "^1.0.5"
+    "tailwindcss-text-box-trim": "^1.0.6"
   }
 }

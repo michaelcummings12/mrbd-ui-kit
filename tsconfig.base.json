@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "es2025",
+    // tsup's dts build injects a `baseUrl` we don't control, which TypeScript 6
+    // reports as a deprecation error. Remove this once tsup stops setting it.
+    "ignoreDeprecations": "6.0",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["es2025", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
     "strict": true,
     "esModuleInterop": true,
